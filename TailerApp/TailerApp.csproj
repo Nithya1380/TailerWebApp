@@ -99,8 +99,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="UI\Admin\" />
-    <Folder Include="UI\Tailer\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -145,7 +143,9 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Site.Master" />
+    <Content Include="UI\Admin\AdminHome.aspx" />
     <Content Include="UI\Common\Login.aspx" />
+    <Content Include="UI\Tailer\TailerHome.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config" />
     <Content Include="Bundle.config" />
@@ -162,7 +162,10 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Common\Cryptography.cs" />
+    <Compile Include="Common\Structs.cs" />
     <Compile Include="Common\Utils.cs" />
+    <Compile Include="Controller\LoginController.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -188,12 +191,26 @@
     <Compile Include="Site.Mobile.Master.designer.cs">
       <DependentUpon>Site.Mobile.Master</DependentUpon>
     </Compile>
+    <Compile Include="UI\Admin\AdminHome.aspx.cs">
+      <DependentUpon>AdminHome.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\AdminHome.aspx.designer.cs">
+      <DependentUpon>AdminHome.aspx</DependentUpon>
+    </Compile>
     <Compile Include="UI\Common\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="UI\Common\Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tailer\TailerHome.aspx.cs">
+      <DependentUpon>TailerHome.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Tailer\TailerHome.aspx.designer.cs">
+      <DependentUpon>TailerHome.aspx</DependentUpon>
     </Compile>
     <Compile Include="ViewSwitcher.ascx.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>
