@@ -99,7 +99,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="UI\Admin\" />
     <Folder Include="UI\Tailer\" />
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +144,8 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Site.Master" />
+    <Content Include="UI\Admin\Branch_AddModify.aspx" />
+    <Content Include="UI\Admin\Company_AddModify.aspx" />
     <Content Include="UI\Common\Login.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config" />
@@ -187,6 +188,20 @@
     </Compile>
     <Compile Include="Site.Mobile.Master.designer.cs">
       <DependentUpon>Site.Mobile.Master</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\Branch_AddModify.aspx.cs">
+      <DependentUpon>Branch_AddModify.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\Branch_AddModify.aspx.designer.cs">
+      <DependentUpon>Branch_AddModify.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\Company_AddModify.aspx.cs">
+      <DependentUpon>Company_AddModify.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\Company_AddModify.aspx.designer.cs">
+      <DependentUpon>Company_AddModify.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Common\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
