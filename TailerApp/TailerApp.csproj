@@ -148,15 +148,22 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Site.Master" />
+    <Content Include="UI\Admin\AdminHome.aspx" />
     <Content Include="UI\Admin\Branch_AddModify.aspx" />
     <Content Include="UI\Admin\Company_AddModify.aspx" />
     <Content Include="UI\Common\Login.aspx" />
+    <Content Include="UI\Img\12345.jpeg" />
+    <Content Include="UI\Img\PopUpMaster.jpeg" />
+    <Content Include="UI\Style\bootstrap.min.css" />
+    <Content Include="UI\Style\TailerStyle.css" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config" />
     <Content Include="Bundle.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Site.Mobile.Master" />
+    <Content Include="UI\Admin\Admin.Master" />
+    <Content Include="UI\Admin\AdminPopUp.Master" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -192,6 +199,27 @@
     </Compile>
     <Compile Include="Site.Mobile.Master.designer.cs">
       <DependentUpon>Site.Mobile.Master</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\Admin.Master.cs">
+      <DependentUpon>Admin.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\Admin.Master.designer.cs">
+      <DependentUpon>Admin.Master</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\AdminHome.aspx.cs">
+      <DependentUpon>AdminHome.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\AdminHome.aspx.designer.cs">
+      <DependentUpon>AdminHome.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\AdminPopUp.Master.cs">
+      <DependentUpon>AdminPopUp.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\AdminPopUp.Master.designer.cs">
+      <DependentUpon>AdminPopUp.Master</DependentUpon>
     </Compile>
     <Compile Include="UI\Admin\Branch_AddModify.aspx.cs">
       <DependentUpon>Branch_AddModify.aspx</DependentUpon>
