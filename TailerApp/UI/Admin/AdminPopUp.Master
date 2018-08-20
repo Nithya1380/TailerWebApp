@@ -1,0 +1,26 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="AdminPopUp.master.cs" Inherits="TailerApp.UI.Admin.AdminPopUp" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <asp:ContentPlaceHolder ID="PopUphead" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+     <div style="padding-bottom:3px;">
+        <img src="../Img/PopUpMaster.jpeg" style="width: 100%; height: 25px;" />
+    </div>
+    <div>
+        <span>Add Company</span>
+    </div>
+    <div>
+        <asp:ContentPlaceHolder ID="PopUpContent" runat="server">
+        
+        </asp:ContentPlaceHolder>
+    </div>
+    </form>
+</body>
+</html>
