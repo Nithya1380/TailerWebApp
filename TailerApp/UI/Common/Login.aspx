@@ -142,6 +142,7 @@
                                                            OnClientClick="return FunForLoginValidation()" runat="server" Style="width: 100%"  />  
                                                    </div>  
                                                </div>  
+                                                <asp:Label ID="lblErrorMessage" CssClass="help-block" runat="server" Text="" ForeColor="White"></asp:Label>
                                            </div>  
                                        </div>  
                                    </fieldset>  

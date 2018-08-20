@@ -40,8 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DBManager\SecurityManager.cs" />
     <Compile Include="KanDB.cs" />
     <Compile Include="KanDelegate.cs" />
+    <Compile Include="Model\Struct.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
