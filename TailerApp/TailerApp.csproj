@@ -99,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="UI\Tailer\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -110,6 +111,10 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\AngularJS\angular.js" />
+    <Content Include="Scripts\AngularJS\BranchController.js" />
+    <Content Include="Scripts\AngularJS\CompanyController.js" />
+    <Content Include="Scripts\AngularJS\TailerApp.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -144,14 +149,25 @@
     <Content Include="Global.asax" />
     <Content Include="Site.Master" />
     <Content Include="UI\Admin\AdminHome.aspx" />
+    <Content Include="UI\Admin\Branch_AddModify.aspx" />
+    <Content Include="UI\Admin\Company_AddModify.aspx" />
+    <Content Include="UI\Common\Login.aspx" />
+    <Content Include="UI\Img\12345.jpeg" />
+    <Content Include="UI\Img\PopUpMaster.jpeg" />
+    <Content Include="UI\Style\bootstrap.min.css" />
+    <Content Include="UI\Style\TailerStyle.css" />
     <Content Include="UI\Common\Login.aspx" />
     <Content Include="UI\Tailer\AccountMaster.aspx" />
     <Content Include="ViewSwitcher.ascx" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Bundle.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Site.Mobile.Master" />
+    <Content Include="UI\Admin\Admin.Master" />
+    <Content Include="UI\Admin\AdminPopUp.Master" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -191,12 +207,40 @@
     <Compile Include="Site.Mobile.Master.designer.cs">
       <DependentUpon>Site.Mobile.Master</DependentUpon>
     </Compile>
+    <Compile Include="UI\Admin\Admin.Master.cs">
+      <DependentUpon>Admin.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\Admin.Master.designer.cs">
+      <DependentUpon>Admin.Master</DependentUpon>
+    </Compile>
     <Compile Include="UI\Admin\AdminHome.aspx.cs">
       <DependentUpon>AdminHome.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="UI\Admin\AdminHome.aspx.designer.cs">
       <DependentUpon>AdminHome.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\AdminPopUp.Master.cs">
+      <DependentUpon>AdminPopUp.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\AdminPopUp.Master.designer.cs">
+      <DependentUpon>AdminPopUp.Master</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\Branch_AddModify.aspx.cs">
+      <DependentUpon>Branch_AddModify.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\Branch_AddModify.aspx.designer.cs">
+      <DependentUpon>Branch_AddModify.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\Company_AddModify.aspx.cs">
+      <DependentUpon>Company_AddModify.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\Company_AddModify.aspx.designer.cs">
+      <DependentUpon>Company_AddModify.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Common\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>

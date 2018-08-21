@@ -10,6 +10,6 @@
 namespace TailerApp.UI.Admin {
     
     
-    public partial class AdminHome {
+    public partial class Company_AddModify {
     }
 }
