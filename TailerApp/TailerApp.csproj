@@ -99,7 +99,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="UI\Tailer\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -144,7 +143,6 @@
     <Content Include="Scripts\WebForms\WebParts.js" />
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Site.Master" />
@@ -158,6 +156,7 @@
     <Content Include="UI\Style\TailerStyle.css" />
     <Content Include="UI\Common\Login.aspx" />
     <Content Include="UI\Tailer\AccountMaster.aspx" />
+    <Content Include="UI\Tailer\TailerHome.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -182,13 +181,6 @@
     <Compile Include="Common\Structs.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Controller\LoginController.cs" />
-    <Compile Include="Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -255,6 +247,13 @@
     </Compile>
     <Compile Include="UI\Tailer\AccountMaster.aspx.designer.cs">
       <DependentUpon>AccountMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tailer\TailerHome.aspx.cs">
+      <DependentUpon>TailerHome.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Tailer\TailerHome.aspx.designer.cs">
+      <DependentUpon>TailerHome.aspx</DependentUpon>
     </Compile>
     <Compile Include="ViewSwitcher.ascx.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>

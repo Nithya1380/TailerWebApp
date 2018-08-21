@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TailerApp
+namespace TailerApp.UI.Tailer
 {
 
 
-    public partial class _Default
+    public partial class TailerHome
     {
     }
 }

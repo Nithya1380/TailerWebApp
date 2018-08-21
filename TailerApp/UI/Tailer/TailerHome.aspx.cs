@@ -5,9 +5,9 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace TailerApp
+namespace TailerApp.UI.Tailer
 {
-    public partial class _Default : Page
+    public partial class TailerHome : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
