@@ -99,10 +99,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-<<<<<<< HEAD
-    <Folder Include="UI\Tailer\" />
-=======
->>>>>>> 691e12c9b5c5337d312cd728047090b1d59bb499
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -152,7 +148,6 @@
     <Content Include="Global.asax" />
     <Content Include="Site.Master" />
     <Content Include="UI\Admin\AdminHome.aspx" />
-<<<<<<< HEAD
     <Content Include="UI\Admin\Branch_AddModify.aspx" />
     <Content Include="UI\Admin\Company_AddModify.aspx" />
     <Content Include="UI\Common\Login.aspx" />
@@ -160,12 +155,12 @@
     <Content Include="UI\Img\PopUpMaster.jpeg" />
     <Content Include="UI\Style\bootstrap.min.css" />
     <Content Include="UI\Style\TailerStyle.css" />
-=======
     <Content Include="UI\Common\Login.aspx" />
     <Content Include="UI\Tailer\TailerHome.aspx" />
->>>>>>> 691e12c9b5c5337d312cd728047090b1d59bb499
     <Content Include="ViewSwitcher.ascx" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Bundle.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
@@ -211,7 +206,6 @@
     <Compile Include="Site.Mobile.Master.designer.cs">
       <DependentUpon>Site.Mobile.Master</DependentUpon>
     </Compile>
-<<<<<<< HEAD
     <Compile Include="UI\Admin\Admin.Master.cs">
       <DependentUpon>Admin.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -219,8 +213,6 @@
     <Compile Include="UI\Admin\Admin.Master.designer.cs">
       <DependentUpon>Admin.Master</DependentUpon>
     </Compile>
-=======
->>>>>>> 691e12c9b5c5337d312cd728047090b1d59bb499
     <Compile Include="UI\Admin\AdminHome.aspx.cs">
       <DependentUpon>AdminHome.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -228,7 +220,6 @@
     <Compile Include="UI\Admin\AdminHome.aspx.designer.cs">
       <DependentUpon>AdminHome.aspx</DependentUpon>
     </Compile>
-<<<<<<< HEAD
     <Compile Include="UI\Admin\AdminPopUp.Master.cs">
       <DependentUpon>AdminPopUp.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -250,8 +241,6 @@
     <Compile Include="UI\Admin\Company_AddModify.aspx.designer.cs">
       <DependentUpon>Company_AddModify.aspx</DependentUpon>
     </Compile>
-=======
->>>>>>> 691e12c9b5c5337d312cd728047090b1d59bb499
     <Compile Include="UI\Common\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -261,7 +250,6 @@
     </Compile>
     <Compile Include="UI\Tailer\TailerHome.aspx.cs">
       <DependentUpon>TailerHome.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="UI\Tailer\TailerHome.aspx.designer.cs">
       <DependentUpon>TailerHome.aspx</DependentUpon>
