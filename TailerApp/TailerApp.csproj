@@ -145,7 +145,7 @@
     <Content Include="Site.Master" />
     <Content Include="UI\Admin\AdminHome.aspx" />
     <Content Include="UI\Common\Login.aspx" />
-    <Content Include="UI\Tailer\TailerHome.aspx" />
+    <Content Include="UI\Tailer\AccountMaster.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config" />
     <Content Include="Bundle.config" />
@@ -205,12 +205,12 @@
     <Compile Include="UI\Common\Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
-    <Compile Include="UI\Tailer\TailerHome.aspx.cs">
-      <DependentUpon>TailerHome.aspx</DependentUpon>
+    <Compile Include="UI\Tailer\AccountMaster.aspx.cs">
+      <DependentUpon>AccountMaster.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="UI\Tailer\TailerHome.aspx.designer.cs">
-      <DependentUpon>TailerHome.aspx</DependentUpon>
+    <Compile Include="UI\Tailer\AccountMaster.aspx.designer.cs">
+      <DependentUpon>AccountMaster.aspx</DependentUpon>
     </Compile>
     <Compile Include="ViewSwitcher.ascx.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>

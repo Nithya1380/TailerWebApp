@@ -20,7 +20,17 @@ namespace TailerApp.UI.Common
 
         protected void btnLogin_Click(object sender, EventArgs e)
         {
+            try
+            {
+                if (string.IsNullOrEmpty(txtUserName.Text) || string.IsNullOrEmpty(txtPassword.Text))
+                    return;
 
+                this.LoginProcess(txtUserName.Text, txtPassword.Text);
+            }
+            catch(Exception ex)
+            {
+                Utils.Write(ex);
+            }
 
         }
 

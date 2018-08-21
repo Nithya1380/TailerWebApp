@@ -11,7 +11,7 @@ namespace TailerApp.UI.Tailer
 {
 
 
-    public partial class TailerHome
+    public partial class AccountMaster
     {
     }
 }

@@ -31,10 +31,6 @@ namespace DAL.DBManager
                 this.AddSPStringParam("@server", server);
                 this.AddSPStringParam("@webSessionID", webSessionID);
                 this.AddSPStringParam("@instanceName", InstanceName);
-                this.AddSPStringParamOut("@correctInstanceURL", 1000);
-                this.AddSPStringParamOut("@DB_NAME", 100);
-                this.AddSPStringParamOut("@InstanceFullURL_Out", 2000);
-                this.AddSPStringParamOut("@InstanceCode_out", 100);
                 this.AddSPStringParam("@OperatingSystem", OperatingSystem);
                 this.AddSPStringParam("@BrowserVersion", BrowserVersion);
                 this.AddSPStringParam("@Browser", BrowserName);
@@ -48,14 +44,14 @@ namespace DAL.DBManager
                     {
 
                         //get the LoginID (Login User Name)
-                        if (reader["LOGIN_ID"] != DBNull.Value)
-                            Ulogin.loginId = reader["LOGIN_ID"].ToString();
+                        if (reader["LoginID"] != DBNull.Value)
+                            Ulogin.loginId = reader["LoginID"].ToString();
                         else
                             Ulogin.loginId = "";
 
                         //get the Role ID
-                        if (reader["ROLE"] != DBNull.Value)
-                            Ulogin.RoleID = Convert.ToInt32(reader["ROLE"]);
+                        if (reader["RoleID"] != DBNull.Value)
+                            Ulogin.RoleID = Convert.ToInt32(reader["RoleID"]);
                         else
                             Ulogin.RoleID = 0;
 
@@ -77,21 +73,21 @@ namespace DAL.DBManager
                             Ulogin.rolescope = "";
 
                         //get the LAST_LOGIN 
-                        if (reader["LastLoginTime"] != DBNull.Value)
-                            Ulogin.lastlogindate = Convert.ToDateTime(reader["LastLoginTime"]);
+                        //if (reader["LastLoginTime"] != DBNull.Value)
+                        //    Ulogin.lastlogindate = Convert.ToDateTime(reader["LastLoginTime"]);
                       
 
                         //get the [USER_ID] 
-                        if (reader["USER_ID"] != DBNull.Value)
-                            Ulogin.UserId = Convert.ToInt32(reader["USER_ID"]);
+                        if (reader["UserID"] != DBNull.Value)
+                            Ulogin.UserId = Convert.ToInt32(reader["UserID"]);
                         else
                             Ulogin.UserId = 0;
 
-                        //get the USER_PK
-                        if (reader["USER_PK"] != DBNull.Value)
-                            Ulogin.UserPrimaryKey = Convert.ToInt32(reader["USER_PK"]);
-                        else
-                            Ulogin.UserPrimaryKey = 0;
+                        ////get the USER_PK
+                        //if (reader["USER_PK"] != DBNull.Value)
+                        //    Ulogin.UserPrimaryKey = Convert.ToInt32(reader["USER_PK"]);
+                        //else
+                        //    Ulogin.UserPrimaryKey = 0;
                                                
                         //get the LANDING_PAGE
                         if (reader["LANDING_PAGE"] != DBNull.Value)
@@ -100,26 +96,26 @@ namespace DAL.DBManager
                             Ulogin.Landingpage = "";
 
                         //get the ROLE_NAME
-                        if (reader["ROLE_NAME"] != DBNull.Value)
-                            Ulogin.RoleName = reader["ROLE_NAME"].ToString();
+                        if (reader["RoleName"] != DBNull.Value)
+                            Ulogin.RoleName = reader["RoleName"].ToString();
                         else
                             Ulogin.RoleName = "";
 
                         //get the IS_PASSWORD_REGENERATED 
-                        if (reader["IS_PASSWORD_REGENERATED"] != DBNull.Value)
-                            Ulogin.Is_Password_Regenerated = Convert.ToBoolean(reader["IS_PASSWORD_REGENERATED"]);
+                        if (reader["isPasswordRegenerated"] != DBNull.Value)
+                            Ulogin.Is_Password_Regenerated = Convert.ToBoolean(reader["isPasswordRegenerated"]);
                         else
                             Ulogin.Is_Password_Regenerated = false;
-                        
-                        if (reader["PASSWD_EXPIRY"] != DBNull.Value)
-                            Ulogin.PASSWD_EXPIRY = Convert.ToDateTime(reader["PASSWD_EXPIRY"]);
+
+                        if (reader["PassowordExpireOn"] != DBNull.Value)
+                            Ulogin.PASSWD_EXPIRY = Convert.ToDateTime(reader["PassowordExpireOn"]);
                                              
                      
-                        //get the User_type 
-                        if (reader["User_Type"] != DBNull.Value)
-                            Ulogin.UserType = Convert.ToByte(reader["User_Type"]);
-                        else
-                            Ulogin.UserType = 0;
+                        ////get the User_type 
+                        //if (reader["User_Type"] != DBNull.Value)
+                        //    Ulogin.UserType = Convert.ToByte(reader["User_Type"]);
+                        //else
+                        //    Ulogin.UserType = 0;
 
                         //SessionTimeOut
                         if (reader["SessionTimeOut"] != DBNull.Value)
@@ -133,7 +129,7 @@ namespace DAL.DBManager
                         else
                             Ulogin.roleType = 0;
 
-                        //userName
+                        //userName  
                         if (reader["userName"] != DBNull.Value)
                             Ulogin.userName = Convert.ToString(reader["userName"]);
                         else
