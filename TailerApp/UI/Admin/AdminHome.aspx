@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ﻿<%@ Page Language="C#" MasterPageFile="~/UI/Admin/Admin.Master" AutoEventWireup="true" CodeBehind="AdminHome.aspx.cs" Inherits="TailerApp.UI.Admin.AdminHome" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
@@ -35,8 +34,4 @@
     </div>
   </div>
 </asp:Content>
-=======
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AdminHome.aspx.cs" Inherits="TailerApp.UI.Admin.AdminHome" %>
-<asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-</asp:Content>
->>>>>>> 691e12c9b5c5337d312cd728047090b1d59bb499
+
