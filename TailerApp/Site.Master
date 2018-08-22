@@ -41,7 +41,7 @@
             </Scripts>
         </asp:ScriptManager>
 
-        <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar navbar-light bg-primary navbar-fixed-top" style="background-color:#011d49">
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -49,7 +49,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" runat="server" href="~/UI/Tailer/TailerHome.aspx">Stitch</a>
+                    <a class="navbar-brand" style="color:white" runat="server" href="~/UI/Tailer/TailerHome.aspx"><i class="fas fa-cut">&nbsp;Stitch</i></a>
                 </div>
                 <%--<div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
