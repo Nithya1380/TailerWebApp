@@ -14,7 +14,6 @@ BEGIN TRAN
    )
 
    GO
-
    CREATE TABLE HomePages
    (
 	  HomePageID INT NOT NULL PRIMARY KEY IDENTITY(1,1),
@@ -178,5 +177,42 @@ GO
 ALTER TABLE [dbo].[_H_Login] ADD DEFAULT (getdate()) FOR [CreatedOn]
 GO
 ALTER TABLE [dbo].[_H_Login] ADD CONSTRAINT FK_H_Login_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID)
-ROLLBACK TRAN
+ROLLBACK
 
+--Added by Mahesh On 22nd Aug 18
+BEGIN TRAN
+	CREATE TABLE BranchDetails(
+		BranchID INT NOT NULL PRIMARY KEY IDENTITY(1,1),	--	PK(1,1)
+		CompanyID INT, 	--	FK=> Company.CompanyID
+		AddressID	INT,	--	FK=> Address.AddressID
+		BranchName	VARCHAR(100),
+		BranchLegalName VARCHAR(100),
+		BranchCode	VARCHAR(5),
+		BranchSTNo VARCHAR(40),
+		BranchITNo VARCHAR(40),
+		BarnchCSTNo VARCHAR(40),
+		BranchExciseNo VARCHAR(40),
+		BranchContactPer VARCHAR(40),
+		BranchCreatedDate DATETIME,
+		CreatedBy	INT,
+		CreatedOn	DATETIME DEFAULT getdate(),
+		isDeleted	BIT,
+		DeletedBy	INT,
+		DeletedOn	DATETIME,
+		CONSTRAINT FK_CompanyMaster_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID),
+		CONSTRAINT FK_Address_AddressID FOREIGN KEY(AddressID) REFERENCES Address(AddressID),
+		CONSTRAINT FK_Users_UserID FOREIGN KEY(CreatedBy) REFERENCES Users(UserID),
+	)
+
+	ALTER TABLE CompanyMaster 
+		ADD	CompLegalName VARCHAR(40),
+			CompCreatedDate DATETIME,
+			CompBusType CHAR(1),
+			TDSNo VARCHAR(50),
+			TDSCircle VARCHAR(50),
+			TDSChallanNo VARCHAR(50),
+			PanNo VARCHAR(15),
+			CSTNo VARCHAR(30),
+			CSTDate DATETIME
+
+ROLLBACK
