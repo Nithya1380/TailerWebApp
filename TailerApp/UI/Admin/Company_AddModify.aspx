@@ -17,6 +17,7 @@
                         <tr>
                             <td style="text-align:right;">Company Name:</td><td style="text-align:left;"><input type="text" class="web_txtbox"/></td>
                             <td style="text-align:right;">Company Code:</td><td style="text-align:left;"><input type="text" class="web_txtbox" /></td>
+                            <td style="text-align:right;">Company Create Date:</td><td style="text-align:left;"><input type="text" class="web_txtbox" /></td>
                         </tr>
                     </tbody>
                 </table>
@@ -45,7 +46,22 @@
                         <td style="text-align:right;">URL: </td><td style="text-align:left;"><input type="text" class="web_txtbox" /></td>
                     </tr>
                     <tr>
-                        <td style="text-align:right;">E-Mail: </td><td><input type="text" class="web_txtbox" /></td>
+                        <td style="text-align:right;">E-Mail: </td><td colspan="5"><input type="text" class="web_txtbox" /></td>
+                    </tr>
+                </table>
+                </div>
+                <h2 class="blueborderline_bottom" style="margin-left:-10px"><div class="slope" style="width:132px"><span>Registration Nos</span></div></h2>
+                <div class="table-responsive  web_tabletext_center">
+                <table class="table table-bordered_second table-condensed table-hover table-striped table-bordered" >
+                    <tr>
+                        <td style="text-align:right;">TDS Number: </td><td style="text-align:left;"><input type="text" class="web_txtbox" /></td>
+                        <td style="text-align:right;">TDS Circle: </td><td style="text-align:left;"><input type="text" class="web_txtbox" /></td>
+                        <td style="text-align:right;">TDS Challan Number: </td><td style="text-align:left;"><input type="text" class="web_txtbox" /></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right;">Pan Number: </td><td style="text-align:left;"><input type="text" class="web_txtbox" /></td>
+                        <td style="text-align:right;">CST Number: </td><td style="text-align:left;"><input type="text" class="web_txtbox" /></td>
+                        <td style="text-align:right;">CST Date: </td><td style="text-align:left;"><input type="text" class="web_txtbox" /></td>
                     </tr>
                 </table>
                 </div>

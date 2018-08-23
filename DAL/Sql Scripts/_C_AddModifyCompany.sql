@@ -4,7 +4,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[_C_AddModifyCompany] 
+ALTER PROCEDURE [dbo].[_C_AddModifyCompany] 
 	@CompanyID INT,
 	@user INT,
 	@CompanyDetails VARCHAR(4000),
@@ -29,7 +29,6 @@ BEGIN TRY
 		INSERT INTO CompanyMaster(
 			CompanyName,
 			CompanyCode,
-			AddressID,
 			CreatedBy,
 			CompLegalName,
 			CompCreatedDate,
@@ -42,7 +41,6 @@ BEGIN TRY
 			CSTDate)
 		SELECT CompanyName,
 			CompanyCode,
-			AddressID,
 			@user,
 			CompLegalName,
 			CompCreatedDate,
@@ -56,7 +54,6 @@ BEGIN TRY
 		 FROM OPENJSON(@CompanyDetails)  
 			WITH (	CompanyName	VARCHAR(50),
 					CompanyCode	VARCHAR(5),
-					AddressID INT,
 					CreatedOn DATETIME,
 					CompLegalName VARCHAR(40),
 					CompCreatedDate DATETIME,
