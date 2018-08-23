@@ -1,12 +1,15 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/UI/Admin/AdminPopUp.Master" AutoEventWireup="true" CodeBehind="Company_AddModify.aspx.cs" Inherits="TailerApp.UI.Admin.Company_AddModify" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="PopUphead" runat="server">
-<script src="../../Scripts/AngularJS/angular.js"></script>
-<script src="../../Scripts/AngularJS/CompanyController.js"></script>
-<script src="../../Scripts/jquery-1.10.2.min.js"></script>
-<link href="../Style/TailerStyle.css" rel="stylesheet" />
-<link href="../Style/bootstrap.min.css" rel="stylesheet" />
+    <style type="text/css">
+    .table td, .table th{
+        padding: 5px;
+    }
+</style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="PopUpContent" runat="server">
+    <div class="Web_PopupHeader">
+        <span >Add Company</span>
+    </div>
     <div ng-app="TailerApp"  ng-controller="CompanyController" >
         <div class="web_box_design web_panel_blue_body" >
             <div class="web_budget_design">

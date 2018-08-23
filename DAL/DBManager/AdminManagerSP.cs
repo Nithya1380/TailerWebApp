@@ -12,7 +12,7 @@ namespace DAL.DBManager
     class AdminManagerSP : KanDelegate
     {
 
-       public bool  _C_GetCompanyDetails(int CompanyID, int User, out Struct_Company Struct_Company){
+       public bool  _C_GetCompanyDetails(int CompanyID, int User, out Struct_Company Struct_Company)
         {
             bool ret = false;
             Struct_Company = new Struct_Company();
