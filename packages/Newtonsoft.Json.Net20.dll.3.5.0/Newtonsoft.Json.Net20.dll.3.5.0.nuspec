@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Newtonsoft.Json.Net20.dll</id>
+    <version>3.5.0</version>
+    <title>Newtonsoft.Json.Net20.dll</title>
+    <authors>wx1983@gmail.com</authors>
+    <owners>wx1983@gmail.com</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Newtonsoft.Json.Net20.dll</description>
+    <summary />
+  </metadata>
+</package>

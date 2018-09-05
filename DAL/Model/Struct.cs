@@ -41,4 +41,144 @@ namespace DAL.Model
         public bool enableAutoSessionOut { get; set; }
 
     }
+
+    public class CustomerMaster
+    {
+        public CustomerAccount CustomerAccount { get; set; }
+        public Customer Customer { get; set; }
+        public CustomerSupply CustomerSupply { get; set; }
+        public List<CustomerBranches> CustomerBranches { get; set; }
+    }
+
+    public class CustomerAccount
+    {
+        public int CompanyID{get;set;}
+        public int CustomerMasterID {get;set;}
+        public string AccountCode {get;set;}
+        public string AccountName {get;set;}
+        public bool IsCommonAccount {get;set;}
+        public string IsActive {get;set;}
+        public string AccountType {get;set;}
+        public string OpeningBalance {get;set;}
+        public string ClosingBalance{get;set;}
+        public string ParentGroup {get;set;}
+        public string AccountCategory {get;set;}
+        public string AccountCreatedDate{get;set;}
+        public string PartyAlert {get;set;}
+        public bool IsTDSApplicable {get;set;}
+        public string TDSCategory {get;set;}
+        public string TDSDepriciation {get;set;}
+        public string Default{get;set;}
+        public string Reverse {get;set;}
+        public string Sequence {get;set;}
+        public string Sh6Group {get;set;}
+        public string Sh6AccountNumber { get; set; }
+    }
+
+    public class Customer
+    {
+       public int CustomerID { get; set; }
+       public int CompanyID{get;set;}
+       public string Gender {get;set;}
+       public string FullName{get;set;}
+       public string FirstName {get;set;}
+       public string MiddleName {get;set;}
+       public string SurName {get;set;}
+       public string ContactPerson {get;set;}
+       public string BirthDate {get;set;}
+       public string OpenDate {get;set;}
+       public string CustomerAddressID {get;set;}
+       public string PANNumber {get;set;}
+       public string ReferenceNumber {get;set;}
+       public string Remarks {get;set;}
+       public string AnnDate {get;set;}
+       public string SRName {get;set;}
+       public string CustomerCardNumber { get; set; }
+       public string Address1{ get; set; }
+       public string Address2{ get; set; }
+       public string City{ get; set; }
+       public string State{ get; set; }
+       public string Pincode{ get; set; }
+       public string MobileNo{ get; set; }
+       public string HomePhoneNo{ get; set; }
+       public string EmailID { get; set; }
+       public string CustomerPhoto { get; set; }
+    }
+
+    public class CustomerSupply
+    {
+        public int CustomerMasterID {get;set;}
+        public int CompanyID {get;set;}
+   	    public string SupplierCode {get;set;}
+        public string SupplierName {get;set;}
+        public string SupplierType {get;set;}
+	    public string SupplierCategory {get;set;}
+        public string CSTNumber {get;set;}
+        public string CSTDate {get;set;}
+        public string STDate {get;set;}
+        public string STNumber {get;set;}
+        public string GSTINNumber{get;set;}
+        public string TINNumber {get;set;}
+        public string VATNumber {get;set;}
+        public string SupplierPANNumber {get;set;}
+        public string LessVATPercent {get;set;}
+        public string MarkUpPercent {get;set;}
+        public string MarkDownPercent {get;set;}
+        public string CreditDays { get; set; }
+    }
+
+    public class CustomerBranches
+    {
+        public int CompanyID { get; set; }
+        public int BranchID { get; set; }
+        public string BranchName { get; set; }
+    }
+
+    public class CustomerPickLists : JsonResults
+    {
+        public CustomerPickLists()
+        {
+            this.AccountCategory = new List<PickList>();
+            this.AccountDateCategory = new List<PickList>();
+            this.AccountParentType = new List<PickList>();
+            this.AccountReverse = new List<PickList>();
+            this.AccountSch6Group = new List<PickList>();
+            this.AccountTDSCategory = new List<PickList>();
+            this.AccountTDSDefault = new List<PickList>();
+            this.AccountType = new List<PickList>();
+            this.City = new List<PickList>();
+            this.Country = new List<PickList>();
+            this.SRNames = new List<PickList>();
+            this.State = new List<PickList>();
+            this.SupplierCategories = new List<PickList>();
+            this.SupplierTypes = new List<PickList>();
+        }
+        public List<PickList> AccountType { get; set; }
+        public List<PickList> AccountParentType { get; set; }
+        public List<PickList> AccountCategory { get; set; }
+        public List<PickList> AccountDateCategory { get; set; }
+        public List<PickList> AccountTDSCategory { get; set; }
+        public List<PickList> AccountTDSDefault { get; set; }
+        public List<PickList> AccountReverse { get; set; }
+        public List<PickList> AccountSch6Group { get; set; }
+        public List<PickList> Country { get; set; }
+        public List<PickList> State { get; set; }
+        public List<PickList> City { get; set; }
+        public List<PickList> SRNames { get; set; }
+        public List<PickList> SupplierTypes { get; set; }
+        public List<PickList> SupplierCategories { get; set; }
+   }
+
+    public class PickList
+    {
+        public string PickListValue { get; set; }
+        public string PickListName { get; set; }
+    }
+
+    public class JsonResults
+    {
+        public int ErrorCode { get; set; }
+        public string ErrorMessage { get; set; }
+        public string JSonstring { get; set; }
+    }
 }
