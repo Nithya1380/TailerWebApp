@@ -3,4 +3,5 @@
 TailerApp.controller("CompanyController", function ($scope) {
     $scope.CompanyID = 0;
     $scope.C_Details = [];
+    $rootScope.PopupHeader = 'Add Company';
 });

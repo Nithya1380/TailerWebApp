@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using DAL.Model;
+using DAL.Utilities;
 
 namespace TailerApp.UI.Admin
 {
@@ -13,5 +15,6 @@ namespace TailerApp.UI.Admin
         {
 
         }
+
     }
 }

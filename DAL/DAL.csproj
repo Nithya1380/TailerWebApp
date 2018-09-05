@@ -44,10 +44,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DBManager\CustomerManager.cs" />
+    <Compile Include="DBManager\AdminManagerSP.cs" />
     <Compile Include="DBManager\SecurityManager.cs" />
     <Compile Include="KanDB.cs" />
     <Compile Include="KanDelegate.cs" />
     <Compile Include="Model\Struct.cs" />
+    <Compile Include="Model\Structs_Admin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\Utils.cs" />
   </ItemGroup>
