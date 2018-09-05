@@ -40,6 +40,11 @@
             $scope.onCustomerClick = function (CustomerMasterID) {
                 alert(CustomerMasterID);
             };
+
+            $scope.OnAddNewCustomerClick = function () {
+                $window.open("AddNewCustomer.aspx", "AddCustomer", "resizable=yes,location=1,status=1,scrollbars=1,width=800,height=600");
+                return false;
+            };
         });
     </script>
 </asp:Content>
@@ -50,7 +55,7 @@
         </div>
         <div class="row">
             <div class="col-lg-2 col-md-2 col-sm-2 pull-right" style="margin-bottom:5px">
-                <button class="btn btn-lg btn-success" type="button" ng-click="GetCustomerList();"><i class="fas fa-plus-square"></i>&nbsp;Add New</button>
+                <button class="btn btn-lg btn-success" type="button" ng-click="OnAddNewCustomerClick();"><i class="fas fa-plus-square"></i>&nbsp;Add New</button>
             </div>
         </div>
         <div class="row">

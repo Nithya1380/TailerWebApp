@@ -160,6 +160,7 @@
     <Content Include="UI\Style\TailerStyle.css" />
     <Content Include="UI\Common\Login.aspx" />
     <Content Include="UI\Tailer\AccountMaster.aspx" />
+    <Content Include="UI\Tailer\AddNewCustomer.aspx" />
     <Content Include="UI\Tailer\CustomerList.aspx" />
     <Content Include="UI\Tailer\TailerHome.aspx" />
     <Content Include="ViewSwitcher.ascx" />
@@ -255,6 +256,13 @@
     </Compile>
     <Compile Include="UI\Tailer\AccountMaster.aspx.designer.cs">
       <DependentUpon>AccountMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tailer\AddNewCustomer.aspx.cs">
+      <DependentUpon>AddNewCustomer.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Tailer\AddNewCustomer.aspx.designer.cs">
+      <DependentUpon>AddNewCustomer.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Tailer\CustomerList.aspx.cs">
       <DependentUpon>CustomerList.aspx</DependentUpon>

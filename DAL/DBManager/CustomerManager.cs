@@ -285,5 +285,45 @@ namespace DAL.DBManager
             }
             return ret;
         }
+
+        public bool AddNewCustomer(int companyID, int userID, ref Customer customerObj)
+        {
+            bool ret = false;
+
+            try
+            {
+                this.Connect(this.GetConnString());
+                string spName = "AddNewCustomer";
+                this.ClearSPParams();
+                this.AddSPIntParam("@companyID", companyID);
+                this.AddSPIntParam("@UserID", userID);
+                this.AddSPStringParam("@customerObj", "");
+                this.AddSPReturnIntParam("@return");
+                
+                if(this.ExecuteNonSP(spName)>1)
+                {
+                    int retcode = this.GetOutValueInt("@return");
+
+                    switch (retcode)
+                    {
+                        case 1: ret = true;
+                            break;
+                        default: SetError(-1, "Failed to add new customer. Please try again later");
+                            break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = false;
+                Utils.Write(ex);
+            }
+            finally
+            {
+                this.ClearSPParams();
+                this.Disconnect();
+            }
+            return ret;
+        }
     }
 }

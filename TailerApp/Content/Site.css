@@ -118,7 +118,79 @@ border:0px;
 box-shadow: 0 2px 10px -2px rgba(0,0,0,.3);
 
 }
+.hha_name{
+font-size:12px;
+font-weight:bold;}
 
+.login_time{
+font-size:12px;
+margin-top:8px;
+font-weight:normal;}
+
+.logout{
+padding-top:5px;
+font-size:13px;
+text-align:center;
+font-weight:bold;}
+
+.icon_table{
+font-size:12px;
+color:#404E67;
+width:100%;
+cursor:pointer;
+}
+
+.icon_table td{
+padding-bottom: 8px;
+    padding-top: 8px;
+}
+
+.icon_table tr:last-child td{
+border-bottom:0px;}
+
+.icon_tr:hover{
+background-color:#f2f4f7;}
+
+.page_content{
+padding:15px;
+padding-top:20PX;
+z-index:-1;
+color:#404E67;
+}
+
+.page_title{
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 1px;
+    color: #1B2942;
+	font-family: 'Montserrat', Georgia, 'Times New Roman', Times, serif;
+	font-size: 20px;}
+
+.btn_drp{
+    padding-left: 10px;
+    padding-right: 8px;
+    color: #465157;
+    font-weight: 600;}
+
+.client_btn{
+   /* background-color: #0088cc;*/
+	background-color:#3a76ae;
+	border:1px solid #0576ae;
+	color:#fff;
+	font-size:12px;
+	padding: 3px 8px;
+	border-radius:4px;
+	margin-left:4px;
+	    FONT-FAMILY: Verdana,Arial,sans-serif;
+	margin-bottom:10px;}
+		
+.client_btn:hover{
+background-color:#3a76ae;
+    transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+	box-shadow: 0 4px 10px 0 rgba(0,0,0,0.2), 0 4px 20px 0 rgba(0,0,0,0.19);}
+	
+.btn-group{
+vertical-align:baseline;}
 .card {
     border: none;
     border-radius: 0;
