@@ -215,6 +215,7 @@ BEGIN TRAN
 			CSTNo VARCHAR(30),
 			CSTDate DATETIME
 
+<<<<<<< HEAD
 	ALTER TABLE BranchDetails
 		ADD ShortName VARCHAR(50),
 			BranchNo VARCHAR(20),
@@ -233,3 +234,122 @@ BEGIN TRAN
 ROLLBACK
 
 
+=======
+ROLLBACK
+
+BEGIN TRAN
+
+CREATE TABLE CustomerMaster
+(
+	CustomerMasterID INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+    CompanyID INT NOT NULL,
+    CreatedBy INT,
+    CreatedOn DATETIME,
+    Gender VARCHAR(10),
+    FullName VARCHAR(100),
+    FirstName VARCHAR(50),
+    MiddleName VARCHAR(20),
+    SurName VARCHAR(20),
+    ContactPerson VARCHAR(100),
+    BirthDate DATE,
+    OpenDate DATE,
+    CustomerAddressID INT,
+    PANNumber VARCHAR(20),
+    ReferenceNumber VARCHAR(100),
+    Remarks VARCHAR(100),
+    AnnDate DATETIME,
+    SRName VARCHAR(50),
+    CustomerCardNumber VARCHAR(100),
+    CONSTRAINT FK_CustomerMaster_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID),
+    CONSTRAINT FK_CustomerMaster_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID),
+    CONSTRAINT FK_CustomerMaster_CustomerAddressID  FOREIGN KEY(CustomerAddressID) REFERENCES Address(AddressID)    
+)
+
+CREATE TABLE AccountsMaster
+(
+	AccountMasterID INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+    CompanyID INT NOT NULL,
+	CustomerMasterID INT NOT NULL,
+    CreatedBy INT,
+    CreatedOn DATETIME,
+    AccountCode VARCHAR(20) NOT NULL,
+    AccountName VARCHAR(100) NOT NULL,
+    IsCommonAccount BIT,
+    IsActive BIT,
+    AccountType VARCHAR(50),
+    OpeningBalance MONEY,
+    ClosingBalance MONEY,
+    ParentGroup VARCHAR(50),
+    AccountCategory VARCHAR(50),
+    AccountCreatedDate DATETIME,
+    PartyAlert VARCHAR(50),
+    IsTDSApplicable BIT,
+    TDSCategory VARCHAR(50),
+    TDSDepriciation VARCHAR(50),
+    [Default] VARCHAR(50),
+    [Reverse] VARCHAR(50),
+    [Sequence] VARCHAR(20),
+    Sh6Group VARCHAR(50),
+    Sh6AccountNumber VARCHAR(50),
+	CONSTRAINT FK_AccountsMaster_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID),
+    CONSTRAINT FK_AccountsMaster_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID),
+    CONSTRAINT FK_AccountsMaster_CustomerMasterID FOREIGN KEY(CustomerMasterID) REFERENCES CustomerMaster(CustomerMasterID)
+)
+
+
+
+CREATE TABLE CustomerPhoto
+(
+   CustomerPhotoID INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+   CustomerMasterID INT NOT NULL,
+   CustomerPhoto VARBINARY(MAX),
+   CompanyID INT NOT NULL,
+   CreatedBy INT,
+   CreatedOn DATETIME,
+   CONSTRAINT FK_CustomerPhoto_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID),
+   CONSTRAINT FK_CustomerPhoto_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID),
+   CONSTRAINT FK_CustomerPhoto_CustomerMasterID FOREIGN KEY(CustomerMasterID) REFERENCES CustomerMaster(CustomerMasterID)
+)
+
+CREATE TABLE CustomerSupplierMaster
+(
+	SupplierMasterID INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+	CustomerMasterID INT NOT NULL,
+    CompanyID INT NOT NULL,
+    CreatedBy INT,
+    CreatedOn DATETIME,
+	SupplierCode VARCHAR(20),
+    SupplierName VARCHAR(100),
+    SupplierType VARCHAR(20),
+	SupplierCategory VARCHAR(50),
+    CSTNumber VARCHAR(30),
+    CSTDate DATETIME,
+    STDate DATETIME,
+    STNumber VARCHAR(30),
+    GSTINNumber VARCHAR(30),
+    TINNumber VARCHAR(30),
+    VATNumber VARCHAR(30),
+    SupplierPANNumber VARCHAR(30),
+    LessVATPercent FLOAT,
+    MarkUpPercent FLOAT,
+    MarkDownPercent FLOAT,
+    CreditDays INT,
+	CONSTRAINT FK_CustomerSupplierMaster_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID),
+    CONSTRAINT FK_CustomerSupplierMaster_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID),
+    CONSTRAINT FK_CustomerSupplierMaster_CustomerMasterID FOREIGN KEY(CustomerMasterID) REFERENCES CustomerMaster(CustomerMasterID)
+)
+
+CREATE TABLE CustomerBranchMaster
+(
+	CustomerBranchMasterID INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+	CustomerMasterID INT NOT NULL,
+	BranchID INT NOT NULL,
+    CompanyID INT NOT NULL,
+    CreatedBy INT,
+    CreatedOn DATETIME,
+	CONSTRAINT FK_CustomerBranchMaster_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID),
+    CONSTRAINT FK_CustomerBranchMaster_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID),
+    CONSTRAINT FK_CustomerBranchMaster_CustomerMasterID FOREIGN KEY(CustomerMasterID) REFERENCES CustomerMaster(CustomerMasterID)
+)
+ROLLBACK TRAN
+>>>>>>> f130d45c042f98d1922ff32db2bbb7d0feb68bea

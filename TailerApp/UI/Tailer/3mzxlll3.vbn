@@ -1,49 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AccountMaster.aspx.cs" Inherits="TailerApp.UI.Tailer.AccountMaster" %>
 <asp:Content ID="content_Head" runat="server" ContentPlaceHolderID="HeaderContent">
-    <script src="../../Scripts/AngularJS/angular.js"></script>
-     <script type="text/javascript" lang="javascript">
-         $(function () {
-                  $("#datepicker").datepicker();
-             
-         });
-
-         var tailerApp = angular.module("TailerApp", []);
-         tailerApp.controller("AccountsController", function ($scope, $window, $http, $rootScope) {
-             $scope.CustomerPickLists = {};
-             $scope.customerID = 0;
-
-             $scope.init = function () {
-                 $scope.GetCustomerDropdowns();
-             };
-
-             $scope.GetCustomerDropdowns = function () {
-                 $scope.CustomerPickLists = {};
-
-                 $http({
-                     type: "POST",
-                     url: "AccountMaster.aspx/GetCustomerPickLists",
-                     data: { customerID: $scope.customerID },
-                     dataType: "json",
-                     headers: {contentType:"application/json"}
-                 }).done(function onSuccess(response) {
-                     if(response.d.ErrorCode==-1001)
-                     {
-                         //Session Expired
-                         return false;
-                     }
-                     if (response.d.ErrorCode!=0) {
-                         alert(response.d.ErrorMessage);
-                         return false;
-                     }
-
-                     $scope.CustomerPickLists = response.d.CustomerPickLists;
-
-                 }, function onFailure(error) {
-
-                 });
-             };
-         });
-    </script>
+    
 </asp:Content>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container bootstrap snippet">
@@ -134,12 +91,12 @@
                                             <button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i>&nbsp;Save</button>
                                         </div>
                                     </div>
-                                    <div class="form-horizontal">
+                                    <div class="form-horizontal row">
                                         <div class="form-group row">
-                                            <label class="checkbox-inline col-sm-2" style="font-weight:bold;margin-left:20px">
+                                            <label class="checkbox-inline col-sm-2 lbl-text-right" style="font-weight: bold;">
                                                 <input type="checkbox" class="checkbox" name="chkCommonAccount" id="chkCommonAccount" />Common Account
                                             </label>
-                                            <label class="checkbox-inline col-sm-2" style="font-weight:bold;">
+                                            <label class="checkbox-inline col-sm-2 lbl-text-right" style="font-weight: bold;">
                                                 <input type="checkbox" class="checkbox" name="chkActiveAccount" id="chkActiveAccount" />Active Account
                                             </label>
                                         </div>
@@ -164,7 +121,7 @@
                                                 </select>
                                             </div>
 
-                                            <label for="drpParentGroup" class="col-sm-2 lbl-text-right">Parent Group</label>
+                                            <label for="drpParentGroup" class="col-sm-2">Parent Group</label>
                                             <div class="col-sm-4">
                                                 <select class="form-control" id="drpParentGroup">
                                                     <option>Select Parent Group</option>
@@ -172,33 +129,33 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="drpCategory" class="col-sm-2 lbl-text-right">Category</label>
+                                            <label for="drpCategory" class="col-sm-2">Category</label>
                                             <div class="col-sm-4">
                                                 <select class="form-control" id="drpCategory">
                                                     <option>Select Category</option>
                                                 </select>
                                             </div>
 
-                                            <label for="txtPartyAlert" class="col-sm-2 lbl-text-right">Party Alert</label>
+                                            <label for="txtPartyAlert" class="col-sm-2">Party Alert</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" name="txtPartyAlert" id="txtPartyAlert" placeholder="Party Alert" />
                                             </div>
                                         </div>
 
                                         <div class="form-group row">
-                                            <label for="txtOpening" class="col-sm-2 lbl-text-right">Opening</label>
+                                            <label for="txtOpening" class="col-sm-2">Opening</label>
                                             <div class="col-sm-4">
-                                                <input type="number" class="form-control" name="txtOpening" id="txtOpening" style="display: inline !important; width: 90%" />&nbsp;Cr.
+                                                <input type="number" class="form-control" name="txtOpening" id="txtOpening" style="display: inline !important; width: 90%" />Cr.
                                             </div>
 
-                                            <label for="txtClosing" class="col-sm-2 lbl-text-right">Closing</label>
+                                            <label for="txtClosing" class="col-sm-2">Closing</label>
                                             <div class="col-sm-4">
-                                                <input type="number" class="form-control" name="txtClosing" id="txtClosing" style="display: inline !important; width: 90%" />&nbsp;Cr.
+                                                <input type="number" class="form-control" name="txtClosing" id="txtClosing" style="display: inline !important; width: 90%" />Cr.
                                             </div>
                                         </div>
 
                                         <div class="form-group row">
-                                            <label for="txtCreatedDate" class="col-sm-2 lbl-text-right">Created Date</label>
+                                            <label for="txtCreatedDate" class="col-sm-2">Created Date</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" name="txtCreatedDate" id="txtCreatedDate" placeholder="Created Date" />
                                             </div>
@@ -209,13 +166,10 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="checkbox-inline col-sm-2" style="font-weight: bold;margin-left:20px">
+                                            <label class="checkbox-inline col-sm-2" style="font-weight: bold;">
                                                 <input type="checkbox" class="checkbox" name="last_name" id="chkTDSApplicable" />TDS Applicable
                                             </label>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label for="drpTDSCategory" class="col-sm-2 lbl-text-right" style="text-align: right">TDS Category</label>
+                                            <label for="drpTDSCategory" class="col-sm-2" style="text-align: right">TDS Category</label>
                                             <div class="col-sm-4">
                                                 <select class="form-control" id="drpTDSCategory">
                                                     <option>Select Category</option>
@@ -224,14 +178,14 @@
                                         </div>
 
                                         <div class="form-group row">
-                                            <label for="drpDefault" class="col-sm-2 lbl-text-right">Default</label>
+                                            <label for="drpDefault" class="col-sm-2">Default</label>
                                             <div class="col-sm-4">
                                                 <select class="form-control" id="drpDefault">
                                                     <option>Select Default</option>
                                                 </select>
                                             </div>
 
-                                            <label for="drpReverse" class="col-sm-2 lbl-text-right">Reverse</label>
+                                            <label for="drpReverse" class="col-sm-2">Reverse</label>
                                             <div class="col-sm-4">
                                                 <select class="form-control" id="drpReverse">
                                                     <option>Select Reverse</option>
@@ -240,14 +194,14 @@
                                         </div>
 
                                         <div class="form-group row">
-                                            <label for="drpSch6Group" class="col-sm-2 lbl-text-right">Sch6 Group</label>
+                                            <label for="drpSch6Group" class="col-sm-2">Sch6 Group</label>
                                             <div class="col-sm-4">
                                                 <select class="form-control" id="drpSch6Group">
                                                     <option>Select Sch6 Group</option>
                                                 </select>
                                             </div>
 
-                                            <label for="txtSch6AccountNo" class="col-sm-2 lbl-text-right">Sch6 Account No</label>
+                                            <label for="txtSch6AccountNo" class="col-sm-2">Sch6 Account No</label>
                                             <div class="col-sm-4">
                                                 <input type="number" class="form-control" name="txtOpening" id="txtSch6AccountNo" />
                                             </div>
@@ -259,19 +213,12 @@
                                 <div class="tab-pane" id="customerTab">
                                     <br />
                                     <div class="form-horizontal">
-                                        <div class="row">
-                                            <div class="col-lg-2 col-md-2 col-sm-2 pull-right">
-                                                <button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i>&nbsp;Save</button>
-                                            </div>
-                                        </div>
-                                         <div class="form-group row">
-                                         </div>
                                         <div class="form-group row">
-                                            <label for="txtFullName" class="col-sm-2 lbl-text-right">Full Name</label>
+                                            <label for="txtFullName" class="col-sm-2">Full Name</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" name="txtFullName" id="txtFullName" placeholder="Full Name" title="enter your Full Name.">
                                             </div>
-                                            <label for="drpSex" class="col-sm-2 lbl-text-right">Sex</label>
+                                            <label for="drpSex" class="col-sm-2">Sex</label>
                                             <div class="col-sm-4">
                                                 <select class="form-control" id="drpSex">
                                                     <option>Male</option>
@@ -280,53 +227,53 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="txtFirstName" class="col-sm-2 lbl-text-right">First Name</label>
+                                            <label for="txtFirstName" class="col-sm-2">First Name</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" name="txtFullName" id="txtFirstName" placeholder="First Name" title="enter your First Name.">
                                             </div>
-                                            <label for="txtLastName" class="col-sm-2 lbl-text-right">Last Name</label>
+                                            <label for="txtLastName" class="col-sm-2">Last Name</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" name="txtLastName" id="txtLastName" placeholder="Last Name" title="enter your Last Name." />
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="txtSurName" class="col-sm-2 lbl-text-right">Sur Name</label>
+                                            <label for="txtSurName" class="col-sm-2">Sur Name</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" name="txtSurName" id="txtSurName" placeholder="Sur Name" title="enter your Sur Name." />
                                             </div>
-                                            <label for="txtContactPerson" class="col-sm-2 lbl-text-right">Contact Person</label>
+                                            <label for="txtContactPerson" class="col-sm-2">Contact Person</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" name="txtContactPerson" id="txtContactPerson" placeholder="Contact Person" title="enter Contact Person Name." />
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="txtBirthDate" class="col-sm-2 lbl-text-right">Birth Date</label>
+                                            <label for="txtBirthDate" class="col-sm-2">Birth Date</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" name="txtBirthDate" id="txtBirthDate" placeholder="Birth Date" title="enter Birth Date." />
                                             </div>
-                                            <label for="txtOpenDate" class="col-sm-2 lbl-text-right">Open Date</label>
+                                            <label for="txtOpenDate" class="col-sm-2">Open Date</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" name="txtOpenDate" id="txtOpenDate" placeholder="Open Date" title="enter Open Date." />
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="txtAddress1" class="col-sm-2 lbl-text-right">Address 1</label>
+                                            <label for="txtAddress1" class="col-sm-2">Address 1</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" name="txtAddress1" id="txtAddress1" placeholder="Address 1" />
                                             </div>
-                                            <label for="txtAddress2" class="col-sm-2 lbl-text-right">Address 2</label>
+                                            <label for="txtAddress2" class="col-sm-2">Address 2</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" name="txtAddress2" id="txtAddress2" placeholder="Address 2" />
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="drpCountry" class="col-sm-2 lbl-text-right">Country</label>
+                                            <label for="drpCountry" class="col-sm-2">Country</label>
                                             <div class="col-sm-4">
                                                 <select class="form-control" id="drpCountry">
                                                     <option>Select Country</option>
                                                 </select>
                                             </div>
-                                            <label for="drpState" class="col-sm-2 lbl-text-right">State</label>
+                                            <label for="drpState" class="col-sm-2">State</label>
                                             <div class="col-sm-4">
                                                 <select class="form-control" id="drpState">
                                                     <option>Select State</option>
@@ -334,68 +281,75 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="drpCity" class="col-sm-2 lbl-text-right">City</label>
+                                            <label for="drpCity" class="col-sm-2">City</label>
                                             <div class="col-sm-4">
                                                 <select class="form-control" id="drpCity">
                                                     <option>Select City</option>
                                                 </select>
                                             </div>
-                                            <label for="txtPin" class="col-sm-2 lbl-text-right">Pin</label>
+                                            <label for="txtPin" class="col-sm-2">Pin</label>
                                             <div class="col-sm-4">
                                                 <input type="number" class="form-control" name="txtPin" id="txtPin" />
                                             </div>
                                         </div>
 
                                         <div class="form-group row">
-                                            <label for="txtMobile" class="col-sm-2 lbl-text-right">Mobile</label>
+                                            <label for="txtMobile" class="col-sm-2">Mobile</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" name="txtMobile" id="txtMobile" placeholder="Mobile" title="enter your Mobile Number.">
                                             </div>
-                                            <label for="txtPhone" class="col-sm-2 lbl-text-right">Phone</label>
+                                            <label for="txtPhone" class="col-sm-2">Phone</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" name="txtPhone" id="txtPhone" placeholder="Phone" title="enter your Phone Number." />
                                             </div>
                                         </div>
 
                                         <div class="form-group row">
-                                            <label for="txtEmail" class="col-sm-2 lbl-text-right">Email</label>
+                                            <label for="txtEmail" class="col-sm-2">Email</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" name="txtMobile" id="txtEmail" placeholder="Email" title="enter your Email.">
                                             </div>
-                                            <label for="txtReferenceNo" class="col-sm-2 lbl-text-right">Reference No</label>
+                                            <label for="txtReferenceNo" class="col-sm-2">Reference No</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" name="txtReferenceNo" id="txtReferenceNo" placeholder="Reference Number" title="Enter Reference Number." />
                                             </div>
                                         </div>
 
                                         <div class="form-group row">
-                                            <label for="txtPANNo" class="col-sm-2 lbl-text-right">PAN No</label>
+                                            <label for="txtPANNo" class="col-sm-2">PAN No</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" name="txtPANNo" id="txtPANNo" placeholder="PAN No" title="enter your PAN No.">
                                             </div>
-                                            <label for="txtAnnDate" class="col-sm-2 lbl-text-right">Ann Date</label>
+                                            <label for="txtAnnDate" class="col-sm-2">Ann Date</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" name="txtAnnDate" id="txtAnnDate" placeholder="Ann Date" title="Enter Ann Date." />
                                             </div>
                                         </div>
 
                                         <div class="form-group row">
-                                            <label for="txtRemarks" class="col-sm-2 lbl-text-right">Remarks</label>
+                                            <label for="txtRemarks" class="col-sm-2">Remarks</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" name="txtRemarks" id="txtRemarks" placeholder="Remarks" title="enter Remarks.">
                                             </div>
-                                            <label for="txtCustomerCardNo" class="col-sm-2 lbl-text-right">Customer Card No</label>
+                                            <label for="txtCustomerCardNo" class="col-sm-2">Customer Card No</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" name="txtCustomerCardNo" id="txtCustomerCardNo" placeholder="Customer Card No" title="Enter Customer Card No." />
                                             </div>
                                         </div>
 
                                         <div class="form-group row">
-                                            <label for="drpSRName" class="col-sm-2 lbl-text-right">SR Name</label>
+                                            <label for="drpSRName" class="col-sm-2">SR Name</label>
                                             <div class="col-sm-4">
                                                 <select class="form-control" id="drpSRName">
                                                     <option>Select SR Name</option>
                                                 </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-xs-6">
+                                                <br />
+                                                <button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i>&nbsp;Save</button>
                                             </div>
                                         </div>
                                     </div>
@@ -404,14 +358,13 @@
                                 </div>
                                 <!--/tab-pane-->
                                 <div class="tab-pane" id="loyaltyTab">
-                                    <br />
-                                     <div class="row">
-                                            <div class="col-lg-2 col-md-2 col-sm-2 pull-right">
-                                                <button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i>&nbsp;Save</button>
-                                            </div>
+
+                                    <div class="form-group">
+                                        <div class="col-xs-6">
+                                            <br />
+                                            <button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i>&nbsp;Save</button>
                                         </div>
-                                         <div class="form-group row">
-                                         </div>
+                                    </div>
                                 </div>
 
                                 <div class="tab-pane" id="customerAndBranchTab">
@@ -468,92 +421,11 @@
                                 </div>
 
                                 <div class="tab-pane" id="supplierTab">
-                                    <br />
-                                    <div class="row">
-                                        <div class="col-lg-2 col-md-2 col-sm-2 pull-right">
-                                            <button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i>&nbsp;Save</button>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="txtSupplierCode" class="col-sm-2 lbl-text-right">Code<span style="color:red">*</span></label>
-                                        <div class="col-sm-4">
-                                            <input type="text" class="form-control" name="txtSupplierCode" id="txtSupplierCode" placeholder="Code" />
-                                        </div>
-                                        <label for="txtSupplierName" class="col-sm-2 lbl-text-right">Name<span style="color:red">*</span></label>
-                                        <div class="col-sm-4">
-                                           <input type="text" class="form-control" name="txtSupplierName" id="txtSupplierName" placeholder="Name" />
-                                        </div>
-                                    </div>
-                                     <div class="form-group row">
-                                        <label for="drpSupplierType" class="col-sm-2 lbl-text-right">Type<span style="color:red">*</span></label>
-                                        <div class="col-sm-4">
-                                            <select class="form-control" id="drpSupplierType"></select>
-                                        </div>
-                                        <label for="drpSupplierCategory" class="col-sm-2 lbl-text-right">Category</label>
-                                        <div class="col-sm-4">
-                                           <select class="form-control" id="drpSupplierCategory"></select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="txtSupplierCSTNo" class="col-sm-2 lbl-text-right">CST No</label>
-                                        <div class="col-sm-4">
-                                            <input type="number" class="form-control" name="txtSupplierCode" id="txtSupplierCSTNo" />
-                                        </div>
-                                        <label for="txtSupplierCSTDate" class="col-sm-2 lbl-text-right">CST Date</label>
-                                        <div class="col-sm-4">
-                                           <input type="text" class="form-control" name="txtSupplierCSTDate" id="txtSupplierCSTDate" placeholder="CST Date" />
-                                        </div>
-                                    </div>
-                                     <div class="form-group row">
-                                        <label for="txtSupplierSTNo" class="col-sm-2 lbl-text-right">ST No</label>
-                                        <div class="col-sm-4">
-                                            <input type="number" class="form-control" name="txtSupplierSTNo" id="txtSupplierSTNo" />
-                                        </div>
-                                        <label for="txtSupplierSTDate" class="col-sm-2 lbl-text-right">ST Date</label>
-                                        <div class="col-sm-4">
-                                           <input type="text" class="form-control" name="txtSupplierSTDate" id="txtSupplierSTDate" placeholder="ST Date" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="txtSupplierGSTINo" class="col-sm-2 lbl-text-right">GSTIN No<span style="color:red">*</span></label>
-                                        <div class="col-sm-4">
-                                            <input type="number" class="form-control" name="txtSupplierGSTINo" id="txtSupplierGSTINo" />
-                                        </div>
-                                        <label for="txtSupplierTINNo" class="col-sm-2 lbl-text-right">TIN No</label>
-                                        <div class="col-sm-4">
-                                           <input type="number" class="form-control" name="txtSupplierTINNo" id="txtSupplierTINNo" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="txtSupplierVATNo" class="col-sm-2 lbl-text-right">VAT No<span style="color:red">*</span></label>
-                                        <div class="col-sm-4">
-                                            <input type="number" class="form-control" name="txtSupplierVATNo" id="txtSupplierVATNo" />
-                                        </div>
-                                        <label for="txtSupplierVATLess" class="col-sm-2 lbl-text-right">Less(VATAV)%</label>
-                                        <div class="col-sm-4">
-                                           <input type="number" class="form-control" name="txtSupplierVATLess" id="txtSupplierVATLess" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="txtSupplierPANNo" class="col-sm-2 lbl-text-right">PAN No</label>
-                                        <div class="col-sm-4">
-                                            <input type="number" class="form-control" name="txtSupplierPANNo" id="txtSupplierPANNo" />
-                                        </div>
-                                        <label for="txtSupplierMarkUp" class="col-sm-2 lbl-text-right">Mark Up%</label>
-                                        <div class="col-sm-4">
-                                           <input type="number" class="form-control" name="txtSupplierMarkUp" id="txtSupplierMarkUp" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="txtSupplierMarkDown" class="col-sm-2 lbl-text-right">Mark Down%</label>
-                                        <div class="col-sm-4">
-                                            <input type="number" class="form-control" name="txtSupplierMarkDown" id="txtSupplierMarkDown" />
-                                        </div>
-                                        <label for="txtSupplierCreditDays" class="col-sm-2 lbl-text-right">Credit Days</label>
-                                        <div class="col-sm-4">
-                                           <input type="number" class="form-control" name="txtSupplierCreditDays" id="txtSupplierCreditDays" />
+                                    <hr>
+                                    <div class="form-group">
+                                        <div class="col-xs-6">
+                                            <br />
+                                            <button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i>Save</button>
                                         </div>
                                     </div>
                                 </div>
@@ -568,6 +440,4 @@
 
         </div>
     </div><!--/row-->
-
-   
 </asp:Content>

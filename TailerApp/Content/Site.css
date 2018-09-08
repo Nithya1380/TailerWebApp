@@ -29,3 +29,331 @@ textarea {
         padding: 0;
     }
 }
+
+body{
+background-color:#f5f7fa;}
+
+.header{
+	background-image:url(Images/top_bg.gif);
+	font-family: 'Montserrat', Georgia, 'Times New Roman', Times, serif;
+	height:51px;
+	padding:0px;
+}
+
+.ApplctnTitle {
+    font-size: 22px;
+    font-style: oblique;
+    color: #fff;
+    font-weight: bold;
+    FONT-FAMILY: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+}
+
+.navbar-brand {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    text-align: center;
+    margin: auto;
+}
+
+
+
+.sub_header{
+background-color:#fff;
+    -webkit-box-shadow: 2px 4px 20px -4px rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 4px 20px -4px rgba(0, 0, 0, 0.1);
+	padding:0 15px;}
+
+.sub_menu_sec{
+float:left;
+color: #404E67;
+padding:10px 7px;
+font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+border-bottom:2px solid #fff;
+cursor:default;}
+
+.sub_menu_sec:hover{
+border-bottom:2px solid #00b5b8;}
+
+.submenu_txt{
+font-size:15px;}
+
+.menu_dropdown{
+background-color:#fff;
+position:absolute;
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	margin:0 25px;
+	margin-top:3px;
+	z-index:1;
+}
+
+.sub_menu_drop{
+float:left;
+color: #404E67;
+padding:12px 9px;
+font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+cursor:default;
+width:auto;
+  }
+ .sub_menu_drop:hover{
+ background-color:#f5f7fa;
+ color:#000;}
+ 
+ .page_name{
+ background-color:#dfdfdf;
+ text-align:center;
+ padding:2px 0px;
+ color:#000;
+ font-weight:bold;}
+ 
+.dropdown-menu{
+top:34px;
+left: unset;
+right:0;
+padding:8px;
+font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+border:0px;
+box-shadow: 0 2px 10px -2px rgba(0,0,0,.3);
+
+}
+.hha_name{
+font-size:12px;
+font-weight:bold;}
+
+.login_time{
+font-size:12px;
+margin-top:8px;
+font-weight:normal;}
+
+.logout{
+padding-top:5px;
+font-size:13px;
+text-align:center;
+font-weight:bold;}
+
+.icon_table{
+font-size:12px;
+color:#404E67;
+width:100%;
+cursor:pointer;
+}
+
+.icon_table td{
+padding-bottom: 8px;
+    padding-top: 8px;
+}
+
+.icon_table tr:last-child td{
+border-bottom:0px;}
+
+.icon_tr:hover{
+background-color:#f2f4f7;}
+
+.page_content{
+padding:15px;
+padding-top:20PX;
+z-index:-1;
+color:#404E67;
+}
+
+.page_title{
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 1px;
+    color: #1B2942;
+	font-family: 'Montserrat', Georgia, 'Times New Roman', Times, serif;
+	font-size: 20px;}
+
+.btn_drp{
+    padding-left: 10px;
+    padding-right: 8px;
+    color: #465157;
+    font-weight: 600;}
+
+.client_btn{
+   /* background-color: #0088cc;*/
+	background-color:#3a76ae;
+	border:1px solid #0576ae;
+	color:#fff;
+	font-size:12px;
+	padding: 3px 8px;
+	border-radius:4px;
+	margin-left:4px;
+	    FONT-FAMILY: Verdana,Arial,sans-serif;
+	margin-bottom:10px;}
+		
+.client_btn:hover{
+background-color:#3a76ae;
+    transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+	box-shadow: 0 4px 10px 0 rgba(0,0,0,0.2), 0 4px 20px 0 rgba(0,0,0,0.19);}
+	
+.btn-group{
+vertical-align:baseline;}
+.card {
+    border: none;
+    border-radius: 0;
+    -webkit-box-shadow: 0 10px 40px 0 rgba(62, 57, 107, 0.07), 0 2px 9px 0 rgba(62, 57, 107, 0.06);
+    box-shadow: 0 10px 40px 0 rgba(62, 57, 107, 0.07), 0 2px 9px 0 rgba(62, 57, 107, 0.06);
+    background-color: #fff;
+    padding: 1.5rem 1.5rem;
+    margin-bottom: 15px;
+}
+
+.profilePic{
+width: 84px;
+    height: 99px;}
+
+.profilePic_outer{
+padding:4px;
+border:1px solid #ddd;}
+
+.clientName{
+font-weight:bold;
+margin-left:15px;
+font-size:19px;
+color:#009900;}
+
+.clientLoc{
+font-size:12px;
+margin-left:15px;
+margin-top:3px;
+font-size:15px;}
+
+.profileLabel{
+font-size:15px;
+/*font-weight:bold;*/}
+
+.profileValue{
+font-size:14px;}
+
+.profileValue1{
+font-size:15px;}
+
+.profile_table1 td{
+padding-bottom:5px;
+padding-top:3px;
+border-bottom:1px solid #f3f5f8;}
+
+.profile_table tr:first td{
+border-right:1px solid #ddd;}
+
+.profile_table td{
+padding-bottom:5px;
+padding-top:6px;
+border:1px solid rgb(206, 217, 234);;}
+
+.card_header{
+font-weight:bold;
+letter-spacing: 1.8px;}
+
+.card_header{
+font-size:16px;}
+
+.card_sub_header{
+margin-top:20px;
+padding-bottom:5px;
+border-bottom:1px solid #dfe1e6;
+font-size:16px;	}
+
+.card_content{
+}
+
+.card_content table td{
+padding-bottom:7px;}
+
+.cernterPop{
+background-color:#fff;
+border:1px solid #ccc;
+z-index:1;}
+
+.popup_bar{
+background-color:#3a76ae;
+color:#fff;
+padding-top:8px;
+padding-bottom:8px;
+font-weight:500;
+padding-left:8px;
+font-size:18px;
+font-family: 'Montserrat', Georgia, 'Times New Roman', Times, serif;
+text-align:center;
+border-bottom:3px solid #ff9800;}
+
+.popup_content{
+padding:10px;
+color:#404E67;
+padding-left:20px;
+padding-right:20px;}
+
+.popup_edit td{
+padding-top:7px;
+padding-bottom:8px;
+}
+
+.btn_close{
+float:right;
+margin-right:10px;}
+
+.black_overlay{
+display: none;
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    z-index: 0;
+    -moz-opacity: 0.45;
+    opacity: .45;
+    filter: alpha(opacity=45);
+    overflow: auto;}
+	
+.popbutton_sec{
+    padding-top: 10px;
+    background-color: #ececec;
+    margin-left: -20px;
+    margin-right: -20px;
+    margin-bottom: -10px;
+    border-top: 1px solid #ddd;}
+	
+.back_shade{
+background-color:#f7f8fc;
+padding-right:4px;}
+
+.profileLabel_pop{
+font-weight:bold;}
+
+.profile_grid{
+border-collapse:collapse;
+width:100%;
+font-size:14px;}
+
+.profile_grid th{
+font-weight:bold;
+padding-top:5px;
+padding-bottom:8px;
+border-bottom:1px solid #ddd;}
+
+.profile_grid td{
+border-bottom:1px solid #ddd;
+padding-top:3px;
+padding-bottom:3px;}
+
+.fullscreen{
+    z-index: 9999; 
+    width: 100%; 
+    height: 100%; 
+    position: fixed; 
+	overflow:auto;
+    top: 0; 
+    left: 0; 
+ }
+
+
+.expand{
+display:block;}
+
+ .lbl-text-right{
+            text-align:right;
+        }
