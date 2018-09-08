@@ -215,4 +215,21 @@ BEGIN TRAN
 			CSTNo VARCHAR(30),
 			CSTDate DATETIME
 
+	ALTER TABLE BranchDetails
+		ADD ShortName VARCHAR(50),
+			BranchNo VARCHAR(20),
+			BranchType VARCHAR(5),
+			BranchGSTIN VARCHAR(40),
+			BranchTINNo VARCHAR(40),
+			BranchSTDate DATETIME,
+			ExciseAddress VARCHAR(40),
+			ExciseDivision VARCHAR(40),
+			ExciseRange VARCHAR(40),
+			ExciseState VARCHAR(40),
+			PeriodFormDate DATETIME,
+			PeriodToDate DATETIME,
+			BranchDivision VARCHAR(40)
+
 ROLLBACK
+
+
