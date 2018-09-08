@@ -215,7 +215,6 @@ BEGIN TRAN
 			CSTNo VARCHAR(30),
 			CSTDate DATETIME
 
-<<<<<<< HEAD
 	ALTER TABLE BranchDetails
 		ADD ShortName VARCHAR(50),
 			BranchNo VARCHAR(20),
@@ -231,10 +230,6 @@ BEGIN TRAN
 			PeriodToDate DATETIME,
 			BranchDivision VARCHAR(40)
 
-ROLLBACK
-
-
-=======
 ROLLBACK
 
 BEGIN TRAN
@@ -352,4 +347,3 @@ CREATE TABLE CustomerBranchMaster
     CONSTRAINT FK_CustomerBranchMaster_CustomerMasterID FOREIGN KEY(CustomerMasterID) REFERENCES CustomerMaster(CustomerMasterID)
 )
 ROLLBACK TRAN
->>>>>>> f130d45c042f98d1922ff32db2bbb7d0feb68bea
