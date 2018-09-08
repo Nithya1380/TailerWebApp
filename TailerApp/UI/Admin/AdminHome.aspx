@@ -37,7 +37,8 @@
                }).then(function successCallback(response) {
 
                    if (response.data.d.errorCode == 10001) {
-                       window.location = '../../SessionExpired.aspx';
+                       //window.location = '../../SessionExpired.aspx';
+                       return false;
                    }
                    else if (response.data.d.errorCode == 0) {
                        $scope.CompanyAndBranchList = JSON.parse(response.data.d.CompanyDetails);
@@ -95,7 +96,8 @@
                }).then(function successCallback(response) {
 
                    if (response.data.d.errorCode == 10001) {
-                       window.location = '../../SessionExpired.aspx';
+                       //window.location = '../../SessionExpired.aspx';
+                       return false;
                    }
                    else if (response.data.d.errorCode == 0) {
                        URL = URL + response.data.d.String_Outvalue;

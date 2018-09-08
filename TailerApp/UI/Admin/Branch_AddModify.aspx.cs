@@ -12,7 +12,7 @@ using System.Web.Services;
 
 namespace TailerApp.UI.Admin
 {
-    public partial class Branch_AddModify : System.Web.UI.Page
+    public partial class Branch_AddModify : PageBase
     {
         public int CompanyID = 0;
         public int BranchID = 0;
@@ -29,10 +29,17 @@ namespace TailerApp.UI.Admin
         public static Struct_Branch GetBranchDetails(string CompanyID, string BranchID)
         {
             Struct_Branch OutPutData = new Struct_Branch();
+            TailerApp.Common.LoginUser currentUser;
             try
             {
+                if (!GetUserSession(out currentUser))
+                {
+                    OutPutData.errorCode = 10001;
+                    OutPutData.errorMessage = "";
+                }
+
                 AdminManagerSP AdminManager = new AdminManagerSP();
-                if (!AdminManager._C_GetBranchDetails(string.IsNullOrEmpty(CompanyID) ? 0 : Convert.ToInt32(CompanyID), 0, string.IsNullOrEmpty(BranchID) ? 0 : Convert.ToInt32(BranchID), out OutPutData))
+                if (!AdminManager._C_GetBranchDetails(string.IsNullOrEmpty(CompanyID) ? 0 : Convert.ToInt32(CompanyID), currentUser.UserId, string.IsNullOrEmpty(BranchID) ? 0 : Convert.ToInt32(BranchID), out OutPutData))
                 {
                     OutPutData.errorCode = AdminManager.GetLastErrorCode();
                     OutPutData.errorMessage = AdminManager.GetLastError();
@@ -53,10 +60,17 @@ namespace TailerApp.UI.Admin
         public static JSONReturnData SaveBranchDetails(string CompanyID, string BranchID, string BranchDetails, string AddressDetails)
         {
             JSONReturnData OutPutData = new JSONReturnData();
+            TailerApp.Common.LoginUser currentUser;
             try
             {
+                if (!GetUserSession(out currentUser))
+                {
+                    OutPutData.errorCode = 10001;
+                    OutPutData.errorMessage = "";
+                }
+
                 AdminManagerSP AdminManager = new AdminManagerSP();
-                if (!AdminManager._C_AddModifyBranch(string.IsNullOrEmpty(CompanyID) ? 0 : Convert.ToInt32(CompanyID), 0, string.IsNullOrEmpty(BranchID) ? 0 : Convert.ToInt32(BranchID), BranchDetails, AddressDetails))
+                if (!AdminManager._C_AddModifyBranch(string.IsNullOrEmpty(CompanyID) ? 0 : Convert.ToInt32(CompanyID), currentUser.UserId, string.IsNullOrEmpty(BranchID) ? 0 : Convert.ToInt32(BranchID), BranchDetails, AddressDetails))
                 {
                     OutPutData.errorCode = AdminManager.GetLastErrorCode();
                     OutPutData.errorMessage = AdminManager.GetLastError();
@@ -71,43 +85,6 @@ namespace TailerApp.UI.Admin
             }
             return OutPutData;
         }
-
-
-        protected string GetDecryptedQueryString(string queryString)
-        {
-            string rowUrl = null;
-            string queryStringVal = null;
-            try
-            {
-                if (HttpContext.Current.Request.Url.ToString().Contains('?'))
-                {
-                    rowUrl = HttpContext.Current.Request.Url.ToString().Split('?')[1];
-                    string[] actualQueryStrings = TailerApp.Common.Cryptography.Decrypt(rowUrl.Substring(rowUrl.IndexOf('?') + 1)).Split(new char[] { '&' });
-                    if (actualQueryStrings != null && actualQueryStrings.Length > 0)
-                    {
-                        var objQuery = actualQueryStrings.Where(str => str.StartsWith(queryString + "="));
-                        var queryString_EqualsCount = 0;
-                        if (objQuery.Count() > 0)
-                        {
-                            queryStringVal = objQuery.First().Split('=')[1];
-
-                            queryString_EqualsCount = objQuery.First().Count(X => X == '=');
-                        }
-
-                        if (queryString_EqualsCount >= 2)
-                        {
-                            int firstEqualIndex = objQuery.First().IndexOf('=');
-                            queryStringVal = objQuery.First().Substring(firstEqualIndex + 1);
-                        }
-
-                    }
-                }
-            }
-            catch (Exception ee)
-            {
-                Utils.Write(ee);
-            }
-            return queryStringVal;
-        }
+        
     }
 }

@@ -12,7 +12,7 @@ using System.Web.Services;
 
 namespace TailerApp.UI.Admin
 {
-    public partial class AdminHome : System.Web.UI.Page
+    public partial class AdminHome : PageBase
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -23,8 +23,14 @@ namespace TailerApp.UI.Admin
         public static JSONReturnData GetURLEncryptedData(string URLdata)
         {
             JSONReturnData records = new JSONReturnData();
+            TailerApp.Common.LoginUser currentUser;
             try
             {
+                if (!GetUserSession(out currentUser))
+                {
+                    records.errorCode = 10001;
+                    records.errorMessage = "";
+                }
                 string EncryptedData = TailerApp.Common.Cryptography.Encrypt(URLdata);
                 records.errorCode = 0;
                 records.errorMessage = "";

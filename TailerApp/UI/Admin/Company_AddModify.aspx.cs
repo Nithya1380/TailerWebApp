@@ -13,7 +13,7 @@ using System.Web.Services;
 
 namespace TailerApp.UI.Admin
 {
-    public partial class Company_AddModify : System.Web.UI.Page
+    public partial class Company_AddModify : PageBase
     {
         public int CompanyID = 0;
 
@@ -28,10 +28,17 @@ namespace TailerApp.UI.Admin
         public static Struct_Company GetCompanyDetails(string CompanyID)
         {
             Struct_Company OutPutData = new Struct_Company();
+            TailerApp.Common.LoginUser currentUser;
             try
             {
+                if (!GetUserSession(out currentUser))
+                {
+                    OutPutData.errorCode = 10001;
+                    OutPutData.errorMessage = "";
+                }
+
                 AdminManagerSP AdminManager = new AdminManagerSP();
-                if (!AdminManager._C_GetCompanyDetails(string.IsNullOrEmpty(CompanyID) ? 0 : Convert.ToInt32(CompanyID), 0, out OutPutData))
+                if (!AdminManager._C_GetCompanyDetails(string.IsNullOrEmpty(CompanyID) ? 0 : Convert.ToInt32(CompanyID), currentUser.UserId, out OutPutData))
                 {
                     OutPutData.errorCode = AdminManager.GetLastErrorCode();
                     OutPutData.errorMessage = AdminManager.GetLastError();
@@ -52,10 +59,17 @@ namespace TailerApp.UI.Admin
         public static JSONReturnData SaveCompanyDetails(string CompanyID, string CompanyDetails, string AddressDetails)
         {
             JSONReturnData OutPutData = new JSONReturnData();
+            TailerApp.Common.LoginUser currentUser;
             try
             {
+                if (!GetUserSession(out currentUser))
+                {
+                    OutPutData.errorCode = 10001;
+                    OutPutData.errorMessage = "";
+                }
+
                 AdminManagerSP AdminManager = new AdminManagerSP();
-                if (!AdminManager._C_AddModifyCompany(string.IsNullOrEmpty(CompanyID) ? 0 : Convert.ToInt32(CompanyID), 0, CompanyDetails, AddressDetails))
+                if (!AdminManager._C_AddModifyCompany(string.IsNullOrEmpty(CompanyID) ? 0 : Convert.ToInt32(CompanyID), currentUser.UserId, CompanyDetails, AddressDetails))
                 {
                     OutPutData.errorCode = AdminManager.GetLastErrorCode();
                     OutPutData.errorMessage = AdminManager.GetLastError();
@@ -69,43 +83,6 @@ namespace TailerApp.UI.Admin
                 Utils.Write(e);
             }
             return OutPutData;
-        }
-
-        protected string GetDecryptedQueryString(string queryString)
-        {
-            string rowUrl = null;
-            string queryStringVal = null;
-            try
-            {
-                if (HttpContext.Current.Request.Url.ToString().Contains('?'))
-                {
-                    rowUrl = HttpContext.Current.Request.Url.ToString().Split('?')[1];
-                    string[] actualQueryStrings = TailerApp.Common.Cryptography.Decrypt(rowUrl.Substring(rowUrl.IndexOf('?') + 1)).Split(new char[] { '&' });
-                    if (actualQueryStrings != null && actualQueryStrings.Length > 0)
-                    {
-                        var objQuery = actualQueryStrings.Where(str => str.StartsWith(queryString + "="));
-                        var queryString_EqualsCount = 0;
-                        if (objQuery.Count() > 0)
-                        {
-                            queryStringVal = objQuery.First().Split('=')[1];
-
-                            queryString_EqualsCount = objQuery.First().Count(X => X == '=');
-                        }
-
-                        if (queryString_EqualsCount >= 2)
-                        {
-                            int firstEqualIndex = objQuery.First().IndexOf('=');
-                            queryStringVal = objQuery.First().Substring(firstEqualIndex + 1);
-                        }
-
-                    }
-                }
-            }
-            catch (Exception ee)
-            {
-                Utils.Write(ee);
-            }
-            return queryStringVal;
         }
 
     }

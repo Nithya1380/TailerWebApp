@@ -56,7 +56,7 @@ Tailer.controller("BranchController", function ($scope, $window, $http) {
            }).then(function successCallback(response) {
 
                if (response.data.d.errorCode == 10001) {
-                   window.location = '../../SessionExpired.aspx';
+                   return false;
                }
                else if (response.data.d.errorCode == 0) {
                    $scope.CD = JSON.parse(response.data.d.BranchDetails)[0];
@@ -96,7 +96,8 @@ Tailer.controller("BranchController", function ($scope, $window, $http) {
             }).then(function successCallback(response) {
 
                 if (response.data.d.errorCode == 10001) {
-                    window.location = '../../SessionExpired.aspx';
+                    //window.location = '../../SessionExpired.aspx';
+                    return false;
                 }
                 else if (response.data.d.errorCode == 0) {
                     $window.alert("Save successfully");
