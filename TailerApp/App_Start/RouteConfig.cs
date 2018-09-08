@@ -12,6 +12,7 @@ namespace TailerApp
         {
             var settings = new FriendlyUrlSettings();
             settings.AutoRedirectMode = RedirectMode.Permanent;
+            settings.AutoRedirectMode = RedirectMode.Off;
             routes.EnableFriendlyUrls(settings);
         }
     }
