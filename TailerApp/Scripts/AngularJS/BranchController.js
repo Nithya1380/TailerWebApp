@@ -59,8 +59,8 @@ Tailer.controller("BranchController", function ($scope, $window, $http) {
                    return false;
                }
                else if (response.data.d.errorCode == 0) {
-                   $scope.CD = JSON.parse(response.data.d.BranchDetails)[0];
-                   $scope.AD = JSON.parse(response.data.d.AddressDetails)[0];
+                   $scope.BD = JSON.parse(response.data.d.BranchDetails)[0];
+                   $scope.BAD = JSON.parse(response.data.d.AddressDetails)[0];
                }
                else {
 

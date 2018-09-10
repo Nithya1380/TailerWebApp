@@ -130,7 +130,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
   <div ng-app="TailerApp" ng-controller = "AdminHomeController" >
     <div align="right" style="width:98%; padding-right:10px;">
-        <input type="button" value="Add Company" ng-click="AddEditCompany(3)"/>
+        <input type="button" value="Add Company" ng-click="AddEditCompany(0)"/>
     </div>
     <div>
         <div class="container">
