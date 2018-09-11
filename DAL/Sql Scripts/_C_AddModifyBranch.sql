@@ -234,7 +234,7 @@ BEGIN
 			) tempAddress
 		WHERE [Address].AddressID = tempAddress.AddressID
 			AND [Address].CompanyID = @CompanyID
-			AND [Address].AddressID = @AddressID
+			--AND [Address].AddressID = @AddressID
 
 	END
 END

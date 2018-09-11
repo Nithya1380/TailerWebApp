@@ -57,7 +57,7 @@ BEGIN TRY
 
 	SET @AddressDetails = (
 			SELECT 
-				AddressID
+				AddressID,
 				CompanyID,
 				Address1,
 				Address2,
