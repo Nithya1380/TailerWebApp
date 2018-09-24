@@ -346,4 +346,10 @@ CREATE TABLE CustomerBranchMaster
     CONSTRAINT FK_CustomerBranchMaster_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID),
     CONSTRAINT FK_CustomerBranchMaster_CustomerMasterID FOREIGN KEY(CustomerMasterID) REFERENCES CustomerMaster(CustomerMasterID)
 )
+
+ALTER TABLE PermissionListMaster ADD IsMenu BIT
+ALTER TABLE CompanyPermissions ADD CompanyID INT
+ALTER TABLE CompanyPermissions ADD CONSTRAINT FK_CompanyPermissions_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID)
+ALTER TABLE Users ADD UserName VARCHAR(150)
+
 ROLLBACK TRAN

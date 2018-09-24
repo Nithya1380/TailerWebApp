@@ -70,7 +70,7 @@ namespace TailerApp.UI.Admin
                 }
 
                 AdminManagerSP AdminManager = new AdminManagerSP();
-                if (!AdminManager._C_AddModifyBranch(string.IsNullOrEmpty(CompanyID) ? 0 : Convert.ToInt32(CompanyID), currentUser.UserId, string.IsNullOrEmpty(BranchID) ? 0 : Convert.ToInt32(BranchID), BranchDetails, AddressDetails))
+                if (AdminManager._C_AddModifyBranch(string.IsNullOrEmpty(CompanyID) ? 0 : Convert.ToInt32(CompanyID), currentUser.UserId, string.IsNullOrEmpty(BranchID) ? 0 : Convert.ToInt32(BranchID), BranchDetails, AddressDetails))
                 {
                     OutPutData.errorCode = AdminManager.GetLastErrorCode();
                     OutPutData.errorMessage = AdminManager.GetLastError();

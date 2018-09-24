@@ -69,7 +69,7 @@ namespace TailerApp.UI.Admin
                 }
 
                 AdminManagerSP AdminManager = new AdminManagerSP();
-                if (!AdminManager._C_AddModifyCompany(string.IsNullOrEmpty(CompanyID) ? 0 : Convert.ToInt32(CompanyID), currentUser.UserId, CompanyDetails, AddressDetails))
+                if (AdminManager._C_AddModifyCompany(string.IsNullOrEmpty(CompanyID) ? 0 : Convert.ToInt32(CompanyID), currentUser.UserId, CompanyDetails, AddressDetails))
                 {
                     OutPutData.errorCode = AdminManager.GetLastErrorCode();
                     OutPutData.errorMessage = AdminManager.GetLastError();

@@ -51,7 +51,7 @@ namespace TailerApp.UI.Admin
             try
             {
                 AdminManagerSP AdminManager = new AdminManagerSP();
-                if (!AdminManager._C_GetCompanyAndBranchList(0, out records))
+                if (AdminManager._C_GetCompanyAndBranchList(0, out records))
                 {
                     records.errorCode = AdminManager.GetLastErrorCode();
                     records.errorMessage = AdminManager.GetLastError();

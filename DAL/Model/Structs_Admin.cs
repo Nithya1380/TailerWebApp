@@ -36,4 +36,11 @@ namespace DAL.Model
         public string BranchDetails { get; set; }
         public string AddressDetails { get; set; }
     }
+
+    public class Struct_UserRole : JSONReturnData
+    {
+        public string Roles { get; set; }
+        public string RolePermissions { get; set; }
+        public string Users { get; set; }
+    }
 }
