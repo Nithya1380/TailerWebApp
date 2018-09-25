@@ -171,8 +171,8 @@ namespace DAL.Model
 
     public class PickList
     {
+        public string PickListLabel { get; set; }
         public string PickListValue { get; set; }
-        public string PickListName { get; set; }
     }
 
     public class JsonResults

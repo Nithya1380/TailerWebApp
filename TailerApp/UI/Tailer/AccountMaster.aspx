@@ -44,7 +44,7 @@
                          return false;
                      }
 
-                     $scope.CustomerPickLists = response.data.d.CustomerPickLists;
+                     $scope.CustomerPickLists = response.data.d;
 
                  }, function onFailure(error) {
 
@@ -369,8 +369,9 @@
                                                         <div class="form-group row">
                                                             <label for="drpCategory" class="col-sm-2 lbl-text-right">Category</label>
                                                             <div class="col-sm-4">
-                                                                <select class="form-control" id="drpCategory" data-ng-model="customerMaster.CustomerAccount.AccountCategory">
-                                                                    <option>Select Category</option>
+                                                                <select class="form-control" id="drpCategory" data-ng-model="customerMaster.CustomerAccount.AccountCategory"
+                                                                    data-ng-options="custCat.PickListLabel for custCat in CustomerPickLists.AccountCategory track by custCat.PickListValue">
+                                                                    <option value="">Select Category</option>
                                                                 </select>
                                                             </div>
 
