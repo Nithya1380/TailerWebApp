@@ -42,7 +42,7 @@ namespace DAL.Model
 
     }
 
-    public class CustomerMaster
+    public class CustomerMaster: JsonResults
     {
         public CustomerAccount CustomerAccount { get; set; }
         public Customer Customer { get; set; }

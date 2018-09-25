@@ -3,40 +3,83 @@
     <script src="../../Scripts/AngularJS/angular.js"></script>
      <script type="text/javascript" lang="javascript">
          $(function () {
-                  $("#datepicker").datepicker();
+                 // $("#datepicker").datepicker();
              
          });
+
+         var gb_customerID='<%=CustomerID%>';
 
          var tailerApp = angular.module("TailerApp", []);
          tailerApp.controller("AccountsController", function ($scope, $window, $http, $rootScope) {
              $scope.CustomerPickLists = {};
-             $scope.customerID = 0;
+             $scope.customerID = gb_customerID;
+             $scope.customerMaster = {};
+             $scope.customerMaster.CustomerAccount= {};
+             $scope.customerMaster.Customer= {};
+             $scope.customerMaster.CustomerSupply = {};
+             $scope.customerMaster.CustomerBranches = {};
 
              $scope.init = function () {
                  $scope.GetCustomerDropdowns();
+                 $scope.GetCustomerDetails();
              };
 
              $scope.GetCustomerDropdowns = function () {
                  $scope.CustomerPickLists = {};
 
                  $http({
-                     type: "POST",
+                     method: "POST",
                      url: "AccountMaster.aspx/GetCustomerPickLists",
                      data: { customerID: $scope.customerID },
                      dataType: "json",
                      headers: {contentType:"application/json"}
-                 }).done(function onSuccess(response) {
-                     if(response.d.ErrorCode==-1001)
+                 }).then(function onSuccess(response) {
+                     if (response.data.d.ErrorCode == -1001)
                      {
                          //Session Expired
                          return false;
                      }
-                     if (response.d.ErrorCode!=0) {
-                         alert(response.d.ErrorMessage);
+                     if (response.data.d.ErrorCode != 0) {
+                         alert(response.data.d.ErrorMessage);
                          return false;
                      }
 
-                     $scope.CustomerPickLists = response.d.CustomerPickLists;
+                     $scope.CustomerPickLists = response.data.d.CustomerPickLists;
+
+                 }, function onFailure(error) {
+
+                 });
+             };
+
+             $scope.GetCustomerDetails = function () {
+                 $scope.customerMaster = {};
+                 $scope.customerMaster.CustomerAccount = {};
+                 $scope.customerMaster.Customer = {};
+                 $scope.customerMaster.CustomerSupply = {};
+                 $scope.customerMaster.CustomerBranches = {};
+
+                 $http({
+                     method: "POST",
+                     url: "AccountMaster.aspx/GetCustomerDetails",
+                     data: { customerID: $scope.customerID },
+                     dataType: "json",
+                     headers: { contentType: "application/json" }
+                 }).then(function onSuccess(response) {
+                     if (response.data.d.ErrorCode == -1001) {
+                         //Session Expired
+                         return false;
+                     }
+                     if (response.data.d.ErrorCode != 0) {
+                         alert(response.data.d.ErrorMessage);
+                         return false;
+                     }
+
+            
+                     $scope.customerMaster.CustomerAccount = response.data.d.CustomerAccount;
+                     $scope.customerMaster.Customer = response.data.d.Customer;
+                     $scope.customerMaster.CustomerSupply = response.data.d.CustomerSupply;
+                     $scope.customerMaster.CustomerBranches = response.data.d.CustomerBranches;
+                     
 
                  }, function onFailure(error) {
 
@@ -46,7 +89,7 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="container bootstrap snippet">
+    <div class="container bootstrap snippet" data-ng-app="TailerApp" data-ng-controller="AccountsController" data-ng-init="init()" >
     <div class="row">
         <div>&nbsp;</div>
     </div>
@@ -120,7 +163,6 @@
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <ul class="nav nav-tabs">
                                 <li class="active"><a data-toggle="tab" href="#accountTab">Account</a></li>
-                                <li><a data-toggle="tab" href="#customerTab">Customer</a></li>
                                 <li><a data-toggle="tab" href="#loyaltyTab">Loyalty Gift</a></li>
                                 <li><a data-toggle="tab" href="#customerAndBranchTab">Company & Branch</a></li>
                                 <li><a data-toggle="tab" href="#cardPrintTab">Card Print</a></li>
@@ -129,279 +171,290 @@
                             <div class="tab-content">
                                 <div class="tab-pane active" id="accountTab">
                                     <br />
-                                     <div class="row">
+                                    <div class="row">
                                         <div class="col-lg-2 col-md-2 col-sm-2 pull-right">
                                             <button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i>&nbsp;Save</button>
                                         </div>
                                     </div>
+                                    <div class="form-group row"></div>
                                     <div class="form-horizontal">
-                                        <div class="form-group row">
-                                            <label class="checkbox-inline col-sm-2" style="font-weight:bold;margin-left:20px">
-                                                <input type="checkbox" class="checkbox" name="chkCommonAccount" id="chkCommonAccount" />Common Account
-                                            </label>
-                                            <label class="checkbox-inline col-sm-2" style="font-weight:bold;">
-                                                <input type="checkbox" class="checkbox" name="chkActiveAccount" id="chkActiveAccount" />Active Account
-                                            </label>
+                                        <div class="panel-group" id="accordion">
+                                            <div class="panel panel-info">
+                                                <div class="panel-heading">
+                                                    <h3 class="panel-title">Personal Information
+                                                      <a data-toggle="collapse" data-parent="#accordion" href="#collapsePersonalInfo" class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></a>
+                                                    </h3>
+                                                </div>
+                                                <div id="collapsePersonalInfo" class="panel-collapse collapse in">
+                                                    <div class="panel-body">
+                                                        <div class="form-group row">
+                                                            <label for="txtFullName" class="col-sm-2 lbl-text-right">Full Name</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtFullName" id="txtFullName" placeholder="Full Name" title="enter your Full Name." data-ng-model="customerMaster.Customer.FullName">
+                                                            </div>
+                                                            <label for="drpSex" class="col-sm-2 lbl-text-right">Sex</label>
+                                                            <div class="col-sm-4">
+                                                                <select class="form-control" id="drpSex" data-ng-model="customerMaster.Customer.Gender">
+                                                                    <option>Male</option>
+                                                                    <option>Female</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="txtFirstName" class="col-sm-2 lbl-text-right">First Name</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtFullName" id="txtFirstName" placeholder="First Name" title="enter your First Name." data-ng-model="customerMaster.Customer.FirstName">
+                                                            </div>
+                                                            <label for="txtLastName" class="col-sm-2 lbl-text-right">Last Name</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtLastName" id="txtLastName" placeholder="Last Name" title="enter your Last Name." data-ng-model="customerMaster.Customer.MiddleName"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="txtSurName" class="col-sm-2 lbl-text-right">Sur Name</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtSurName" id="txtSurName" placeholder="Sur Name" title="enter your Sur Name." data-ng-model="customerMaster.Customer.SurName"/>
+                                                            </div>
+                                                            <label for="txtContactPerson" class="col-sm-2 lbl-text-right">Contact Person</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtContactPerson" id="txtContactPerson" placeholder="Contact Person" title="enter Contact Person Name." data-ng-model="customerMaster.Customer.ContactPerson"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="txtBirthDate" class="col-sm-2 lbl-text-right">Birth Date</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtBirthDate" id="txtBirthDate" placeholder="Birth Date" title="enter Birth Date." data-ng-model="customerMaster.Customer.BirthDate"/>
+                                                            </div>
+                                                            <label for="txtOpenDate" class="col-sm-2 lbl-text-right">Open Date</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtOpenDate" id="txtOpenDate" placeholder="Open Date" title="enter Open Date." data-ng-model="customerMaster.Customer.OpenDate"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="txtAddress1" class="col-sm-2 lbl-text-right">Address 1</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtAddress1" id="txtAddress1" placeholder="Address 1" data-ng-model="customerMaster.Customer.Address1"/>
+                                                            </div>
+                                                            <label for="txtAddress2" class="col-sm-2 lbl-text-right">Address 2</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtAddress2" id="txtAddress2" placeholder="Address 2" data-ng-model="customerMaster.Customer.Address2"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="drpCountry" class="col-sm-2 lbl-text-right">Country</label>
+                                                            <div class="col-sm-4">
+                                                                <select class="form-control" id="drpCountry">
+                                                                    <option>Select Country</option>
+                                                                </select>
+                                                            </div>
+                                                            <label for="drpState" class="col-sm-2 lbl-text-right">State</label>
+                                                            <div class="col-sm-4">
+                                                                <select class="form-control" id="drpState" data-ng-model="customerMaster.Customer.State">
+                                                                    <option>Select State</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="drpCity" class="col-sm-2 lbl-text-right">City</label>
+                                                            <div class="col-sm-4">
+                                                                <select class="form-control" id="drpCity" data-ng-model="customerMaster.Customer.City">
+                                                                    <option>Select City</option>
+                                                                </select>
+                                                            </div>
+                                                            <label for="txtPin" class="col-sm-2 lbl-text-right">Pin</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="number" class="form-control" name="txtPin" id="txtPin" data-ng-model="customerMaster.Customer.Pincode"/>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group row">
+                                                            <label for="txtMobile" class="col-sm-2 lbl-text-right">Mobile</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtMobile" id="txtMobile" placeholder="Mobile" title="enter your Mobile Number." data-ng-model="customerMaster.Customer.MobileNo">
+                                                            </div>
+                                                            <label for="txtPhone" class="col-sm-2 lbl-text-right">Phone</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtPhone" id="txtPhone" placeholder="Phone" title="enter your Phone Number." data-ng-model="customerMaster.Customer.HomePhoneNo"/>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group row">
+                                                            <label for="txtEmail" class="col-sm-2 lbl-text-right">Email</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtMobile" id="txtEmail" placeholder="Email" title="enter your Email." data-ng-model="customerMaster.Customer.EmailID">
+                                                            </div>
+                                                            <label for="txtReferenceNo" class="col-sm-2 lbl-text-right">Reference No</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtReferenceNo" id="txtReferenceNo" placeholder="Reference Number" title="Enter Reference Number." data-ng-model="customerMaster.Customer.ReferenceNumber"/>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group row">
+                                                            <label for="txtPANNo" class="col-sm-2 lbl-text-right">PAN No</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtPANNo" id="txtPANNo" placeholder="PAN No" title="enter your PAN No." data-ng-model="customerMaster.Customer.PANNumber">
+                                                            </div>
+                                                            <label for="txtAnnDate" class="col-sm-2 lbl-text-right">Ann Date</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtAnnDate" id="txtAnnDate" placeholder="Ann Date" title="Enter Ann Date." data-ng-model="customerMaster.Customer.AnnDate" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group row">
+                                                            <label for="txtRemarks" class="col-sm-2 lbl-text-right">Remarks</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtRemarks" id="txtRemarks" placeholder="Remarks" title="enter Remarks."  data-ng-model="customerMaster.Customer.Remarks">
+                                                            </div>
+                                                            <label for="txtCustomerCardNo" class="col-sm-2 lbl-text-right">Customer Card No</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtCustomerCardNo" id="txtCustomerCardNo" placeholder="Customer Card No" title="Enter Customer Card No." data-ng-model="customerMaster.Customer.CustomerCardNumber"/>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group row">
+                                                            <label for="drpSRName" class="col-sm-2 lbl-text-right">SR Name</label>
+                                                            <div class="col-sm-4">
+                                                                <select class="form-control" id="drpSRName" data-ng-model="customerMaster.Customer.SRName">
+                                                                    <option>Select SR Name</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel panel-info">
+                                                <div class="panel-heading">
+                                                    <h3 class="panel-title">Account Information
+                                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseAccountInfo" class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></a>
+                                                    </h3>
+                                                </div>
+                                                <div id="collapseAccountInfo" class="panel-collapse collapse in">
+                                                    <div class="panel-body">
+                                                        <div class="form-group row">
+                                                            <label class="checkbox-inline col-sm-2" style="font-weight: bold; margin-left: 20px">
+                                                                <input type="checkbox" class="checkbox" name="chkCommonAccount" id="chkCommonAccount" data-ng-model="customerMaster.CustomerAccount.IsCommonAccount"/>Common Account
+                                                            </label>
+                                                            <label class="checkbox-inline col-sm-2" style="font-weight: bold;">
+                                                                <input type="checkbox" class="checkbox" name="chkActiveAccount" id="chkActiveAccount" data-ng-model="customerMaster.CustomerAccount.IsActive"/>Active Account
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-group row">
+                                                            <label for="txtAccountCode" class="col-sm-2 lbl-text-right">Account Code</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="first_name" id="txtAccountCode" placeholder="Account Code" title="enter your Account Code." data-ng-model="customerMaster.CustomerAccount.AccountCode">
+                                                            </div>
+
+                                                            <label for="txtAccountName" class="col-sm-2 lbl-text-right">Account Name</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="first_name" id="txtAccountName" placeholder="Account Name" title="enter your Account Code." data-ng-model="customerMaster.CustomerAccount.AccountName">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group row">
+                                                            <label for="drpAccountType" class="col-sm-2 lbl-text-right">Account Type</label>
+                                                            <div class="col-sm-4">
+                                                                <select class="form-control" id="drpAccountType" data-ng-model="customerMaster.CustomerAccount.AccountType">
+                                                                    <option>Select Account Type</option>
+                                                                </select>
+                                                            </div>
+
+                                                            <label for="drpParentGroup" class="col-sm-2 lbl-text-right">Parent Group</label>
+                                                            <div class="col-sm-4">
+                                                                <select class="form-control" id="drpParentGroup" data-ng-model="customerMaster.CustomerAccount.ParentGroup">
+                                                                    <option>Select Parent Group</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="drpCategory" class="col-sm-2 lbl-text-right">Category</label>
+                                                            <div class="col-sm-4">
+                                                                <select class="form-control" id="drpCategory" data-ng-model="customerMaster.CustomerAccount.AccountCategory">
+                                                                    <option>Select Category</option>
+                                                                </select>
+                                                            </div>
+
+                                                            <label for="txtPartyAlert" class="col-sm-2 lbl-text-right">Party Alert</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtPartyAlert" id="txtPartyAlert" placeholder="Party Alert" data-ng-model="customerMaster.CustomerAccount.PartyAlert"/>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group row">
+                                                            <label for="txtOpening" class="col-sm-2 lbl-text-right">Opening</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="number" class="form-control" name="txtOpening" id="txtOpening" style="display: inline !important; width: 90%"  data-ng-model="customerMaster.CustomerAccount.OpeningBalance"/>&nbsp;Cr.
+                                                            </div>
+
+                                                            <label for="txtClosing" class="col-sm-2 lbl-text-right">Closing</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="number" class="form-control" name="txtClosing" id="txtClosing" style="display: inline !important; width: 90%" data-ng-model="customerMaster.CustomerAccount.ClosingBalance"/>&nbsp;Cr.
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group row">
+                                                            <label for="txtCreatedDate" class="col-sm-2 lbl-text-right">Created Date</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtCreatedDate" id="txtCreatedDate" placeholder="Created Date"  data-ng-model="customerMaster.CustomerAccount.AccountCreatedDate" />
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <select class="form-control" id="drpDateCategory">
+                                                                    <option>Select Category</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label class="checkbox-inline col-sm-2" style="font-weight: bold; margin-left: 20px">
+                                                                <input type="checkbox" class="checkbox" name="last_name" id="chkTDSApplicable"  data-ng-model="customerMaster.CustomerAccount.IsTDSApplicable"/>TDS Applicable
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-group row">
+                                                            <label for="drpTDSCategory" class="col-sm-2 lbl-text-right" style="text-align: right">TDS Category</label>
+                                                            <div class="col-sm-4">
+                                                                <select class="form-control" id="drpTDSCategory" data-ng-model="customerMaster.CustomerAccount.TDSCategory">
+                                                                    <option>Select Category</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group row">
+                                                            <label for="drpDefault" class="col-sm-2 lbl-text-right">Default</label>
+                                                            <div class="col-sm-4">
+                                                                <select class="form-control" id="drpDefault" data-ng-model="customerMaster.CustomerAccount.Default">
+                                                                    <option>Select Default</option>
+                                                                </select>
+                                                            </div>
+
+                                                            <label for="drpReverse" class="col-sm-2 lbl-text-right">Reverse</label>
+                                                            <div class="col-sm-4">
+                                                                <select class="form-control" id="drpReverse"  data-ng-model="customerMaster.CustomerAccount.Reverse">
+                                                                    <option>Select Reverse</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group row">
+                                                            <label for="drpSch6Group" class="col-sm-2 lbl-text-right">Sch6 Group</label>
+                                                            <div class="col-sm-4">
+                                                                <select class="form-control" id="drpSch6Group" data-ng-model="customerMaster.CustomerAccount.Sh6Group">
+                                                                    <option>Select Sch6 Group</option>
+                                                                </select>
+                                                            </div>
+
+                                                            <label for="txtSch6AccountNo" class="col-sm-2 lbl-text-right">Sch6 Account No</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="number" class="form-control" name="txtOpening" id="txtSch6AccountNo" data-ng-model="customerMaster.CustomerAccount.Sh6AccountNumber"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-
-                                        <div class="form-group row">
-                                            <label for="txtAccountCode" class="col-sm-2 lbl-text-right">Account Code</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="first_name" id="txtAccountCode" placeholder="Account Code" title="enter your Account Code.">
-                                            </div>
-
-                                            <label for="txtAccountName" class="col-sm-2 lbl-text-right">Account Name</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="first_name" id="txtAccountName" placeholder="Account Name" title="enter your Account Code.">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label for="drpAccountType" class="col-sm-2 lbl-text-right">Account Type</label>
-                                            <div class="col-sm-4">
-                                                <select class="form-control" id="drpAccountType">
-                                                    <option>Select Account Type</option>
-                                                </select>
-                                            </div>
-
-                                            <label for="drpParentGroup" class="col-sm-2 lbl-text-right">Parent Group</label>
-                                            <div class="col-sm-4">
-                                                <select class="form-control" id="drpParentGroup">
-                                                    <option>Select Parent Group</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label for="drpCategory" class="col-sm-2 lbl-text-right">Category</label>
-                                            <div class="col-sm-4">
-                                                <select class="form-control" id="drpCategory">
-                                                    <option>Select Category</option>
-                                                </select>
-                                            </div>
-
-                                            <label for="txtPartyAlert" class="col-sm-2 lbl-text-right">Party Alert</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="txtPartyAlert" id="txtPartyAlert" placeholder="Party Alert" />
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label for="txtOpening" class="col-sm-2 lbl-text-right">Opening</label>
-                                            <div class="col-sm-4">
-                                                <input type="number" class="form-control" name="txtOpening" id="txtOpening" style="display: inline !important; width: 90%" />&nbsp;Cr.
-                                            </div>
-
-                                            <label for="txtClosing" class="col-sm-2 lbl-text-right">Closing</label>
-                                            <div class="col-sm-4">
-                                                <input type="number" class="form-control" name="txtClosing" id="txtClosing" style="display: inline !important; width: 90%" />&nbsp;Cr.
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label for="txtCreatedDate" class="col-sm-2 lbl-text-right">Created Date</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="txtCreatedDate" id="txtCreatedDate" placeholder="Created Date" />
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <select class="form-control" id="drpDateCategory">
-                                                    <option>Select Category</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="checkbox-inline col-sm-2" style="font-weight: bold;margin-left:20px">
-                                                <input type="checkbox" class="checkbox" name="last_name" id="chkTDSApplicable" />TDS Applicable
-                                            </label>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label for="drpTDSCategory" class="col-sm-2 lbl-text-right" style="text-align: right">TDS Category</label>
-                                            <div class="col-sm-4">
-                                                <select class="form-control" id="drpTDSCategory">
-                                                    <option>Select Category</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label for="drpDefault" class="col-sm-2 lbl-text-right">Default</label>
-                                            <div class="col-sm-4">
-                                                <select class="form-control" id="drpDefault">
-                                                    <option>Select Default</option>
-                                                </select>
-                                            </div>
-
-                                            <label for="drpReverse" class="col-sm-2 lbl-text-right">Reverse</label>
-                                            <div class="col-sm-4">
-                                                <select class="form-control" id="drpReverse">
-                                                    <option>Select Reverse</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label for="drpSch6Group" class="col-sm-2 lbl-text-right">Sch6 Group</label>
-                                            <div class="col-sm-4">
-                                                <select class="form-control" id="drpSch6Group">
-                                                    <option>Select Sch6 Group</option>
-                                                </select>
-                                            </div>
-
-                                            <label for="txtSch6AccountNo" class="col-sm-2 lbl-text-right">Sch6 Account No</label>
-                                            <div class="col-sm-4">
-                                                <input type="number" class="form-control" name="txtOpening" id="txtSch6AccountNo" />
-                                            </div>
-                                        </div>
-
                                     </div>
                                 </div>
-                                <!--/tab-pane-->
-                                <div class="tab-pane" id="customerTab">
-                                    <br />
-                                    <div class="form-horizontal">
-                                        <div class="row">
-                                            <div class="col-lg-2 col-md-2 col-sm-2 pull-right">
-                                                <button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i>&nbsp;Save</button>
-                                            </div>
-                                        </div>
-                                         <div class="form-group row">
-                                         </div>
-                                        <div class="form-group row">
-                                            <label for="txtFullName" class="col-sm-2 lbl-text-right">Full Name</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="txtFullName" id="txtFullName" placeholder="Full Name" title="enter your Full Name.">
-                                            </div>
-                                            <label for="drpSex" class="col-sm-2 lbl-text-right">Sex</label>
-                                            <div class="col-sm-4">
-                                                <select class="form-control" id="drpSex">
-                                                    <option>Male</option>
-                                                    <option>Female</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label for="txtFirstName" class="col-sm-2 lbl-text-right">First Name</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="txtFullName" id="txtFirstName" placeholder="First Name" title="enter your First Name.">
-                                            </div>
-                                            <label for="txtLastName" class="col-sm-2 lbl-text-right">Last Name</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="txtLastName" id="txtLastName" placeholder="Last Name" title="enter your Last Name." />
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label for="txtSurName" class="col-sm-2 lbl-text-right">Sur Name</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="txtSurName" id="txtSurName" placeholder="Sur Name" title="enter your Sur Name." />
-                                            </div>
-                                            <label for="txtContactPerson" class="col-sm-2 lbl-text-right">Contact Person</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="txtContactPerson" id="txtContactPerson" placeholder="Contact Person" title="enter Contact Person Name." />
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label for="txtBirthDate" class="col-sm-2 lbl-text-right">Birth Date</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="txtBirthDate" id="txtBirthDate" placeholder="Birth Date" title="enter Birth Date." />
-                                            </div>
-                                            <label for="txtOpenDate" class="col-sm-2 lbl-text-right">Open Date</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="txtOpenDate" id="txtOpenDate" placeholder="Open Date" title="enter Open Date." />
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label for="txtAddress1" class="col-sm-2 lbl-text-right">Address 1</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="txtAddress1" id="txtAddress1" placeholder="Address 1" />
-                                            </div>
-                                            <label for="txtAddress2" class="col-sm-2 lbl-text-right">Address 2</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="txtAddress2" id="txtAddress2" placeholder="Address 2" />
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label for="drpCountry" class="col-sm-2 lbl-text-right">Country</label>
-                                            <div class="col-sm-4">
-                                                <select class="form-control" id="drpCountry">
-                                                    <option>Select Country</option>
-                                                </select>
-                                            </div>
-                                            <label for="drpState" class="col-sm-2 lbl-text-right">State</label>
-                                            <div class="col-sm-4">
-                                                <select class="form-control" id="drpState">
-                                                    <option>Select State</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label for="drpCity" class="col-sm-2 lbl-text-right">City</label>
-                                            <div class="col-sm-4">
-                                                <select class="form-control" id="drpCity">
-                                                    <option>Select City</option>
-                                                </select>
-                                            </div>
-                                            <label for="txtPin" class="col-sm-2 lbl-text-right">Pin</label>
-                                            <div class="col-sm-4">
-                                                <input type="number" class="form-control" name="txtPin" id="txtPin" />
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label for="txtMobile" class="col-sm-2 lbl-text-right">Mobile</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="txtMobile" id="txtMobile" placeholder="Mobile" title="enter your Mobile Number.">
-                                            </div>
-                                            <label for="txtPhone" class="col-sm-2 lbl-text-right">Phone</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="txtPhone" id="txtPhone" placeholder="Phone" title="enter your Phone Number." />
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label for="txtEmail" class="col-sm-2 lbl-text-right">Email</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="txtMobile" id="txtEmail" placeholder="Email" title="enter your Email.">
-                                            </div>
-                                            <label for="txtReferenceNo" class="col-sm-2 lbl-text-right">Reference No</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="txtReferenceNo" id="txtReferenceNo" placeholder="Reference Number" title="Enter Reference Number." />
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label for="txtPANNo" class="col-sm-2 lbl-text-right">PAN No</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="txtPANNo" id="txtPANNo" placeholder="PAN No" title="enter your PAN No.">
-                                            </div>
-                                            <label for="txtAnnDate" class="col-sm-2 lbl-text-right">Ann Date</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="txtAnnDate" id="txtAnnDate" placeholder="Ann Date" title="Enter Ann Date." />
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label for="txtRemarks" class="col-sm-2 lbl-text-right">Remarks</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="txtRemarks" id="txtRemarks" placeholder="Remarks" title="enter Remarks.">
-                                            </div>
-                                            <label for="txtCustomerCardNo" class="col-sm-2 lbl-text-right">Customer Card No</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="txtCustomerCardNo" id="txtCustomerCardNo" placeholder="Customer Card No" title="Enter Customer Card No." />
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label for="drpSRName" class="col-sm-2 lbl-text-right">SR Name</label>
-                                            <div class="col-sm-4">
-                                                <select class="form-control" id="drpSRName">
-                                                    <option>Select SR Name</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                </div>
+                        
+                                
                                 <!--/tab-pane-->
                                 <div class="tab-pane" id="loyaltyTab">
                                     <br />
@@ -479,87 +532,88 @@
                                     <div class="form-group row">
                                         <label for="txtSupplierCode" class="col-sm-2 lbl-text-right">Code<span style="color:red">*</span></label>
                                         <div class="col-sm-4">
-                                            <input type="text" class="form-control" name="txtSupplierCode" id="txtSupplierCode" placeholder="Code" />
+                                            <input type="text" class="form-control" name="txtSupplierCode" id="txtSupplierCode" placeholder="Code" data-ng-model="customerMaster.CustomerSupply.SupplierCode"/>
                                         </div>
                                         <label for="txtSupplierName" class="col-sm-2 lbl-text-right">Name<span style="color:red">*</span></label>
                                         <div class="col-sm-4">
-                                           <input type="text" class="form-control" name="txtSupplierName" id="txtSupplierName" placeholder="Name" />
+                                           <input type="text" class="form-control" name="txtSupplierName" id="txtSupplierName" placeholder="Name" data-ng-model="customerMaster.CustomerSupply.SupplierName"/>
                                         </div>
                                     </div>
                                      <div class="form-group row">
                                         <label for="drpSupplierType" class="col-sm-2 lbl-text-right">Type<span style="color:red">*</span></label>
                                         <div class="col-sm-4">
-                                            <select class="form-control" id="drpSupplierType"></select>
+                                            <select class="form-control" id="drpSupplierType" data-ng-model="customerMaster.CustomerSupply.SupplierType"></select>
                                         </div>
                                         <label for="drpSupplierCategory" class="col-sm-2 lbl-text-right">Category</label>
                                         <div class="col-sm-4">
-                                           <select class="form-control" id="drpSupplierCategory"></select>
+                                           <select class="form-control" id="drpSupplierCategory" data-ng-model="customerMaster.CustomerSupply.SupplierCategory"></select>
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label for="txtSupplierCSTNo" class="col-sm-2 lbl-text-right">CST No</label>
                                         <div class="col-sm-4">
-                                            <input type="number" class="form-control" name="txtSupplierCode" id="txtSupplierCSTNo" />
+                                            <input type="number" class="form-control" name="txtSupplierCode" id="txtSupplierCSTNo" data-ng-model="customerMaster.CustomerSupply.CSTNumber"/>
                                         </div>
                                         <label for="txtSupplierCSTDate" class="col-sm-2 lbl-text-right">CST Date</label>
                                         <div class="col-sm-4">
-                                           <input type="text" class="form-control" name="txtSupplierCSTDate" id="txtSupplierCSTDate" placeholder="CST Date" />
+                                           <input type="text" class="form-control" name="txtSupplierCSTDate" id="txtSupplierCSTDate" placeholder="CST Date" data-ng-model="customerMaster.CustomerSupply.CSTDate"/>
                                         </div>
                                     </div>
                                      <div class="form-group row">
                                         <label for="txtSupplierSTNo" class="col-sm-2 lbl-text-right">ST No</label>
                                         <div class="col-sm-4">
-                                            <input type="number" class="form-control" name="txtSupplierSTNo" id="txtSupplierSTNo" />
+                                            <input type="number" class="form-control" name="txtSupplierSTNo" id="txtSupplierSTNo" data-ng-model="customerMaster.CustomerSupply.STNumber"/>
                                         </div>
                                         <label for="txtSupplierSTDate" class="col-sm-2 lbl-text-right">ST Date</label>
                                         <div class="col-sm-4">
-                                           <input type="text" class="form-control" name="txtSupplierSTDate" id="txtSupplierSTDate" placeholder="ST Date" />
+                                           <input type="text" class="form-control" name="txtSupplierSTDate" id="txtSupplierSTDate" placeholder="ST Date" data-ng-model="customerMaster.CustomerSupply.STDate"/>
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label for="txtSupplierGSTINo" class="col-sm-2 lbl-text-right">GSTIN No<span style="color:red">*</span></label>
                                         <div class="col-sm-4">
-                                            <input type="number" class="form-control" name="txtSupplierGSTINo" id="txtSupplierGSTINo" />
+                                            <input type="number" class="form-control" name="txtSupplierGSTINo" id="txtSupplierGSTINo" data-ng-model="customerMaster.CustomerSupply.GSTINNumber"/>
                                         </div>
                                         <label for="txtSupplierTINNo" class="col-sm-2 lbl-text-right">TIN No</label>
                                         <div class="col-sm-4">
-                                           <input type="number" class="form-control" name="txtSupplierTINNo" id="txtSupplierTINNo" />
+                                           <input type="number" class="form-control" name="txtSupplierTINNo" id="txtSupplierTINNo" data-ng-model="customerMaster.CustomerSupply.TINNumber"/>
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label for="txtSupplierVATNo" class="col-sm-2 lbl-text-right">VAT No<span style="color:red">*</span></label>
                                         <div class="col-sm-4">
-                                            <input type="number" class="form-control" name="txtSupplierVATNo" id="txtSupplierVATNo" />
+                                            <input type="number" class="form-control" name="txtSupplierVATNo" id="txtSupplierVATNo" data-ng-model="customerMaster.CustomerSupply.VATNumber"/>
                                         </div>
                                         <label for="txtSupplierVATLess" class="col-sm-2 lbl-text-right">Less(VATAV)%</label>
                                         <div class="col-sm-4">
-                                           <input type="number" class="form-control" name="txtSupplierVATLess" id="txtSupplierVATLess" />
+                                           <input type="number" class="form-control" name="txtSupplierVATLess" id="txtSupplierVATLess" data-ng-model="customerMaster.CustomerSupply.LessVATPercent"/>
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label for="txtSupplierPANNo" class="col-sm-2 lbl-text-right">PAN No</label>
                                         <div class="col-sm-4">
-                                            <input type="number" class="form-control" name="txtSupplierPANNo" id="txtSupplierPANNo" />
+                                            <input type="number" class="form-control" name="txtSupplierPANNo" id="txtSupplierPANNo" data-ng-model="customerMaster.CustomerSupply.SupplierPANNumber"/>
                                         </div>
                                         <label for="txtSupplierMarkUp" class="col-sm-2 lbl-text-right">Mark Up%</label>
                                         <div class="col-sm-4">
-                                           <input type="number" class="form-control" name="txtSupplierMarkUp" id="txtSupplierMarkUp" />
+                                           <input type="number" class="form-control" name="txtSupplierMarkUp" id="txtSupplierMarkUp"  data-ng-model="customerMaster.CustomerSupply.MarkUpPercent"/>
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label for="txtSupplierMarkDown" class="col-sm-2 lbl-text-right">Mark Down%</label>
                                         <div class="col-sm-4">
-                                            <input type="number" class="form-control" name="txtSupplierMarkDown" id="txtSupplierMarkDown" />
+                                            <input type="number" class="form-control" name="txtSupplierMarkDown" id="txtSupplierMarkDown" data-ng-model="customerMaster.CustomerSupply.MarkDownPercent"/>
                                         </div>
                                         <label for="txtSupplierCreditDays" class="col-sm-2 lbl-text-right">Credit Days</label>
                                         <div class="col-sm-4">
-                                           <input type="number" class="form-control" name="txtSupplierCreditDays" id="txtSupplierCreditDays" />
+                                           <input type="number" class="form-control" name="txtSupplierCreditDays" id="txtSupplierCreditDays" data-ng-model="customerMaster.CustomerSupply.CreditDays"/>
                                         </div>
                                     </div>
                                 </div>
 
                             </div>
                             <!--/tab-pane-->
+                         </div>
                         </div>
                         <!--/tab-content-->
                     </div>
