@@ -45,5 +45,42 @@ namespace TailerApp
             }
             return ret;
         }
+
+        protected string GetDecryptedQueryString(string queryString)
+        {
+            string rowUrl = null;
+            string queryStringVal = null;
+            try
+            {
+                if (HttpContext.Current.Request.Url.ToString().Contains('?'))
+                {
+                    rowUrl = HttpContext.Current.Request.Url.ToString().Split('?')[1];
+                    string[] actualQueryStrings = TailerApp.Common.Cryptography.Decrypt(rowUrl.Substring(rowUrl.IndexOf('?') + 1)).Split(new char[] { '&' });
+                    if (actualQueryStrings != null && actualQueryStrings.Length > 0)
+                    {
+                        var objQuery = actualQueryStrings.Where(str => str.StartsWith(queryString + "="));
+                        var queryString_EqualsCount = 0;
+                        if (objQuery.Count() > 0)
+                        {
+                            queryStringVal = objQuery.First().Split('=')[1];
+
+                            queryString_EqualsCount = objQuery.First().Count(X => X == '=');
+                        }
+
+                        if (queryString_EqualsCount >= 2)
+                        {
+                            int firstEqualIndex = objQuery.First().IndexOf('=');
+                            queryStringVal = objQuery.First().Substring(firstEqualIndex + 1);
+                        }
+
+                    }
+                }
+            }
+            catch (Exception ee)
+            {
+                Utils.Write(ee);
+            }
+            return queryStringVal;
+        }
     }
 }

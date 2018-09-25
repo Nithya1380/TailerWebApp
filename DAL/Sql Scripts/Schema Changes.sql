@@ -215,6 +215,21 @@ BEGIN TRAN
 			CSTNo VARCHAR(30),
 			CSTDate DATETIME
 
+	ALTER TABLE BranchDetails
+		ADD ShortName VARCHAR(50),
+			BranchNo VARCHAR(20),
+			BranchType VARCHAR(5),
+			BranchGSTIN VARCHAR(40),
+			BranchTINNo VARCHAR(40),
+			BranchSTDate DATETIME,
+			ExciseAddress VARCHAR(40),
+			ExciseDivision VARCHAR(40),
+			ExciseRange VARCHAR(40),
+			ExciseState VARCHAR(40),
+			PeriodFormDate DATETIME,
+			PeriodToDate DATETIME,
+			BranchDivision VARCHAR(40)
+
 ROLLBACK
 
 BEGIN TRAN
@@ -331,6 +346,7 @@ CREATE TABLE CustomerBranchMaster
     CONSTRAINT FK_CustomerBranchMaster_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID),
     CONSTRAINT FK_CustomerBranchMaster_CustomerMasterID FOREIGN KEY(CustomerMasterID) REFERENCES CustomerMaster(CustomerMasterID)
 )
+<<<<<<< HEAD
 ROLLBACK TRAN
 
 BEGIN TRAN
@@ -350,3 +366,12 @@ CREATE TABLE PickListValues
 	CONSTRAINT FK_PickListValues_PickListMasterID FOREIGN KEY(PickListMasterID) REFERENCES PickListMaster(PickListMasterID)
 )
 ROLLBACK TRAN
+=======
+
+ALTER TABLE PermissionListMaster ADD IsMenu BIT
+ALTER TABLE CompanyPermissions ADD CompanyID INT
+ALTER TABLE CompanyPermissions ADD CONSTRAINT FK_CompanyPermissions_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID)
+ALTER TABLE Users ADD UserName VARCHAR(150)
+
+ROLLBACK TRAN
+>>>>>>> 9601289045112dbf309824a45822d7ab5d035ae4

@@ -3,7 +3,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[_C_GetCompanyDetails]
+ALTER PROCEDURE [dbo].[_C_GetCompanyDetails]
 	@CompanyID INT,
 	@user INT
 AS
@@ -28,7 +28,7 @@ BEGIN
 			CompanyCode,
 			AddressID,
 			CompLegalName,
-			CompCreatedDate,
+			CONVERT(VARCHAR,CompCreatedDate,101) as CompCreatedDate,
 			CompBusType,
 			TDSNo,
 			TDSCircle,
@@ -56,5 +56,7 @@ BEGIN
 		FROM [Address] WHERE AddressID = @AddressID AND CompanyID = @CompanyID
 		FOR JSON PATH
 		)
+
+	SELECT @CompanyDetails CompanyDetails, @AddressDetails AddressDetails
 END
 GO
