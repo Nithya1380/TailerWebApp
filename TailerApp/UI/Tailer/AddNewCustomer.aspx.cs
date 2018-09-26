@@ -21,26 +21,26 @@ namespace TailerApp.UI.Tailer
         [WebMethod]
         public static JsonResults AddNewCustomerToDB(Customer Customer)
         {
-            JsonResults custList = new JsonResults();
+            JsonResults returnObj = new JsonResults();
             LoginUser currentUser;
             try
             {
                 if (!GetUserSession(out currentUser))
                 {
-                    custList.ErrorCode = -1001;
-                    custList.ErrorMessage = "";
+                    returnObj.ErrorCode = -1001;
+                    returnObj.ErrorMessage = "";
                 }
 
                 CustomerManager customerObj = new CustomerManager();
-                if (customerObj.GetCustomerList(currentUser.CompanyID, currentUser.UserId, out custList))
+                if (customerObj.AddNewCustomer(currentUser.CompanyID, currentUser.UserId, ref Customer))
                 {
-                    custList.ErrorCode = 0;
-                    custList.ErrorMessage = "";
+                    returnObj.ErrorCode = 0;
+                    returnObj.ErrorMessage = "";
                 }
                 else
                 {
-                    custList.ErrorCode = -1;
-                    custList.ErrorMessage = "Failed to get Customer List. please try again later";
+                    returnObj.ErrorCode = customerObj.GetLastErrorCode();
+                    returnObj.ErrorMessage = customerObj.GetLastError();
                 }
             }
             catch (Exception ex)
@@ -48,7 +48,7 @@ namespace TailerApp.UI.Tailer
                 Utils.Write(ex);
             }
 
-            return custList;
+            return returnObj;
         }
     }
 }

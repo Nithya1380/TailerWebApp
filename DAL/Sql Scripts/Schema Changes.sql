@@ -346,6 +346,27 @@ CREATE TABLE CustomerBranchMaster
     CONSTRAINT FK_CustomerBranchMaster_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID),
     CONSTRAINT FK_CustomerBranchMaster_CustomerMasterID FOREIGN KEY(CustomerMasterID) REFERENCES CustomerMaster(CustomerMasterID)
 )
+<<<<<<< HEAD
+ROLLBACK TRAN
+
+BEGIN TRAN
+  
+CREATE TABLE PickListMaster
+(
+	PickListMasterID INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+	PickListName VARCHAR(50)
+)
+
+CREATE TABLE PickListValues
+(
+	PickListValueID INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+	PickListMasterID INT NOT NULL,
+	PickListValue VARCHAR(50),
+	PickListLabel VARCHAR(50),
+	CONSTRAINT FK_PickListValues_PickListMasterID FOREIGN KEY(PickListMasterID) REFERENCES PickListMaster(PickListMasterID)
+)
+ROLLBACK TRAN
+=======
 
 ALTER TABLE PermissionListMaster ADD IsMenu BIT
 ALTER TABLE CompanyPermissions ADD CompanyID INT
@@ -353,3 +374,4 @@ ALTER TABLE CompanyPermissions ADD CONSTRAINT FK_CompanyPermissions_CompanyID FO
 ALTER TABLE Users ADD UserName VARCHAR(150)
 
 ROLLBACK TRAN
+>>>>>>> 9601289045112dbf309824a45822d7ab5d035ae4

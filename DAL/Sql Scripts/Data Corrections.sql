@@ -36,5 +36,25 @@ BEGIN TRAN
 ROLLBACK TRAN
 
 
+BEGIN TRAN
+    DECLARE @PickID INT
+	--Executed
+	INSERT INTO PickListMaster(PickListName)
+	SELECT 'AccountCategory'
+
+	select @PickID=SCOPE_IDENTITY()
+
+	INSERT INTO PickListValues (PickListMasterID,PickListValue,PickListLabel)
+		SELECT @PickID,'Test Acc1' ,'Test Acc1' 
+			FROM PickListMaster
+				WHERE PickListName='AccountCategory'
+
+	INSERT INTO PickListValues (PickListMasterID,PickListValue,PickListLabel)
+		SELECT @PickID,'Test Acc2','Test Acc2'  
+			FROM PickListMaster
+				WHERE PickListName='AccountCategory'
+				
+ROLLBACK TRAN
+
 
 

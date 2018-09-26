@@ -42,7 +42,7 @@ namespace DAL.Model
 
     }
 
-    public class CustomerMaster
+    public class CustomerMaster: JsonResults
     {
         public CustomerAccount CustomerAccount { get; set; }
         public Customer Customer { get; set; }
@@ -171,8 +171,8 @@ namespace DAL.Model
 
     public class PickList
     {
+        public string PickListLabel { get; set; }
         public string PickListValue { get; set; }
-        public string PickListName { get; set; }
     }
 
     public class JsonResults
