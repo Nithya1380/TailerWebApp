@@ -2,7 +2,22 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeaderContent" runat="server">
 <script src="../../Scripts/AngularJS/angular.js"></script>
-    <script src="../../Scripts/AngularJS/UserAndRoleController.js"></script>
+<script src="../../Scripts/AngularJS/UserAndRoleController.js"></script>
+<style type="text/css">
+.modal-backdrop { 
+    position: fixed;
+    z-index: auto;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.7);
+    opacity: 2.26;
+}
+
+</style>
 <script type="text/javascript">
 </script>
 
@@ -100,8 +115,8 @@
         </div>
     </div>
         <%--user add modify--%>
-        <div id="div_usermodify" class="modal">
-            <div  style="margin-top:100px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+        <div id="div_usermodify" class="modal modal-backdrop">
+            <div class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <div class="panel-title">{{UserID == 0?'Add New User':'Modify User'}}</div>
@@ -148,7 +163,7 @@
                                     <button class="client_btn" type="button" ng-click="OnAddModifyUserClick()" data-toggle="dropdown" style="border-color: #00A5A8 !important; background-color: #00B5B8">
                                         <i class="fa fa-save"></i> Save
                                     </button>
-                                    <button class="client_btn" type="button" ng-hide="UserID == 0" ng-click="onUserDeleteClick();" data-toggle="dropdown" style="border-color: #FFA87D !important; background-color: #FFA87D">
+                                    <button class="client_btn" type="button" ng-hide="UserID == 0" ng-click="onUserDeleteClick();" data-toggle="dropdown" style="border-color: rgba(212, 63, 58, 1) !important; background-color: rgba(212, 63, 58, 1)">
                                         <i class="fa fa-close"></i>Delete
                                     </button>
                                     <button class="client_btn" type="button" ng-click="onUserClose();" data-toggle="dropdown" style="border-color: #FFA87D !important; background-color: #FFA87D">
@@ -162,7 +177,7 @@
             </div>             
         </div>
 
-         <div id="passwordreset" class="modal">
+         <div id="passwordreset" class="modal modal-backdrop" >
             <div  style="margin-top:137px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
                 <div class="panel panel-info">
                     <div class="panel-heading">

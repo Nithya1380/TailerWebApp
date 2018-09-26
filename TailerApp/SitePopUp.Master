@@ -1,0 +1,30 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="SitePopUp.master.cs" Inherits="TailerApp.SitePopUp" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <link href="UI/Style/TailerStyle.css" rel="stylesheet" />
+    <title></title>
+    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <style type="text/css">
+        body { padding-top: 0px}
+    </style>
+    <asp:ContentPlaceHolder ID="PopUphead" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div style="padding-bottom:3px; background-image:url(/Content/Images/top_bg.gif); height:30px; padding:0px;">
+        <div class="col-sm-4 pull-right" style="margin-top:5px;text-align:right">
+            <img src="<%=ApplicationVirtualPath %>/Content/Images/logo.png" alt="Logo" style="vertical-align:auto;" height="20" />
+        </div> 
+    </div>
+    <div>
+        <asp:ContentPlaceHolder ID="PopUpContent" runat="server">
+        
+        </asp:ContentPlaceHolder>
+    </div>
+    </form>
+</body>
+</html>
