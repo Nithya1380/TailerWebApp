@@ -110,18 +110,24 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\angular-datepicker.css" />
+    <Content Include="Scripts\angular-datepicker.js" />
     <Content Include="Scripts\AngularJS\angular.js" />
     <Content Include="Scripts\AngularJS\BranchController.js" />
     <Content Include="Scripts\AngularJS\CompanyController.js" />
     <Content Include="Scripts\AngularJS\TailerApp.js" />
+    <Content Include="Scripts\AngularJS\UserAndRoleController.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\CalendarControl.css" />
+    <Content Include="Scripts\font-awesome.min.css" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\jquery-1.10.2.ui.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\ui-bootstrap-tpls-1.3.2.js" />
     <Content Include="Scripts\WebForms\DetailsView.js" />
     <Content Include="Scripts\WebForms\Focus.js" />
     <Content Include="Scripts\WebForms\GridView.js" />
@@ -147,9 +153,11 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Site.Master" />
+    <Content Include="UI\Admin\AddModifyRole.aspx" />
     <Content Include="UI\Admin\AdminHome.aspx" />
     <Content Include="UI\Admin\Branch_AddModify.aspx" />
     <Content Include="UI\Admin\Company_AddModify.aspx" />
+    <Content Include="UI\Admin\UserAndRole.aspx" />
     <Content Include="UI\Common\Login.aspx" />
     <Content Include="UI\Img\12345.jpeg" />
     <Content Include="UI\Img\PopUpMaster.jpeg" />
@@ -170,6 +178,7 @@
     <Content Include="Site.Mobile.Master" />
     <Content Include="UI\Admin\Admin.Master" />
     <Content Include="UI\Admin\AdminPopUp.Master" />
+    <Content Include="SitePopUp.Master" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -205,6 +214,20 @@
     <Compile Include="Site.Mobile.Master.designer.cs">
       <DependentUpon>Site.Mobile.Master</DependentUpon>
     </Compile>
+    <Compile Include="SitePopUp.Master.cs">
+      <DependentUpon>SitePopUp.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SitePopUp.Master.designer.cs">
+      <DependentUpon>SitePopUp.Master</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\AddModifyRole.aspx.cs">
+      <DependentUpon>AddModifyRole.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\AddModifyRole.aspx.designer.cs">
+      <DependentUpon>AddModifyRole.aspx</DependentUpon>
+    </Compile>
     <Compile Include="UI\Admin\Admin.Master.cs">
       <DependentUpon>Admin.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -239,6 +262,13 @@
     </Compile>
     <Compile Include="UI\Admin\Company_AddModify.aspx.designer.cs">
       <DependentUpon>Company_AddModify.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\UserAndRole.aspx.cs">
+      <DependentUpon>UserAndRole.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\UserAndRole.aspx.designer.cs">
+      <DependentUpon>UserAndRole.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Common\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
