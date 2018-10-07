@@ -110,6 +110,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\angular-datepicker.css" />
+    <Content Include="Scripts\angular-datepicker.js" />
     <Content Include="Scripts\AngularJS\angular.js" />
     <Content Include="Scripts\AngularJS\BranchController.js" />
     <Content Include="Scripts\AngularJS\CompanyController.js" />
@@ -147,9 +149,11 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Site.Master" />
+    <Content Include="UI\Admin\AddEditItemMaster.aspx" />
     <Content Include="UI\Admin\AdminHome.aspx" />
     <Content Include="UI\Admin\Branch_AddModify.aspx" />
     <Content Include="UI\Admin\Company_AddModify.aspx" />
+    <Content Include="UI\Admin\ItemsMaster.aspx" />
     <Content Include="UI\Common\Login.aspx" />
     <Content Include="UI\Img\12345.jpeg" />
     <Content Include="UI\Img\PopUpMaster.jpeg" />
@@ -206,6 +210,13 @@
     <Compile Include="Site.Mobile.Master.designer.cs">
       <DependentUpon>Site.Mobile.Master</DependentUpon>
     </Compile>
+    <Compile Include="UI\Admin\AddEditItemMaster.aspx.cs">
+      <DependentUpon>AddEditItemMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\AddEditItemMaster.aspx.designer.cs">
+      <DependentUpon>AddEditItemMaster.aspx</DependentUpon>
+    </Compile>
     <Compile Include="UI\Admin\Admin.Master.cs">
       <DependentUpon>Admin.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -240,6 +251,13 @@
     </Compile>
     <Compile Include="UI\Admin\Company_AddModify.aspx.designer.cs">
       <DependentUpon>Company_AddModify.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\ItemsMaster.aspx.cs">
+      <DependentUpon>ItemsMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\ItemsMaster.aspx.designer.cs">
+      <DependentUpon>ItemsMaster.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Common\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>

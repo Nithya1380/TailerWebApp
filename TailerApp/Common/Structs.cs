@@ -40,6 +40,7 @@ namespace TailerApp.Common
         public bool IsSSOLogin { get; set; }
         public string UserSessionID { get; set; }
         public bool enableAutoSessionOut { get; set; }
+        public int UserBranchID { get; set; }
 
     }
 }

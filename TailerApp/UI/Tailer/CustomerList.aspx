@@ -46,9 +46,9 @@
             };
 
             $scope.OnAddNewCustomerClick = function () {
-                var left = (screen.width / 2) - (800 / 2);
+                var left = (screen.width / 2) - (850 / 2);
                 var top = (screen.height / 2) - (500 / 2);
-                $window.open("AddNewCustomer.aspx", "AddCustomer", 'resizable=yes,location=1,status=1,scrollbars=1,width=800,height=500,top='+top+', left='+left);
+                $window.open("AddNewCustomer.aspx", "AddCustomer", 'resizable=yes,location=1,status=1,scrollbars=1,width=850,height=500,top=' + top + ', left=' + left);
                 return false;
             };
         });
@@ -81,7 +81,7 @@
                                     <th>Home Phone</th>
                                     <th>Email</th>
                                     <th>Address</th>
-                                    <th>test&nbsp;</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody ng-repeat="customer in CustomerList">

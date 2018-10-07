@@ -281,6 +281,55 @@ namespace DAL.DBManager
             return ret;
         }
 
+        public bool GetPickLists(int companyID, int userID, string PickListName, out GenericPickList MasterPickLists)
+        {
+            MasterPickLists = new GenericPickList();
+            bool ret = false;
+            string dropdowns = string.Empty;
+            try
+            {
+                this.Connect(this.GetConnString());
+                string spName = "GetPickLists";
+                this.ClearSPParams();
+                this.AddSPIntParam("@companyID", companyID);
+                this.AddSPStringParam("@PickListName", PickListName);
+                this.AddSPReturnIntParam("@return");
+                using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+                {
+                    dropdowns = string.Empty;
+                    while (reader.Read())
+                    {
+                        dropdowns += reader.GetString(0);
+                    }
+
+                    MasterPickLists.PickListItems = Newtonsoft.Json.JsonConvert.DeserializeObject<List<PickList>>(dropdowns);
+
+                    reader.Close();
+                }
+
+                int retcode = this.GetOutValueInt("@return");
+
+                switch (retcode)
+                {
+                    case 1: ret = true;
+                        break;
+                    default: SetError(-1, "Failed to get dropdowns. Please try again later");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = false;
+                Utils.Write(ex);
+            }
+            finally
+            {
+                this.ClearSPParams();
+                this.Disconnect();
+            }
+            return ret;
+        }
+
         public bool GetCustomerList(int companyID, int userID, out JsonResults customerList)
         {
             customerList = new JsonResults();
@@ -327,7 +376,7 @@ namespace DAL.DBManager
             return ret;
         }
 
-        public bool AddNewCustomer(int companyID, int userID, ref Customer customerObj)
+        public bool AddNewCustomer(int companyID, int userID, int UserBranchID, ref Customer customerObj,ref CustomerAccount customerAccountObj)
         {
             bool ret = false;
 
@@ -338,7 +387,9 @@ namespace DAL.DBManager
                 this.ClearSPParams();
                 this.AddSPIntParam("@companyID", companyID);
                 this.AddSPIntParam("@UserID", userID);
+                this.AddSPIntParam("@UserBranchID", UserBranchID);
                 this.AddSPStringParam("@customerObj", Newtonsoft.Json.JsonConvert.SerializeObject(customerObj));
+                this.AddSPStringParam("@customerAccountObj", Newtonsoft.Json.JsonConvert.SerializeObject(customerAccountObj));
                 this.AddSPReturnIntParam("@return");
                 this.ExecuteNonSP(spName);
                 int retcode = this.GetOutValueInt("@return");
@@ -351,6 +402,9 @@ namespace DAL.DBManager
                         break;
                     case -3: SetError(-3, "Customer with same name already exists. Failed to add new customer.");
                         break;
+                    case -4: SetError(-4, "Customer code already exists. Failed to add new customer.");
+                        break;
+               
                     default: SetError(-1, "Failed to add new customer. Please try again later");
                         break;
                 }
@@ -359,6 +413,53 @@ namespace DAL.DBManager
             {
                 ret = false;
                 SetError(-1, "Failed to add new customer. Please try again later");
+                Utils.Write(ex);
+            }
+            finally
+            {
+                this.ClearSPParams();
+                this.Disconnect();
+            }
+            return ret;
+        }
+
+        public bool SaveCustomerDetails(int companyID, int userID,int customerID,int customerBranch,ref CustomerMaster customerObj,out int newCustomerID)
+        {
+            bool ret = false;
+            newCustomerID=0;
+            try
+            {
+                this.Connect(this.GetConnString());
+                string spName = "SaveCustomerDetails";
+                this.ClearSPParams();
+                this.AddSPIntParam("@companyID", companyID);
+                this.AddSPIntParam("@CustomerID", customerID);
+                this.AddSPIntParam("@CustomerBranchID", customerBranch);
+                this.AddSPIntParam("@UserID", userID);
+                this.AddSPStringParam("@customerObj", Newtonsoft.Json.JsonConvert.SerializeObject(customerObj));
+                this.AddSPReturnIntParam("@return");
+                this.ExecuteNonSP(spName);
+                int retcode = this.GetOutValueInt("@return");
+
+                switch (retcode)
+                {
+                    case 1: ret = true;
+                        newCustomerID = this.GetOutValueInt("@CustomerID");
+                        break;
+                    case -2: SetError(-2, "Mandatory fileds are not entered. Failed to Save.");
+                        break;
+                    case -3: SetError(-3, "Customer with same name already exists. Failed to Save customer.");
+                        break;
+                    case -4: SetError(-4, "Customer code already exists. Failed to Save customer.");
+                        break;
+                    default: SetError(-1, "Failed to save customer information.Please try again later");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = false;
+                SetError(-1, "Failed to save customer information.Please try again later");
                 Utils.Write(ex);
             }
             finally

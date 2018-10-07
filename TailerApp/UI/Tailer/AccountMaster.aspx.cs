@@ -94,5 +94,44 @@ namespace TailerApp.UI.Tailer
 
             return CustomerDetails;
         }
+
+        [WebMethod]
+        public static JsonResults SaveCustomerDetails(CustomerMaster Customer,int customerID)
+        {
+            JsonResults returnObj = new JsonResults();
+            LoginUser currentUser;
+            int newCustomerID=0;
+            try
+            {
+                if (!GetUserSession(out currentUser))
+                {
+                    returnObj.ErrorCode = -1001;
+                    returnObj.ErrorMessage = "";
+                }
+
+                CustomerManager customerObj = new CustomerManager();
+                if (customerObj.SaveCustomerDetails(currentUser.CompanyID, currentUser.UserId, customerID, currentUser.UserBranchID, ref Customer, out newCustomerID))
+                {
+                    returnObj.ErrorCode = 0;
+                    returnObj.ErrorMessage = "";
+
+                    if (customerID != 0)
+                        newCustomerID = customerID;
+
+                    returnObj.OutValue = newCustomerID;
+                }
+                else
+                {
+                    returnObj.ErrorCode = customerObj.GetLastErrorCode();
+                    returnObj.ErrorMessage = customerObj.GetLastError();
+                }
+            }
+            catch (Exception ex)
+            {
+                Utils.Write(ex);
+            }
+
+            return returnObj;
+        }
     }
 }

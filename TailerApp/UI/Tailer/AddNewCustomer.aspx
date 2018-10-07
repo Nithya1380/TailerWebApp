@@ -6,6 +6,8 @@
 <head runat="server">
     <title></title>
     <script src="../../Scripts/AngularJS/angular.js"></script>
+    <link href="../../Scripts/angular-datepicker.css" rel="stylesheet" />
+    <script src="../../Scripts/angular-datepicker.js"></script>
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
         <script src="<%: ResolveUrl("~/Scripts/jquery-1.10.2.js") %>"></script>
@@ -18,13 +20,44 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous" />
    
     <script type="text/javascript">
-        var tailerApp = angular.module("TailerApp", []);
+        var tailerApp = angular.module("TailerApp", ['720kb.datepicker']);
         tailerApp.controller("AddCustomerController", function ($scope, $window, $http, $rootScope, $sce) {
             $scope.Customer = {};
+            $scope.CustomerAccount = {};
             $scope.ShowError = false;
             $scope.CustomerError = "";
             $scope.AlertClass = "alert-danger";
             $scope.EnableSave = true;
+
+            $scope.init = function () {
+                $scope.GetAccountCategory();
+            }
+
+            $scope.GetAccountCategory = function () {
+                $scope.AccountCategoryPickLists = {};
+
+                $http({
+                    method: "POST",
+                    url: "AddNewCustomer.aspx/GetAccountCategory",
+                    data: {},
+                    dataType: "json",
+                    headers: { contentType: "application/json" }
+                }).then(function onSuccess(response) {
+                    if (response.data.d.ErrorCode == -1001) {
+                        //Session Expired
+                        return false;
+                    }
+                    if (response.data.d.ErrorCode != 0) {
+                        alert(response.data.d.ErrorMessage);
+                        return false;
+                    }
+
+                    $scope.AccountCategoryPickLists = response.data.d;
+
+                }, function onFailure(error) {
+
+                });
+            };
 
             $scope.AddNewCustomer = function () {
                 $scope.ShowError = false;
@@ -36,7 +69,7 @@
                 $http({
                     method: "POST",
                     url: "AddNewCustomer.aspx/AddNewCustomerToDB",
-                    data: { Customer: $scope.Customer },
+                    data: { Customer: $scope.Customer, CustomerAccountObj: $scope.CustomerAccount },
                     dataType: "json",
                     headers: { "Content-Type": "application/json" }
                 }).then(function onSuccess(response) {
@@ -80,6 +113,12 @@
                 if ($scope.Customer.BirthDate == '' || $scope.Customer.BirthDate ==null) {
                     errors += '<li>DOB</li>';
                 }
+                if ($scope.CustomerAccount.AccountCode == '' || $scope.CustomerAccount.AccountCode == null) {
+                    errors += '<li>Account Code</li>';
+                }
+                if ($scope.CustomerAccount.AccountCategory == '' || $scope.CustomerAccount.AccountCategory == null) {
+                    errors += '<li>Account Category</li>';
+                }
 
                 if(errors!="")
                 {
@@ -102,7 +141,7 @@
 </head>
 <body>
     <form id="form1" runat="server" name="AddCustomer">
-        <div class="col-lg-12 col-md-12 col-sm-12" data-ng-app="TailerApp" data-ng-controller="AddCustomerController">
+        <div class="col-lg-12 col-md-12 col-sm-12" data-ng-app="TailerApp" data-ng-controller="AddCustomerController" data-ng-init="init()">
             <div class="alert" data-ng-class="AlertClass" data-ng-show="ShowError">
                 <span data-ng-bind-html="CustomerError" ></span>
             </div>
@@ -127,10 +166,31 @@
                     <table style="width:100%" class="profile_table">
                         <tbody>
                             <tr>
+                                <td style="text-align:right" class="back_shade">
+                                    <span class="profileLabel"><span style="color:red">*</span> Account Code: </span>
+                                </td>
+                                <td>
+                                    <span class="profileLabel">
+                                        <input type="text" class="form-control" style="width: 250px; margin-left: 5px;" maxlength="50" data-ng-model="CustomerAccount.AccountCode"  required/>
+                                    </span>
+                                </td>
+                                 <td style="text-align:right" class="back_shade">
+                                    <span class="profileLabel"><span style="color:red">*</span> Account Category: </span>
+                                </td>
+                                <td colspan="5">
+                                    <span class="profileLabel">
+                                        <select class="form-control" id="drpAccountCategory" data-ng-model="CustomerAccount.AccountCategory"
+                                             data-ng-options="custCat.PickListValue as custCat.PickListLabel for custCat in AccountCategoryPickLists.PickListItems track by custCat.PickListValue">
+                                               <option value="">Select Category</option>
+                                        </select>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td style="text-align:right" class="back_shade"><span class="profileLabel"><span style="color:red">*</span>First Name:</span></td>
                                 <td colspan="5">
                                    <span class="profileValue">
-                                    <input type="text" data-ng-model="Customer.FirstName" name="FirstName" class="form-control" style="width: 250px; margin-left: 5px;" maxlength="50" requiredd />
+                                    <input type="text" data-ng-model="Customer.FirstName" name="FirstName" class="form-control" style="width: 250px; margin-left: 5px;" maxlength="50" required />
                                    </span>
                                 </td>
                             </tr>
@@ -151,8 +211,10 @@
                             <tr>
                                 <td style="text-align:right" class="back_shade"><span class="profileLabel"><span style="color:red">*</span>DOB:</span></td>
                                 <td colspan="5">
-                                    <input type="text" data-ng-model="Customer.BirthDate" class="form-control" style="width: 250px; margin-left: 5px;" maxlength="15" required />
-                                </td>
+                                    <datepicker date-format="MM/dd/yyyy">
+                                    <input type="text" data-ng-model="Customer.BirthDate"  class="form-control" style="width: 250px; margin-left: 5px;" maxlength="15" required />
+                                    </datepicker>
+                                 </td>
                             </tr>
                             <tr>
                                 <td style="text-align:right" class="back_shade"><span class="profileLabel">Address 1:</span></td>

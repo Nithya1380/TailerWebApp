@@ -549,6 +549,100 @@ namespace DAL.DBManager
            return ret;
        }
 
+       public bool GetItemMasterList(int companyID, int userID,int itemMasterID ,out ItemMasterList itemsMasterList)
+       {
+           itemsMasterList = new ItemMasterList();
+           itemsMasterList.ItemsList = new List<ItemMaster>();
+           string jsonString = string.Empty;
+           bool ret = false;
+
+           try
+           {
+               this.Connect(this.GetConnString());
+               string spName = "GetItemMasterList";
+               this.ClearSPParams();
+               this.AddSPIntParam("@companyID", companyID);
+               this.AddSPIntParam("@UserID", userID);
+               this.AddSPIntParam("@ItemMasterID", itemMasterID);
+               this.AddSPReturnIntParam("@return");
+               using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+               {
+                   while (reader.Read())
+                   {
+                       jsonString += reader.GetString(0);
+                   }
+
+                   reader.Close();
+
+                   itemsMasterList.ItemsList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ItemMaster>>(jsonString);
+               }
+
+               int retcode = this.GetOutValueInt("@return");
+
+               switch (retcode)
+               {
+                   case 1: ret = true;
+                       break;
+                   default: SetError(-1, "Failed to get Items List. Please try again later");
+                       break;
+               }
+           }
+           catch (Exception ex)
+           {
+               ret = false;
+               Utils.Write(ex);
+           }
+           finally
+           {
+               this.ClearSPParams();
+               this.Disconnect();
+           }
+           return ret;
+       }
+
+       public bool AddEditItemMaster(int companyID, int userID, int UserBranchID,int itemMasterID,ref ItemMaster itemMaster)
+       {
+           bool ret = false;
+
+           try
+           {
+               this.Connect(this.GetConnString());
+               string spName = "AddEditItemMaster";
+               this.ClearSPParams();
+               this.AddSPIntParam("@companyID", companyID);
+               this.AddSPIntParam("@UserID", userID);
+               this.AddSPIntParam("@UserBranchID", UserBranchID);
+               this.AddSPIntParam("@ItemMasterID", itemMasterID);
+               this.AddSPStringParam("@itemMasterObj", Newtonsoft.Json.JsonConvert.SerializeObject(itemMaster));
+               this.AddSPReturnIntParam("@return");
+               this.ExecuteNonSP(spName);
+               int retcode = this.GetOutValueInt("@return");
+
+               switch (retcode)
+               {
+                   case 1: ret = true;
+                       break;
+                   case -2: SetError(-2, "Mandatory fileds are not entered. Failed to add new Item.");
+                       break;
+                   case -3: SetError(-3, "Item with same Item Code already exists.");
+                       break;
+                   default: SetError(-1, "Failed to add/Edit Item. Please try again later");
+                       break;
+               }
+           }
+           catch (Exception ex)
+           {
+               ret = false;
+               SetError(-1, "Failed to add/Edit Item. Please try again later");
+               Utils.Write(ex);
+           }
+           finally
+           {
+               this.ClearSPParams();
+               this.Disconnect();
+           }
+           return ret;
+       }
 
     }
 }

@@ -1,6 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AccountMaster.aspx.cs" Inherits="TailerApp.UI.Tailer.AccountMaster" %>
 <asp:Content ID="content_Head" runat="server" ContentPlaceHolderID="HeaderContent">
     <script src="../../Scripts/AngularJS/angular.js"></script>
+    <link href="../../Scripts/angular-datepicker.css" rel="stylesheet" />
+    <script src="../../Scripts/angular-datepicker.js"></script>
      <script type="text/javascript" lang="javascript">
          $(function () {
                  // $("#datepicker").datepicker();
@@ -9,8 +11,8 @@
 
          var gb_customerID='<%=CustomerID%>';
 
-         var tailerApp = angular.module("TailerApp", []);
-         tailerApp.controller("AccountsController", function ($scope, $window, $http, $rootScope) {
+         var tailerApp = angular.module("TailerApp", ['720kb.datepicker']);
+         tailerApp.controller("AccountsController", function ($scope, $window, $http, $rootScope, $sce) {
              $scope.CustomerPickLists = {};
              $scope.customerID = gb_customerID;
              $scope.customerMaster = {};
@@ -18,6 +20,10 @@
              $scope.customerMaster.Customer= {};
              $scope.customerMaster.CustomerSupply = {};
              $scope.customerMaster.CustomerBranches = {};
+             $scope.CustInfo = {};
+             $scope.ShowError = false;
+             $scope.CustomerError = "";
+             $scope.AlertClass = "alert-danger";
 
              $scope.init = function () {
                  $scope.GetCustomerDropdowns();
@@ -74,16 +80,106 @@
                          return false;
                      }
 
-            
                      $scope.customerMaster.CustomerAccount = response.data.d.CustomerAccount;
                      $scope.customerMaster.Customer = response.data.d.Customer;
                      $scope.customerMaster.CustomerSupply = response.data.d.CustomerSupply;
                      $scope.customerMaster.CustomerBranches = response.data.d.CustomerBranches;
                      
+                     $scope.CustInfo.CustomerName = $scope.customerMaster.Customer.FirstName + ' ' + $scope.customerMaster.Customer.SurName;
+                     $scope.CustInfo.Address1 = $scope.customerMaster.Customer.Address1;
+                     $scope.CustInfo.Address2 = $scope.customerMaster.Customer.Address2;
+                     $scope.CustInfo.Address2 = $scope.customerMaster.Customer.Address2;
+                     $scope.CustInfo.Telephone = $scope.customerMaster.Customer.HomePhoneNo;
+                     $scope.CustInfo.Mobile = $scope.customerMaster.Customer.MobileNo;
+                     $scope.CustInfo.DOB = $scope.customerMaster.Customer.BirthDate;
+                     $scope.CustInfo.Email = $scope.customerMaster.Customer.EmailID;
 
                  }, function onFailure(error) {
 
                  });
+             };
+
+             //save Details
+             $scope.SaveDetails = function () {
+                 $scope.ShowError = false;
+                 $scope.CustomerError = "";
+
+                 if (!$scope.ValidateSave())
+                     return false;
+
+                 $http({
+                     method: "POST",
+                     url: "AccountMaster.aspx/SaveCustomerDetails",
+                     data: { Customer: $scope.customerMaster, customerID: $scope.customerID },
+                     dataType: "json",
+                     headers: { "Content-Type": "application/json" }
+                 }).then(function onSuccess(response) {
+                     if (response.data.d.ErrorCode == -1001) {
+                         //Session Expired
+                         return false;
+                     }
+                     if (response.data.d.ErrorCode != 0) {
+                         $scope.ShowError = true;
+                         $scope.CustomerError = $sce.trustAsHtml(response.data.d.ErrorMessage);
+                         return false;
+                     }
+                     else {
+                         $scope.ShowError = true;
+                         $scope.CustomerError = $sce.trustAsHtml("Saved Successfully!");
+                         $scope.AlertClass = "alert-success";
+                         $scope.customerID=response.data.d.OutValue;
+                         return false;
+                     }
+
+                 }, function onFailure(error) {
+                     $scope.ShowError = true;
+                     $scope.CustomerError = response.data.d.ErrorCode;
+                 });
+
+             };
+
+             $scope.ValidateSave = function () {
+                 var errors = "";
+                 if ($scope.customerMaster.Customer.FirstName == '' || $scope.customerMaster.Customer.FirstName == null) {
+                     errors = '<li>First Name</li>';
+                 }
+                 if ($scope.customerMaster.Customer.SurName == '' || $scope.customerMaster.Customer.SurName == null) {
+                     errors += '<li>Sur Name</li>';
+                 }
+                 if ($scope.customerMaster.Customer.Gender == '' || $scope.customerMaster.Customer.Gender == null) {
+                     errors += '<li>Sex</li>';
+                 }
+                 if ($scope.customerMaster.Customer.BirthDate == '' || $scope.customerMaster.Customer.BirthDate == null) {
+                     errors += '<li>DOB</li>';
+                 }
+                 if ($scope.customerMaster.CustomerAccount.AccountCode == '' || $scope.customerMaster.CustomerAccount.AccountCode == null) {
+                     errors += '<li>Account Code</li>';
+                 }
+                 if ($scope.customerMaster.CustomerAccount.AccountCategory == '' || $scope.customerMaster.CustomerAccount.AccountCategory == null) {
+                     errors += '<li>Account Category</li>';
+                 }
+                 else if ($scope.customerMaster.CustomerAccount.AccountCategory == 'Supplier')
+                 {
+                     
+                     if ($scope.customerMaster.CustomerSupply.SupplierCode == '' || $scope.customerMaster.CustomerSupply.SupplierCode == null) {
+                         errors += '<li>Supplier Code</li>';
+                     }
+                     if ($scope.customerMaster.CustomerSupply.SupplierName == '' || $scope.customerMaster.CustomerSupply.SupplierName == null) {
+                         errors += '<li>Supplier Name</li>';
+                     }
+                     if ($scope.customerMaster.CustomerSupply.SupplierType == '' || $scope.customerMaster.CustomerSupply.SupplierType == null) {
+                         errors += '<li>Supplier Type</li>';
+                     }
+                 }
+                 
+                 if (errors != "") {
+                     $scope.ShowError = true;
+                     $scope.CustomerError = $sce.trustAsHtml('<ul>' + errors + '</ul>');
+                     $scope.AlertClass = "alert-danger";
+                     return false;
+                 }
+
+                 return true;
              };
          });
     </script>
@@ -92,6 +188,9 @@
     <div class="container bootstrap snippet" data-ng-app="TailerApp" data-ng-controller="AccountsController" data-ng-init="init()" >
     <div class="row">
         <div>&nbsp;</div>
+        <div class="alert" data-ng-class="AlertClass" data-ng-show="ShowError">
+                <span data-ng-bind-html="CustomerError" ></span>
+            </div>
     </div>
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
@@ -107,7 +206,7 @@
                                             </div>
                                         </td>
                                         <td style="vertical-align: top">
-                                            <div class="clientName">Remington Albritton</div>
+                                            <div class="clientName" data-ng-bind="CustInfo.CustomerName"></div>
                                             <div>&nbsp;<input type="file" title="Upload Photo" class="text-center center-block file-upload" style="margin-left: 3px" /></div>
                                         </td>
                                     </tr>
@@ -121,10 +220,10 @@
                                         <td><i class="fa fa-map-marker" style="font-size: 15px; color: #636E7B;"></i>&nbsp;<span class="profileValue1">391 County Rd 3386</span></td>
                                     </tr>
                                     <tr>
-                                        <td><span class="profileValue1">391 Brooks, Jennifer Rd 3386</span></td>
+                                        <td><span class="profileValue1" data-ng-bind="CustInfo.Address1"></span></td>
                                     </tr>
                                     <tr>
-                                        <td><span class="profileValue1">Paradise    TX    76073</span></td>
+                                        <td><span class="profileValue1"  data-ng-bind="CustInfo.Address2"></span></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -134,19 +233,19 @@
                                 <tbody>
                                     <tr>
                                         <td style="text-align: right"><span class="profileValue1">Phone:</span></td>
-                                        <td>&nbsp;<span class="profileValue1">(999) 927-7421</span></td>
+                                        <td>&nbsp;<span class="profileValue1" data-ng-bind="CustInfo.Telephone"></span></td>
                                     </tr>
                                     <tr>
                                         <td style="text-align: right"><span class="profileValue1">Cell No:</span></td>
-                                        <td>&nbsp;<span class="profileValue1">(999) 866-5522</span></td>
+                                        <td>&nbsp;<span class="profileValue1" data-ng-bind="CustInfo.Mobile"></span></td>
                                     </tr>
                                     <tr>
-                                        <td style="text-align: right"><span class="profileValue1">Work Phone:</span></td>
-                                        <td>&nbsp;<span class="profileValue1">(999) 927-6541</span></td>
+                                        <td style="text-align: right"><span class="profileValue1">Birth Day:</span></td>
+                                        <td>&nbsp;<span class="profileValue1" data-ng-bind="CustInfo.DOB"></span></td>
                                     </tr>
                                     <tr>
                                         <td style="text-align: right"><span class="profileValue1">Email:</span></td>
-                                        <td>&nbsp;<span class="profileValue1">remingtonalbritton@yahoo.com </span></td>
+                                        <td>&nbsp;<span class="profileValue1" data-ng-bind="CustInfo.Email"></span></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -163,17 +262,31 @@
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <ul class="nav nav-tabs">
                                 <li class="active"><a data-toggle="tab" href="#accountTab">Account</a></li>
-                                <li><a data-toggle="tab" href="#loyaltyTab">Loyalty Gift</a></li>
-                                <li><a data-toggle="tab" href="#customerAndBranchTab">Company & Branch</a></li>
+                                <li style="display:none"><a data-toggle="tab" href="#loyaltyTab">Loyalty Gift</a></li>
+                                <li style="display:none"><a data-toggle="tab" href="#customerAndBranchTab">Company & Branch</a></li>
                                 <li><a data-toggle="tab" href="#cardPrintTab">Card Print</a></li>
-                                <li><a data-toggle="tab" href="#supplierTab">Supplier</a></li>
+                                <li style="display:none"><a data-toggle="tab" href="#supplierTab">Supplier</a></li>
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane active" id="accountTab">
                                     <br />
                                     <div class="row">
-                                        <div class="col-lg-2 col-md-2 col-sm-2 pull-right">
-                                            <button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i>&nbsp;Save</button>
+                                        <div class="col-lg-10 col-md-10 col-sm-10">
+                                            <label for="txtAccountCode" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>Account Code</label>
+                                            <div class="col-sm-4">
+                                                <input type="text" class="form-control" name="first_name" id="txtAccountCode" placeholder="Account Code" title="enter your Account Code." data-ng-model="customerMaster.CustomerAccount.AccountCode">
+                                            </div>
+                                       
+                                            <label for="drpCategory" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>Category</label>
+                                            <div class="col-sm-4">
+                                                <select class="form-control" id="drpCategory" data-ng-model="customerMaster.CustomerAccount.AccountCategory"
+                                                    data-ng-options="custCat.PickListValue as custCat.PickListLabel for custCat in CustomerPickLists.AccountCategory track by custCat.PickListValue">
+                                                    <option value="">Select Category</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                         <div class="col-lg-2 col-md-2 col-sm-2 pull-right">
+                                            <button class="btn btn-lg btn-success" type="button" data-ng-click="SaveDetails()"><i class="glyphicon glyphicon-ok-sign"></i>&nbsp;Save</button>
                                         </div>
                                     </div>
                                     <div class="form-group row"></div>
@@ -192,7 +305,7 @@
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control" name="txtFullName" id="txtFullName" placeholder="Full Name" title="enter your Full Name." data-ng-model="customerMaster.Customer.FullName">
                                                             </div>
-                                                            <label for="drpSex" class="col-sm-2 lbl-text-right">Sex</label>
+                                                            <label for="drpSex" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>Sex</label>
                                                             <div class="col-sm-4">
                                                                 <select class="form-control" id="drpSex" data-ng-model="customerMaster.Customer.Gender">
                                                                     <option>Male</option>
@@ -201,11 +314,11 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="txtFirstName" class="col-sm-2 lbl-text-right">First Name</label>
+                                                            <label for="txtFirstName" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>First Name</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control" name="txtFullName" id="txtFirstName" placeholder="First Name" title="enter your First Name." data-ng-model="customerMaster.Customer.FirstName">
                                                             </div>
-                                                            <label for="txtLastName" class="col-sm-2 lbl-text-right">Last Name</label>
+                                                            <label for="txtLastName" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>Last Name</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control" name="txtLastName" id="txtLastName" placeholder="Last Name" title="enter your Last Name." data-ng-model="customerMaster.Customer.MiddleName"/>
                                                             </div>
@@ -223,11 +336,15 @@
                                                         <div class="form-group row">
                                                             <label for="txtBirthDate" class="col-sm-2 lbl-text-right">Birth Date</label>
                                                             <div class="col-sm-4">
+                                                                <datepicker date-format="MM/dd/yyyy">
                                                                 <input type="text" class="form-control" name="txtBirthDate" id="txtBirthDate" placeholder="Birth Date" title="enter Birth Date." data-ng-model="customerMaster.Customer.BirthDate"/>
-                                                            </div>
+                                                                </datepicker>
+                                                             </div>
                                                             <label for="txtOpenDate" class="col-sm-2 lbl-text-right">Open Date</label>
                                                             <div class="col-sm-4">
+                                                                <datepicker date-format="MM/dd/yyyy">
                                                                 <input type="text" class="form-control" name="txtOpenDate" id="txtOpenDate" placeholder="Open Date" title="enter Open Date." data-ng-model="customerMaster.Customer.OpenDate"/>
+                                                                <datepicker>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
@@ -244,7 +361,7 @@
                                                             <label for="drpCountry" class="col-sm-2 lbl-text-right">Country</label>
                                                             <div class="col-sm-4">
                                                                 <select class="form-control" id="drpCountry">
-                                                                    <option>Select Country</option>
+                                                                    <option value="India">India</option>
                                                                 </select>
                                                             </div>
                                                             <label for="drpState" class="col-sm-2 lbl-text-right">State</label>
@@ -296,7 +413,9 @@
                                                             </div>
                                                             <label for="txtAnnDate" class="col-sm-2 lbl-text-right">Ann Date</label>
                                                             <div class="col-sm-4">
+                                                                <datepicker date-format="MM/dd/yyyy">
                                                                 <input type="text" class="form-control" name="txtAnnDate" id="txtAnnDate" placeholder="Ann Date" title="Enter Ann Date." data-ng-model="customerMaster.Customer.AnnDate" />
+                                                                </datepicker>
                                                             </div>
                                                         </div>
 
@@ -340,14 +459,13 @@
                                                         </div>
 
                                                         <div class="form-group row">
-                                                            <label for="txtAccountCode" class="col-sm-2 lbl-text-right">Account Code</label>
-                                                            <div class="col-sm-4">
-                                                                <input type="text" class="form-control" name="first_name" id="txtAccountCode" placeholder="Account Code" title="enter your Account Code." data-ng-model="customerMaster.CustomerAccount.AccountCode">
-                                                            </div>
-
-                                                            <label for="txtAccountName" class="col-sm-2 lbl-text-right">Account Name</label>
+                                                           <label for="txtAccountName" class="col-sm-2 lbl-text-right">Account Name</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control" name="first_name" id="txtAccountName" placeholder="Account Name" title="enter your Account Code." data-ng-model="customerMaster.CustomerAccount.AccountName">
+                                                            </div>
+                                                             <label for="txtPartyAlert" class="col-sm-2 lbl-text-right">Party Alert</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtPartyAlert" id="txtPartyAlert" placeholder="Party Alert" data-ng-model="customerMaster.CustomerAccount.PartyAlert"/>
                                                             </div>
                                                         </div>
 
@@ -366,21 +484,7 @@
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        <div class="form-group row">
-                                                            <label for="drpCategory" class="col-sm-2 lbl-text-right">Category</label>
-                                                            <div class="col-sm-4">
-                                                                <select class="form-control" id="drpCategory" data-ng-model="customerMaster.CustomerAccount.AccountCategory"
-                                                                    data-ng-options="custCat.PickListLabel for custCat in CustomerPickLists.AccountCategory track by custCat.PickListValue">
-                                                                    <option value="">Select Category</option>
-                                                                </select>
-                                                            </div>
-
-                                                            <label for="txtPartyAlert" class="col-sm-2 lbl-text-right">Party Alert</label>
-                                                            <div class="col-sm-4">
-                                                                <input type="text" class="form-control" name="txtPartyAlert" id="txtPartyAlert" placeholder="Party Alert" data-ng-model="customerMaster.CustomerAccount.PartyAlert"/>
-                                                            </div>
-                                                        </div>
-
+                                                       
                                                         <div class="form-group row">
                                                             <label for="txtOpening" class="col-sm-2 lbl-text-right">Opening</label>
                                                             <div class="col-sm-4">
@@ -396,8 +500,10 @@
                                                         <div class="form-group row">
                                                             <label for="txtCreatedDate" class="col-sm-2 lbl-text-right">Created Date</label>
                                                             <div class="col-sm-4">
+                                                                <datepicker date-format="MM/dd/yyyy">
                                                                 <input type="text" class="form-control" name="txtCreatedDate" id="txtCreatedDate" placeholder="Created Date"  data-ng-model="customerMaster.CustomerAccount.AccountCreatedDate" />
-                                                            </div>
+                                                                <datepicker>
+                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <select class="form-control" id="drpDateCategory">
                                                                     <option>Select Category</option>
@@ -451,13 +557,108 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="panel panel-info" data-ng-if="customerMaster.CustomerAccount.AccountCategory=='Supplier'">
+                                                <div class="panel-heading">
+                                                    <h3 class="panel-title">Supplier Information
+                                                      <a data-toggle="collapse" data-parent="#accordion" href="#collapseSupplierInfo" class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></a>
+                                                    </h3>
+                                                </div>
+                                                <div id="collapseSupplierInfo" class="panel-collapse collapse in">
+                                                    <div class="panel-body">
+                                                        <div class="form-group row">
+                                                            <label for="txtSupplierCode" class="col-sm-2 lbl-text-right">Code<span style="color: red">*</span></label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtSupplierCode" id="txtSupplierCode" placeholder="Code" data-ng-model="customerMaster.CustomerSupply.SupplierCode" />
+                                                            </div>
+                                                            <label for="txtSupplierName" class="col-sm-2 lbl-text-right">Name<span style="color: red">*</span></label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtSupplierName" id="txtSupplierName" placeholder="Name" data-ng-model="customerMaster.CustomerSupply.SupplierName" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="drpSupplierType" class="col-sm-2 lbl-text-right">Type<span style="color: red">*</span></label>
+                                                            <div class="col-sm-4">
+                                                                <select class="form-control" id="drpSupplierType" data-ng-model="customerMaster.CustomerSupply.SupplierType"></select>
+                                                            </div>
+                                                            <label for="drpSupplierCategory" class="col-sm-2 lbl-text-right">Category</label>
+                                                            <div class="col-sm-4">
+                                                                <select class="form-control" id="drpSupplierCategory" data-ng-model="customerMaster.CustomerSupply.SupplierCategory"></select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="txtSupplierCSTNo" class="col-sm-2 lbl-text-right">CST No</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="number" class="form-control" name="txtSupplierCode" id="txtSupplierCSTNo" data-ng-model="customerMaster.CustomerSupply.CSTNumber" />
+                                                            </div>
+                                                            <label for="txtSupplierCSTDate" class="col-sm-2 lbl-text-right">CST Date</label>
+                                                            <div class="col-sm-4">
+                                                                <datepicker date-format="MM/dd/yyyy">
+                                                                <input type="text" class="form-control" name="txtSupplierCSTDate" id="txtSupplierCSTDate" placeholder="CST Date" data-ng-model="customerMaster.CustomerSupply.CSTDate" />
+                                                                <datepicker >
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="txtSupplierSTNo" class="col-sm-2 lbl-text-right">ST No</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="number" class="form-control" name="txtSupplierSTNo" id="txtSupplierSTNo" data-ng-model="customerMaster.CustomerSupply.STNumber" />
+                                                            </div>
+                                                            <label for="txtSupplierSTDate" class="col-sm-2 lbl-text-right">ST Date</label>
+                                                            <div class="col-sm-4">
+                                                                <datepicker date-format="MM/dd/yyyy">
+                                                                <input type="text" class="form-control" name="txtSupplierSTDate" id="txtSupplierSTDate" placeholder="ST Date" data-ng-model="customerMaster.CustomerSupply.STDate" />
+                                                                <datepicker>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="txtSupplierGSTINo" class="col-sm-2 lbl-text-right">GSTIN No<span style="color: red">*</span></label>
+                                                            <div class="col-sm-4">
+                                                                <input type="number" class="form-control" name="txtSupplierGSTINo" id="txtSupplierGSTINo" data-ng-model="customerMaster.CustomerSupply.GSTINNumber" />
+                                                            </div>
+                                                            <label for="txtSupplierTINNo" class="col-sm-2 lbl-text-right">TIN No</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="number" class="form-control" name="txtSupplierTINNo" id="txtSupplierTINNo" data-ng-model="customerMaster.CustomerSupply.TINNumber" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="txtSupplierVATNo" class="col-sm-2 lbl-text-right">VAT No<span style="color: red">*</span></label>
+                                                            <div class="col-sm-4">
+                                                                <input type="number" class="form-control" name="txtSupplierVATNo" id="txtSupplierVATNo" data-ng-model="customerMaster.CustomerSupply.VATNumber" />
+                                                            </div>
+                                                            <label for="txtSupplierVATLess" class="col-sm-2 lbl-text-right">Less(VATAV)%</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="number" class="form-control" name="txtSupplierVATLess" id="txtSupplierVATLess" data-ng-model="customerMaster.CustomerSupply.LessVATPercent" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="txtSupplierPANNo" class="col-sm-2 lbl-text-right">PAN No</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="number" class="form-control" name="txtSupplierPANNo" id="txtSupplierPANNo" data-ng-model="customerMaster.CustomerSupply.SupplierPANNumber" />
+                                                            </div>
+                                                            <label for="txtSupplierMarkUp" class="col-sm-2 lbl-text-right">Mark Up%</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="number" class="form-control" name="txtSupplierMarkUp" id="txtSupplierMarkUp" data-ng-model="customerMaster.CustomerSupply.MarkUpPercent" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="txtSupplierMarkDown" class="col-sm-2 lbl-text-right">Mark Down%</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="number" class="form-control" name="txtSupplierMarkDown" id="txtSupplierMarkDown" data-ng-model="customerMaster.CustomerSupply.MarkDownPercent" />
+                                                            </div>
+                                                            <label for="txtSupplierCreditDays" class="col-sm-2 lbl-text-right">Credit Days</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="number" class="form-control" name="txtSupplierCreditDays" id="txtSupplierCreditDays" data-ng-model="customerMaster.CustomerSupply.CreditDays" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                         
                                 
                                 <!--/tab-pane-->
-                                <div class="tab-pane" id="loyaltyTab">
+                                <div class="tab-pane" id="loyaltyTab" style="display:none">
                                     <br />
                                      <div class="row">
                                             <div class="col-lg-2 col-md-2 col-sm-2 pull-right">
@@ -468,7 +669,7 @@
                                          </div>
                                 </div>
 
-                                <div class="tab-pane" id="customerAndBranchTab">
+                                <div class="tab-pane" id="customerAndBranchTab" style="display:none">
                                     <div class="form-group">
                                         <div class="col-xs-6 pull-right">
                                             <br />
@@ -521,7 +722,7 @@
                                     </div>
                                 </div>
 
-                                <div class="tab-pane" id="supplierTab">
+                                <div class="tab-pane" id="supplierTab" style="display:none">
                                     <br />
                                     <div class="row">
                                         <div class="col-lg-2 col-md-2 col-sm-2 pull-right">
@@ -530,86 +731,7 @@
                                     </div>
                                     <div class="form-group row">
                                     </div>
-                                    <div class="form-group row">
-                                        <label for="txtSupplierCode" class="col-sm-2 lbl-text-right">Code<span style="color:red">*</span></label>
-                                        <div class="col-sm-4">
-                                            <input type="text" class="form-control" name="txtSupplierCode" id="txtSupplierCode" placeholder="Code" data-ng-model="customerMaster.CustomerSupply.SupplierCode"/>
-                                        </div>
-                                        <label for="txtSupplierName" class="col-sm-2 lbl-text-right">Name<span style="color:red">*</span></label>
-                                        <div class="col-sm-4">
-                                           <input type="text" class="form-control" name="txtSupplierName" id="txtSupplierName" placeholder="Name" data-ng-model="customerMaster.CustomerSupply.SupplierName"/>
-                                        </div>
-                                    </div>
-                                     <div class="form-group row">
-                                        <label for="drpSupplierType" class="col-sm-2 lbl-text-right">Type<span style="color:red">*</span></label>
-                                        <div class="col-sm-4">
-                                            <select class="form-control" id="drpSupplierType" data-ng-model="customerMaster.CustomerSupply.SupplierType"></select>
-                                        </div>
-                                        <label for="drpSupplierCategory" class="col-sm-2 lbl-text-right">Category</label>
-                                        <div class="col-sm-4">
-                                           <select class="form-control" id="drpSupplierCategory" data-ng-model="customerMaster.CustomerSupply.SupplierCategory"></select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="txtSupplierCSTNo" class="col-sm-2 lbl-text-right">CST No</label>
-                                        <div class="col-sm-4">
-                                            <input type="number" class="form-control" name="txtSupplierCode" id="txtSupplierCSTNo" data-ng-model="customerMaster.CustomerSupply.CSTNumber"/>
-                                        </div>
-                                        <label for="txtSupplierCSTDate" class="col-sm-2 lbl-text-right">CST Date</label>
-                                        <div class="col-sm-4">
-                                           <input type="text" class="form-control" name="txtSupplierCSTDate" id="txtSupplierCSTDate" placeholder="CST Date" data-ng-model="customerMaster.CustomerSupply.CSTDate"/>
-                                        </div>
-                                    </div>
-                                     <div class="form-group row">
-                                        <label for="txtSupplierSTNo" class="col-sm-2 lbl-text-right">ST No</label>
-                                        <div class="col-sm-4">
-                                            <input type="number" class="form-control" name="txtSupplierSTNo" id="txtSupplierSTNo" data-ng-model="customerMaster.CustomerSupply.STNumber"/>
-                                        </div>
-                                        <label for="txtSupplierSTDate" class="col-sm-2 lbl-text-right">ST Date</label>
-                                        <div class="col-sm-4">
-                                           <input type="text" class="form-control" name="txtSupplierSTDate" id="txtSupplierSTDate" placeholder="ST Date" data-ng-model="customerMaster.CustomerSupply.STDate"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="txtSupplierGSTINo" class="col-sm-2 lbl-text-right">GSTIN No<span style="color:red">*</span></label>
-                                        <div class="col-sm-4">
-                                            <input type="number" class="form-control" name="txtSupplierGSTINo" id="txtSupplierGSTINo" data-ng-model="customerMaster.CustomerSupply.GSTINNumber"/>
-                                        </div>
-                                        <label for="txtSupplierTINNo" class="col-sm-2 lbl-text-right">TIN No</label>
-                                        <div class="col-sm-4">
-                                           <input type="number" class="form-control" name="txtSupplierTINNo" id="txtSupplierTINNo" data-ng-model="customerMaster.CustomerSupply.TINNumber"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="txtSupplierVATNo" class="col-sm-2 lbl-text-right">VAT No<span style="color:red">*</span></label>
-                                        <div class="col-sm-4">
-                                            <input type="number" class="form-control" name="txtSupplierVATNo" id="txtSupplierVATNo" data-ng-model="customerMaster.CustomerSupply.VATNumber"/>
-                                        </div>
-                                        <label for="txtSupplierVATLess" class="col-sm-2 lbl-text-right">Less(VATAV)%</label>
-                                        <div class="col-sm-4">
-                                           <input type="number" class="form-control" name="txtSupplierVATLess" id="txtSupplierVATLess" data-ng-model="customerMaster.CustomerSupply.LessVATPercent"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="txtSupplierPANNo" class="col-sm-2 lbl-text-right">PAN No</label>
-                                        <div class="col-sm-4">
-                                            <input type="number" class="form-control" name="txtSupplierPANNo" id="txtSupplierPANNo" data-ng-model="customerMaster.CustomerSupply.SupplierPANNumber"/>
-                                        </div>
-                                        <label for="txtSupplierMarkUp" class="col-sm-2 lbl-text-right">Mark Up%</label>
-                                        <div class="col-sm-4">
-                                           <input type="number" class="form-control" name="txtSupplierMarkUp" id="txtSupplierMarkUp"  data-ng-model="customerMaster.CustomerSupply.MarkUpPercent"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="txtSupplierMarkDown" class="col-sm-2 lbl-text-right">Mark Down%</label>
-                                        <div class="col-sm-4">
-                                            <input type="number" class="form-control" name="txtSupplierMarkDown" id="txtSupplierMarkDown" data-ng-model="customerMaster.CustomerSupply.MarkDownPercent"/>
-                                        </div>
-                                        <label for="txtSupplierCreditDays" class="col-sm-2 lbl-text-right">Credit Days</label>
-                                        <div class="col-sm-4">
-                                           <input type="number" class="form-control" name="txtSupplierCreditDays" id="txtSupplierCreditDays" data-ng-model="customerMaster.CustomerSupply.CreditDays"/>
-                                        </div>
-                                    </div>
+                                   
                                 </div>
 
                             </div>
