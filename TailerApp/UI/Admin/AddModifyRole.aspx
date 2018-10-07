@@ -1,17 +1,7 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="AddModifyRole.aspx.cs" Inherits="TailerApp.UI.Admin.AddModifyRole" %>
+﻿<%@ Page Language="C#" MasterPageFile="/SitePopUp.Master" AutoEventWireup="true" CodeBehind="AddModifyRole.aspx.cs" Inherits="TailerApp.UI.Admin.AddModifyRole" %>
 
-<!DOCTYPE html>
-<html>
-<head>
-<title>Page Title</title>
-
-<script src="../../Scripts/AngularJS/angular.js"></script>
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/solid.css" crossorigin="anonymous">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/fontawesome.css" crossorigin="anonymous">
-
+<asp:Content ID="Content1" ContentPlaceHolderID="PopUphead" runat="server">
+    <script src="../../Scripts/AngularJS/angular.js"></script>
 <style type="text/css">
 
 .web_panel_blue_head {
@@ -294,13 +284,32 @@
     }]);
 
 </script>
-</head>
-<body>
-
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="PopUpContent" runat="server">
+<div class="Web_PopupHeader">
+    Modify Role
+</div>
 <div ng-app="Test">
     <div ng-controller="testcontroller">
-	<br>
-	<div>
+    <div class="form-horizontal" style="margin-left:15px;" role="form">
+	    <div class="form-group" style="margin:10px;">
+            <label class="control-label col-sm-2" style="padding-right:0px;"><span style="color: red; font-size: 8px; vertical-align: top;">&#10033;</span>Role Name</label> 
+            <div class="col-sm-3">
+                <input type="text" class="form-control"  placeholder="Role name" ng-model="" />
+            </div>                           
+            <div class="col-sm-7 text-right">
+                <button class="client_btn" type="button" ng-click="OnAddModifyUserClick()" data-toggle="dropdown" style="border-color: #00A5A8 !important; background-color: #00B5B8">
+                    <i class="fa fa-save"></i> Save
+                </button>
+                <button class="client_btn" type="button" ng-hide="UserID == 0" ng-click="onUserDeleteClick();" data-toggle="dropdown" style="border-color: rgba(212, 63, 58, 1) !important; background-color: rgba(212, 63, 58, 1)">
+                    <i class="fa fa-close"></i>Delete
+                </button>
+                <button class="client_btn" type="button" ng-click="onUserClose();" data-toggle="dropdown" style="border-color: #FFA87D !important; background-color: #FFA87D">
+                    <i class="fa fa-close"></i>Cancel
+                </button>
+            </div>
+        </div> 
+        <div class="form-group">
 		<div class="web_panel_blue_head"><label> Menu Access </label></div>
 		<div ng-repeat="MenuPar in (FilterItem(0, true))">
 			<table class="table table-bordered_second table-condensed table-hover table-striped table-bordered" style="margin-bottom:0px">
@@ -332,8 +341,8 @@
 			</table>
 		</div>
 	</div>
+       </div>
     </div>
 </div>
 
-</body>
-</html>
+</asp:Content>
