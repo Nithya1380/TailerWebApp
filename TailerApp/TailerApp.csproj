@@ -112,6 +112,7 @@
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\angular-datepicker.css" />
     <Content Include="Scripts\angular-datepicker.js" />
+    <Content Include="Scripts\AngularJS\AddModifyRoleController.js" />
     <Content Include="Scripts\AngularJS\angular.js" />
     <Content Include="Scripts\AngularJS\BranchController.js" />
     <Content Include="Scripts\AngularJS\CompanyController.js" />
@@ -158,9 +159,14 @@
     <Content Include="UI\Admin\Branch_AddModify.aspx" />
     <Content Include="UI\Admin\Company_AddModify.aspx" />
     <Content Include="UI\Admin\ItemsMaster.aspx" />
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7c6c85fdef2f29c056dd30e3e63c2f47c43690a3
     <Content Include="UI\Admin\AddModifyRole.aspx" />
     <Content Include="UI\Admin\AdminHome.aspx" />
     <Content Include="UI\Admin\Branch_AddModify.aspx" />
+    <Content Include="UI\Admin\CompanyBranchList.aspx" />
     <Content Include="UI\Admin\Company_AddModify.aspx" />
     <Content Include="UI\Admin\UserAndRole.aspx" />
     <Content Include="UI\Common\Login.aspx" />
@@ -173,6 +179,8 @@
     <Content Include="UI\Tailer\AddNewCustomer.aspx" />
     <Content Include="UI\Tailer\CreateInvoice.aspx" />
     <Content Include="UI\Tailer\CustomerList.aspx" />
+    <Content Include="UI\Tailer\EmployeeList.aspx" />
+    <Content Include="UI\Tailer\EmployeeMaster.aspx" />
     <Content Include="UI\Tailer\TailerHome.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config">
@@ -226,6 +234,10 @@
     </Compile>
     <Compile Include="UI\Admin\AddEditItemMaster.aspx.designer.cs">
       <DependentUpon>AddEditItemMaster.aspx</DependentUpon>
+<<<<<<< HEAD
+=======
+      <SubType>ASPXCodeBehind</SubType>
+>>>>>>> 7c6c85fdef2f29c056dd30e3e63c2f47c43690a3
     </Compile>
     <Compile Include="SitePopUp.Master.cs">
       <DependentUpon>SitePopUp.Master</DependentUpon>
@@ -269,6 +281,13 @@
     <Compile Include="UI\Admin\Branch_AddModify.aspx.designer.cs">
       <DependentUpon>Branch_AddModify.aspx</DependentUpon>
     </Compile>
+    <Compile Include="UI\Admin\CompanyBranchList.aspx.cs">
+      <DependentUpon>CompanyBranchList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\CompanyBranchList.aspx.designer.cs">
+      <DependentUpon>CompanyBranchList.aspx</DependentUpon>
+    </Compile>
     <Compile Include="UI\Admin\Company_AddModify.aspx.cs">
       <DependentUpon>Company_AddModify.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -282,6 +301,10 @@
     </Compile>
     <Compile Include="UI\Admin\ItemsMaster.aspx.designer.cs">
       <DependentUpon>ItemsMaster.aspx</DependentUpon>
+<<<<<<< HEAD
+=======
+      <SubType>ASPXCodeBehind</SubType>
+>>>>>>> 7c6c85fdef2f29c056dd30e3e63c2f47c43690a3
     </Compile>
     <Compile Include="UI\Admin\UserAndRole.aspx.cs">
       <DependentUpon>UserAndRole.aspx</DependentUpon>
@@ -324,6 +347,20 @@
     </Compile>
     <Compile Include="UI\Tailer\CustomerList.aspx.designer.cs">
       <DependentUpon>CustomerList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tailer\EmployeeList.aspx.cs">
+      <DependentUpon>EmployeeList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Tailer\EmployeeList.aspx.designer.cs">
+      <DependentUpon>EmployeeList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tailer\EmployeeMaster.aspx.cs">
+      <DependentUpon>EmployeeMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Tailer\EmployeeMaster.aspx.designer.cs">
+      <DependentUpon>EmployeeMaster.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Tailer\TailerHome.aspx.cs">
       <DependentUpon>TailerHome.aspx</DependentUpon>

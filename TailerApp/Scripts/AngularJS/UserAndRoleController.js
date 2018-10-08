@@ -15,6 +15,8 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
     $scope.isdeleted = false;
     $scope.passwordStatus = '';
     $scope.passwordStyle = '';
+    $scope.EmployeeList = {};
+    $scope.EmployeeMasterID = {};
 
     $scope.GetUsersList = function () {            
         $http({
@@ -70,10 +72,38 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
 
     $scope.GetRoleList();
 
+    $scope.GetEmployee = function () {
+        $http({
+            method: "POST",
+            url: "UserAndRole.aspx/GetEmployee",
+            data: {},
+            dataType: "json",
+            headers: { "Content-Type": "application/json" }
+        }).then(function onSuccess(response) {
+            if (response.data.d.ErrorCode == 1001) {
+                //Session Expired
+                return false;
+            }
+            if (response.data.d.ErrorCode != 0) {
+                alert(response.data.d.ErrorMessage);
+                return false;
+            }
+            else {
+                $scope.EmployeeList = JSON.parse(response.data.d.JSonstring);
+            }
+
+        }, function onFailure(error) {
+
+        });
+    };
+
+    $scope.GetEmployee();
+
     $scope.OnUserClick = function (UserID) {
         if (UserID != 0) {
             var Obj = $scope.UserList.filter(function (x) { return x.UserID == UserID })[0];
-            $scope.UserRolsID = {RoleID: Obj.RoleID, RoleName: ""};
+            $scope.UserRolsID = { RoleID: Obj.RoleID, RoleName: "" };
+            $scope.EmployeeMasterID = { EmployeeMasterID: Obj.EmployeeID, EmployeeName: "" };
             $scope.UserName = Obj.UserName;
             $scope.UserMailID = Obj.LoginID;
             $scope.Userpassword = "";
@@ -83,6 +113,7 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
             $scope.passwordStyle = '';
         } else {
             $scope.UserRolsID = { RoleID: 0, RoleName: "" };
+            $scope.EmployeeMasterID = { EmployeeMasterID: 0, EmployeeName: "" };
             $scope.UserName = "";
             $scope.UserMailID = "";
             $scope.Userpassword = "";
@@ -106,7 +137,7 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
             method: "POST",
             url: "UserAndRole.aspx/AddModifyUser",
             data: {LoginUserID: $scope.UserID, UserName: $scope.UserName, LoginID: $scope.UserMailID, RoleID: $scope.UserRolsID.RoleID, 
-                Password: $scope.Userpassword, isPasswordRegenerated: $scope.isPasswordRegenerated, isdeleted: $scope.isdeleted
+                Password: $scope.Userpassword, isPasswordRegenerated: $scope.isPasswordRegenerated, isdeleted: $scope.isdeleted, EmpoyeeID: $scope.EmployeeMasterID.EmployeeMasterID
             },
             dataType: "json",
             headers: { "Content-Type": "application/json" }
@@ -176,6 +207,10 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
                 $window.alert("Please select role");
                 return false;
             }
+            else if ($scope.UserRolsID.RoleID == 0) {
+                $window.alert("Please select Employee");
+                return false;
+            }
             if ($scope.UserID == 0) {
                 if ($scope.passwordStatus == 'Weak' && $scope.Userpassword != "") {
                     $window.alert("Password is week");
@@ -216,7 +251,7 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
     }
 
     $scope.OnAddModifyRoleClick = function (RoleID) {
-        $window.open("AddModifyRole.aspx", "role", "resizable=yes,location=1,status=1,scrollbars=1,width=800,height=600");
+        $window.open("AddModifyRole.aspx?RoleID=" + RoleID, "role", "resizable=yes,location=1,status=1,scrollbars=1,width=800,height=600");
         return false;
     }
 

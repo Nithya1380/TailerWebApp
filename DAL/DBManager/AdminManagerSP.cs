@@ -296,33 +296,51 @@ namespace DAL.DBManager
            return ret;
        }
 
-       public bool _U_ModifyRolePermission(int CompanyID, int User, string RoleName, int RoleID, string PermissionAdded, string PermissionRemoved)
+       public bool _U_ModifyRolePermission(int CompanyID, int User, string RoleName, int RoleID, string PermissionAdded, string PermissionRemoved, bool isDeleted, out JSONReturnData Struct_Perm)
        {
            bool ret = false;
+           Struct_Perm = new JSONReturnData();
            try
            {
 
                this.Connect(this.GetConnString());
                string spName = "_U_ModifyRolePermission";
                this.ClearSPParams();
-               this.AddSPIntParam("@CompanyID", CompanyID);
-               this.AddSPIntParam("@User", User);
+               this.AddSPIntParam("@Company", CompanyID);
+               this.AddSPIntParam("@user", User);
                this.AddSPStringParam("@RoleName", RoleName);
                this.AddSPIntParam("@RoleID", RoleID);
                this.AddSPStringParam("@PermissionAdded", PermissionAdded);
                this.AddSPStringParam("@PermissionRemoved", PermissionRemoved);
+               this.AddSPBoolParam("@isDeleted", isDeleted);
                this.AddSPReturnIntParam("@return");
 
-               if (this.ExecuteNonSP(spName) == 1)
+               using (SqlDataReader reader = this.ExecuteSelectSP(spName))
                {
+                   while (reader.Read())
+                   {
+
+                       if (!reader.IsDBNull(0))
+                           Struct_Perm.Outvalue = reader.GetInt32(0);
+                       else
+                           Struct_Perm.Outvalue = 0;
+
+                   }
+                   reader.Close();
                    int retcode = this.GetOutValueInt("@return");
                    switch (retcode)
                    {
                        case 0:
                            ret = true;
                            break;
+                       case 2:
+                           SetError(2, "Can not deleted role, it is atteched to user(s).");
+                           break;
+                       case 3:
+                           SetError(3, "Same role name is alrady exist.");
+                           break;
                        default:
-                           SetError(1, "Failed to save role permission. Please try again later");
+                           SetError(1, "Failed to save role permission. Please try again later.");
                            break;
                    }
                }
@@ -411,7 +429,16 @@ namespace DAL.DBManager
 
                using (SqlDataReader reader = this.ExecuteSelectSP(spName))
                {
+                   while (reader.Read())
+                   {
 
+                       if (!reader.IsDBNull(0))
+                           Struct_Perm.RoleName = reader.GetString(0);
+                       else
+                           Struct_Perm.RoleName = "";
+
+                   }
+                   reader.NextResult();
                    while (reader.Read())
                    {
 
@@ -499,7 +526,7 @@ namespace DAL.DBManager
            }
            return ret;
        }
-       public bool _U_AddModifyUser(int CompanyID, int User, int UserID, string UserName, string LoginID, int RoleID, byte[] Password, bool isPasswordRegenerated, bool isdeleted)
+       public bool _U_AddModifyUser(int CompanyID, int User, int UserID, string UserName, string LoginID, int RoleID, byte[] Password, bool isPasswordRegenerated, bool isdeleted, int EmployeeID)
        {
            bool ret = false;
            try
@@ -514,6 +541,7 @@ namespace DAL.DBManager
                this.AddSPStringParam("@UserName", UserName);
                this.AddSPStringParam("@LoginID", LoginID);
                this.AddSPIntParam("@RoleID", RoleID);
+               this.AddSPIntParam("@EmployeeID", EmployeeID);
                this.AddSPVarBinaryParam("@Password", Password);
                this.AddSPBoolParam("@isPasswordRegenerated", isPasswordRegenerated);
                this.AddSPBoolParam("@isdeleted", isdeleted);
@@ -643,6 +671,223 @@ namespace DAL.DBManager
            }
            return ret;
        }
+
+       public bool GetEmployeeList(int companyID, int userID, bool isShort, out JsonResults EmployeeList)
+       {
+           EmployeeList = new JsonResults();
+           bool ret = false;
+
+           try
+           {
+               this.Connect(this.GetConnString());
+               string spName = "GetEmployeeList";
+               this.ClearSPParams();
+               this.AddSPIntParam("@Company", companyID);
+               this.AddSPIntParam("@user", userID);
+               this.AddSPBoolParam("@isShort", isShort);
+               this.AddSPReturnIntParam("@return");
+               using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+               {
+                   while (reader.Read())
+                   {
+                       if (!reader.IsDBNull(0))
+                            EmployeeList.JSonstring = reader.GetString(0);
+                   }
+
+                   reader.Close();
+               }
+
+               int retcode = this.GetOutValueInt("@return");
+
+               switch (retcode)
+               {
+                   case 0: ret = true;
+                       break;
+                   default: SetError(-1, "Failed to get Employee List. Please try again later");
+                       break;
+               }
+           }
+           catch (Exception ex)
+           {
+               ret = false;
+               Utils.Write(ex);
+           }
+           finally
+           {
+               this.ClearSPParams();
+               this.Disconnect();
+           }
+           return ret;
+       }
+
+       public bool SaveEmployeeMasterDetails(int CompanyID, int User, int EmployeeID, string EmployeeDetails, bool isDeleted, out Struct_Employee Struct_empl)
+       {
+           bool ret = false;
+           Struct_empl = new Struct_Employee();
+           try
+           {
+
+               this.Connect(this.GetConnString());
+               string spName = "SaveEmployeeMasterDetails";
+               this.ClearSPParams();
+               this.AddSPIntParam("@Company", CompanyID);
+               this.AddSPIntParam("@user", User);
+               this.AddSPStringParam("@EmployeeDetails", EmployeeDetails);
+               this.AddSPIntParam("@Employee", EmployeeID);
+               this.AddSPBoolParam("@isDeleted", isDeleted);
+               this.AddSPReturnIntParam("@return");
+
+               using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+               {
+                   while (reader.Read())
+                   {
+
+                       if (!reader.IsDBNull(0))
+                           Struct_empl.EmployeeID = reader.GetInt32(0);
+                       else
+                           Struct_empl.EmployeeID = 0;
+
+                       if (!reader.IsDBNull(1))
+                           Struct_empl.AddressID = reader.GetInt32(1);
+                       else
+                           Struct_empl.AddressID = 0;
+
+                   }
+                   reader.Close();
+                   int retcode = this.GetOutValueInt("@return");
+                   switch (retcode)
+                   {
+                       case 0:
+                           ret = true;
+                           break;
+                       case 2:
+                           SetError(2, "Can not deleted role, it is atteched to user(s).");
+                           break;
+                       case 3:
+                           SetError(3, "Same role name is alrady exist.");
+                           break;
+                       default:
+                           SetError(1, "Failed to save employee. Please try again later.");
+                           break;
+                   }
+               }
+           }
+           catch (Exception e)
+           {
+               SetError(-100, "Failed to save employee. Please try again later");
+               Utils.Write(0, 0, "AdminManagerSP", "SaveEmployeeMasterDetails", "", "", e);
+           }
+           finally
+           {
+               this.ClearSPParams();
+               this.Disconnect();
+           }
+           return ret;
+       }
+
+       public bool GetEmployeeMasterDetails(int CompanyID, int User, int EmployeeID, out Struct_Employee Struct_empl)
+       {
+           bool ret = false;
+           Struct_empl = new Struct_Employee();
+           try
+           {
+
+               this.Connect(this.GetConnString());
+               string spName = "GetEmployeeMasterDetails";
+               this.ClearSPParams();
+               this.AddSPIntParam("@Company", CompanyID);
+               this.AddSPIntParam("@User", User);
+               this.AddSPIntParam("@Employee", EmployeeID);
+
+               this.AddSPReturnIntParam("@return");
+
+               using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+               {
+
+                   while (reader.Read())
+                   {
+
+                       if (!reader.IsDBNull(0))
+                           Struct_empl.EmployeeDetails = reader.GetString(0);
+                       else
+                           Struct_empl.EmployeeDetails = "";
+
+                   }
+
+                   reader.Close();
+                   int retcode = this.GetOutValueInt("@return");
+                   switch (retcode)
+                   {
+                       case 0:
+                           ret = true;
+                           break;
+                       default:
+                           SetError(1, "Failed to get employee. Please try again later");
+                           break;
+                   }
+               }
+           }
+           catch (Exception e)
+           {
+               SetError(1, "Failed to get employee . Please try again later");
+               Utils.Write(0, 0, "AdminManagerSP", "GetEmployeeMasterDetails", "", "", e);
+           }
+           finally
+           {
+               this.ClearSPParams();
+               this.Disconnect();
+           }
+           return ret;
+       }
+
+       public bool GetPickLists(int companyID, int userID, string PickListName, out JsonResults plist)
+       {
+           plist = new JsonResults();
+           bool ret = false;
+
+           try
+           {
+               this.Connect(this.GetConnString());
+               string spName = "GetPickLists";
+               this.ClearSPParams();
+               this.AddSPIntParam("@companyID", companyID);
+               this.AddSPIntParam("@user", userID);
+               this.AddSPStringParam("@PickListName", PickListName);
+               this.AddSPReturnIntParam("@return");
+               using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+               {
+                   while (reader.Read())
+                   {
+                       if (!reader.IsDBNull(0))
+                           plist.JSonstring = reader.GetString(0);
+                   }
+
+                   reader.Close();
+               }
+
+               int retcode = this.GetOutValueInt("@return");
+
+               switch (retcode)
+               {
+                   case 1: ret = true;
+                       break;
+                   default: SetError(-1, "Failed to get Position List. Please try again later");
+                       break;
+               }
+           }
+           catch (Exception ex)
+           {
+               ret = false;
+               Utils.Write(ex);
+           }
+           finally
+           {
+               this.ClearSPParams();
+               this.Disconnect();
+           }
+           return ret;
+       }
+
 
     }
 }

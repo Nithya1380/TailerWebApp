@@ -87,7 +87,7 @@ namespace TailerApp.UI.Admin
         }
 
         [WebMethod]
-        public static JSONReturnData AddModifyUser(string LoginUserID, string UserName, string LoginID, string RoleID, string Password, bool isPasswordRegenerated, bool isdeleted)
+        public static JSONReturnData AddModifyUser(string LoginUserID, string UserName, string LoginID, string RoleID, string Password, bool isPasswordRegenerated, bool isdeleted, string EmpoyeeID)
         {
             JSONReturnData Objuser = new JSONReturnData();
             LoginUser currentUser;
@@ -104,7 +104,7 @@ namespace TailerApp.UI.Admin
                 AdminManagerSP adminObj = new AdminManagerSP();
 
                 if (adminObj._U_AddModifyUser(currentUser.CompanyID, currentUser.UserId, string.IsNullOrEmpty(LoginUserID) ? 0 : Convert.ToInt32(LoginUserID),
-                    UserName, LoginID, string.IsNullOrEmpty(RoleID) ? 0 : Convert.ToInt32(RoleID), EncryptedCurrentpassword, isPasswordRegenerated, isdeleted))
+                    UserName, LoginID, string.IsNullOrEmpty(RoleID) ? 0 : Convert.ToInt32(RoleID), EncryptedCurrentpassword, isPasswordRegenerated, isdeleted, , string.IsNullOrEmpty(EmpoyeeID) ? 0 : Convert.ToInt32(EmpoyeeID)))
                 {
                     Objuser.errorCode = 0;
                     Objuser.errorMessage = "";
@@ -123,6 +123,39 @@ namespace TailerApp.UI.Admin
             return Objuser;
         }
 
+        [WebMethod]
+        public static JsonResults GetEmployee()
+        {
+            JsonResults emplList = new JsonResults();
+            LoginUser currentUser;
+            try
+            {
+                if (!GetUserSession(out currentUser))
+                {
+                    emplList.ErrorCode = 1001;
+                    emplList.ErrorMessage = "";
+                    return emplList;
+                }
+
+                AdminManagerSP adminObj = new AdminManagerSP();
+                if (adminObj.GetEmployeeList(currentUser.CompanyID, currentUser.UserId, true, out emplList))
+                {
+                    emplList.ErrorCode = 0;
+                    emplList.ErrorMessage = "";
+                }
+                else
+                {
+                    emplList.ErrorCode = 1;
+                    emplList.ErrorMessage = "Failed to get Employee List. please try again later";
+                }
+            }
+            catch (Exception ex)
+            {
+                Utils.Write(ex);
+            }
+
+            return emplList;
+        }
 
     }
 }
