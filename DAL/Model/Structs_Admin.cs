@@ -42,5 +42,15 @@ namespace DAL.Model
         public string Roles { get; set; }
         public string RolePermissions { get; set; }
         public string Users { get; set; }
+        public string RoleName { get; set; }
+        public string EmployeeList { get; set; }
     }
+
+    public class Struct_Employee : JSONReturnData
+    {
+        public int EmployeeID { get; set; }
+        public int AddressID { get; set; }
+        public string EmployeeDetails { get; set; }
+    }
+
 }

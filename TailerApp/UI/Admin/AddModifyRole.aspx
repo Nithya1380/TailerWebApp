@@ -2,6 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="PopUphead" runat="server">
     <script src="../../Scripts/AngularJS/angular.js"></script>
+    <script src="../../Scripts/AngularJS/AddModifyRoleController.js"></script>
 <style type="text/css">
 
 .web_panel_blue_head {
@@ -26,6 +27,7 @@
 </style>
 
 <script type="text/javascript" language="javascript">
+    var RoleID = "<%=RoleID%>";
     /*
     public bool _U_UsersRegeneratePassword(int hha, int loggedInUser, int UserId, byte[] currentPassword, byte[] newPassword, out JSONReturnData report)
             {
@@ -240,7 +242,6 @@
 
     <i class="fas fa-angle-down"></i>
    <i class="fas fa-angle-right"></i>
-*/
 
     var test = angular.module("Test", []);
 	
@@ -282,29 +283,29 @@
         }
 
     }]);
-
+    */
 </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="PopUpContent" runat="server">
 <div class="Web_PopupHeader">
     Modify Role
 </div>
-<div ng-app="Test">
-    <div ng-controller="testcontroller">
+<div ng-app="TailerApp">
+    <div ng-controller="ModifyRoleController">
     <div class="form-horizontal" style="margin-left:15px;" role="form">
 	    <div class="form-group" style="margin:10px;">
             <label class="control-label col-sm-2" style="padding-right:0px;"><span style="color: red; font-size: 8px; vertical-align: top;">&#10033;</span>Role Name</label> 
             <div class="col-sm-3">
-                <input type="text" class="form-control"  placeholder="Role name" ng-model="" />
+                <input type="text" class="form-control"  placeholder="Role name" ng-model="RoleName" />
             </div>                           
             <div class="col-sm-7 text-right">
-                <button class="client_btn" type="button" ng-click="OnAddModifyUserClick()" data-toggle="dropdown" style="border-color: #00A5A8 !important; background-color: #00B5B8">
+                <button class="client_btn" type="button" ng-click="SaveRolePermission()" data-toggle="dropdown" style="border-color: #00A5A8 !important; background-color: #00B5B8">
                     <i class="fa fa-save"></i> Save
                 </button>
-                <button class="client_btn" type="button" ng-hide="UserID == 0" ng-click="onUserDeleteClick();" data-toggle="dropdown" style="border-color: rgba(212, 63, 58, 1) !important; background-color: rgba(212, 63, 58, 1)">
+                <button class="client_btn" type="button" ng-hide="UserID == 0" ng-click="onRoleDeleteClick();" data-toggle="dropdown" style="border-color: rgba(212, 63, 58, 1) !important; background-color: rgba(212, 63, 58, 1)">
                     <i class="fa fa-close"></i>Delete
                 </button>
-                <button class="client_btn" type="button" ng-click="onUserClose();" data-toggle="dropdown" style="border-color: #FFA87D !important; background-color: #FFA87D">
+                <button class="client_btn" type="button" ng-click="onRolePermClose();" data-toggle="dropdown" style="border-color: #FFA87D !important; background-color: #FFA87D">
                     <i class="fa fa-close"></i>Cancel
                 </button>
             </div>
@@ -315,12 +316,12 @@
 			<table class="table table-bordered_second table-condensed table-hover table-striped table-bordered" style="margin-bottom:0px">
 				<tr>
 					<td style="padding:  0.25rem">
-						<span class="web_parent_perss">&nbsp;<input type="checkbox" ng-model="MenuPar.isch" ng-click="onParCheck(MenuPar.ID, MenuPar.isch)" />&nbsp;{{MenuPar.PerName}}</span>
+						<span class="web_parent_perss">&nbsp;<input type="checkbox" ng-model="MenuPar.isChecked" ng-click="onParCheck(MenuPar.PermissionIndexID, MenuPar.isChecked)" />&nbsp;{{MenuPar.PermissionDesc}}</span>
 					</td>
 				</tr>
-				<tr ng-repeat="MenuChi in (FilterItem(MenuPar.ID, true))">
+				<tr ng-repeat="MenuChi in (FilterItem(MenuPar.PermissionIndexID, true))">
 					<td style="padding:  0.25rem">
-						<span class="web_child_perss"><input type="checkbox" ng-model="MenuChi.isch" ng-disabled="!MenuPar.isch" />&nbsp;{{MenuChi.PerName}}</span>
+						<span class="web_child_perss"><input type="checkbox" ng-model="MenuChi.isChecked" ng-disabled="!MenuPar.isChecked" />&nbsp;{{MenuChi.PermissionDesc}}</span>
 					</td>
 				</tr>
 			</table>
@@ -330,12 +331,12 @@
 			<table class="table table-bordered_second table-condensed table-hover table-striped table-bordered" style="margin-bottom:0px">
 				<tr>
 					<td style="padding:  0.25rem">
-						<span  class="web_parent_perss">&nbsp;<input type="checkbox" ng-click="onParCheck(MenuPar.ID, MenuPar.isch)" ng-model="MenuPar.isch" />&nbsp;{{PerPar.PerName}}</span>
+						<span  class="web_parent_perss">&nbsp;<input type="checkbox" ng-click="onParCheck(PerPar.PermissionIndexID, PerPar.isChecked)" ng-model="PerPar.isChecked" />&nbsp;{{PerPar.PermissionDesc}}</span>
 					</td>
 				</tr>
-				<tr ng-repeat="PerChi in (FilterItem(PerPar.ID, false))">
+				<tr ng-repeat="PerChi in (FilterItem(PerPar.PermissionIndexID, false))">
 					<td style="padding: 0.25rem">
-						<span class="web_child_perss"><input type="checkbox" ng-model="MenuChi.isch" ng-disabled="!MenuPar.isch" />&nbsp;{{PerChi.PerName}}</span>
+						<span class="web_child_perss"><input type="checkbox" ng-model="PerChi.isChecked" ng-disabled="!PerPar.isChecked" />&nbsp;{{PerChi.PermissionDesc}}</span>
 					</td>
 				</tr>
 			</table>

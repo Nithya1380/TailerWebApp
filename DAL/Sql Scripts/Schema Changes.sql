@@ -346,7 +346,7 @@ CREATE TABLE CustomerBranchMaster
     CONSTRAINT FK_CustomerBranchMaster_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID),
     CONSTRAINT FK_CustomerBranchMaster_CustomerMasterID FOREIGN KEY(CustomerMasterID) REFERENCES CustomerMaster(CustomerMasterID)
 )
-<<<<<<< HEAD
+
 ROLLBACK TRAN
 
 BEGIN TRAN
@@ -365,13 +365,58 @@ CREATE TABLE PickListValues
 	PickListLabel VARCHAR(50),
 	CONSTRAINT FK_PickListValues_PickListMasterID FOREIGN KEY(PickListMasterID) REFERENCES PickListMaster(PickListMasterID)
 )
-ROLLBACK TRAN
-=======
 
 ALTER TABLE PermissionListMaster ADD IsMenu BIT
 ALTER TABLE CompanyPermissions ADD CompanyID INT
 ALTER TABLE CompanyPermissions ADD CONSTRAINT FK_CompanyPermissions_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID)
 ALTER TABLE Users ADD UserName VARCHAR(150)
 
+CREATE TABLE EmployeeMaster
+(
+	EmployeeMasterID INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+    CompanyID INT NOT NULL,
+    CreatedBy INT,
+    CreatedOn DATETIME,
+    Gender VARCHAR(10),
+    FirstName VARCHAR(50),
+    MiddleName VARCHAR(20),
+	LastName VARCHAR(50),
+    BirthDate DATE,
+    HireDate DATE,
+    AddressID INT,
+	Position VARCHAR(50), 
+	isDeleted BIT,
+	DeletedOn DATETIME,
+	DeletedBy INT,
+    CONSTRAINT FK_EmployeeMaster_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID),
+    CONSTRAINT FK_EmployeeMaster_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID),
+    CONSTRAINT FK_EmployeeMaster_CustomerAddressID  FOREIGN KEY(AddressID) REFERENCES Address(AddressID),
+	CONSTRAINT FK_EmployeeMaster_DeletedBy FOREIGN KEY(DeletedBy) REFERENCES Users(UserID)      
+)
+
 ROLLBACK TRAN
->>>>>>> 9601289045112dbf309824a45822d7ab5d035ae4
+
+BEGIN TRAN
+	CREATE TABLE UserBranch(
+		UserBranchID INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
+		CompanyID INT NOT NULL,
+		UserID INT NOT NULL,
+		BranchID INT,
+		CreatedBy INT,
+		CreatedOn DATETIME,
+		isDeleted BIT,
+		DeletedBy INT,
+		DeletedOn DATETIME,
+		CONSTRAINT FK_UserBranch_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID),
+		CONSTRAINT FK_UserBranch_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID),
+		CONSTRAINT FK_UserBranch_UserID FOREIGN KEY(UserID) REFERENCES Users(UserID),
+		CONSTRAINT FK_UserBranch_BranchID  FOREIGN KEY(BranchID) REFERENCES BranchDetails(BranchID),
+		CONSTRAINT FK_UserBranch_DeletedBy FOREIGN KEY(DeletedBy) REFERENCES Users(UserID)
+	)
+
+	ALTER TABLE Users ADD EmployeeID INT
+	ALTER TABLE Users ADD CONSTRAINT FK_Users_EmployeeID  FOREIGN KEY(EmployeeID) REFERENCES EmployeeMaster(EmployeeMasterID)
+
+ROLLBACK
+
+ 
