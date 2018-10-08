@@ -52,7 +52,6 @@ BEGIN TRAN
 	INSERT INTO PickListMaster(PickListName)
 	SELECT 'EmployeePosition'
 
-<<<<<<< HEAD
 	select @PickID=SCOPE_IDENTITY()
 
 	INSERT INTO PickListValues (PickListMasterID,PickListValue,PickListLabel)
@@ -62,7 +61,7 @@ BEGIN TRAN
 		  (@PickID, 'Designer', 'Designer'),
 		  (@PickID, 'Owner', 'Owner')		
 				
-=======
+
 BEGIN TRAN
    DECLARE @PickListID INT
    INSERT INTO PickListMaster(PickListName) VALUES('ItemMasterGroup')
@@ -71,7 +70,7 @@ BEGIN TRAN
    INSERT INTO PickListValues(PickListMasterID,PickListLabel,PickListValue)
    VALUES(@PickListID,'Shirts','Shirts'),(@PickListID,'Pants','Pants')
 
->>>>>>> c04d10f1d791808acc5b513b3a75a873a77f2865
+
 ROLLBACK TRAN
 
 
