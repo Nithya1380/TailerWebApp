@@ -33,7 +33,7 @@ namespace TailerApp.UI.Tailer
             StringBuilder sbHtml = new StringBuilder();
             try
             {
-                userBranchList=HttpContext.Current.Session["LoginUser"] as List<BranchDetail>;
+                userBranchList = HttpContext.Current.Session["LoginUserBranchList"] as List<BranchDetail>;
                 if(this.CURRENT_USER.UserBranchID==0 && userBranchList!=null && userBranchList.Count>1)
                 {
                     sbHtml.Append("<div class=\"row BranchDiv\">");
