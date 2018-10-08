@@ -33,6 +33,8 @@
 
             $scope.init = function () {
                 $scope.GetItemGroups();
+                if ($scope.ItemMasterID!=0)
+                    $scope.GetItemMasterDetails();
             }
 
             $scope.GetItemGroups = function () {
@@ -66,7 +68,7 @@
 
                 $http({
                     method: "POST",
-                    url: "ItemsMaster.aspx/GetItemDetails",
+                    url: "AddEditItemMaster.aspx/GetItemDetails",
                     data: { itemMasterID: $scope.ItemMasterID },
                     dataType: "json",
                     headers: { "Content-Type": "application/json" }
@@ -81,7 +83,7 @@
                         return false;
                     }
 
-                    $scope.ItemMaster = JSON.parse(response.data.d.ItemsList[0]);
+                    $scope.ItemMaster = response.data.d.ItemsList[0];
 
                 }, function onFailure(error) {
                     $scope.ShowError = true;
@@ -118,7 +120,7 @@
                         $scope.CustomerError = $sce.trustAsHtml("New Item Added Successfully!");
                         $scope.AlertClass = "alert-success";
                         $scope.EnableSave = false;
-                        $scope.RefreshCustomerList();
+                        $scope.RefreshItemMasterList();
                         return false;
                     }
 
@@ -228,7 +230,7 @@
                             <tr>
                                 <td style="text-align:right" class="back_shade"><span class="profileLabel"><span style="color:red">*</span>Price:</span></td>
                                 <td colspan="5">
-                                    <input type="number" data-ng-model="ItemMaster.ItemPrice" class="form-control" style="width: 250px; margin-left: 5px;"  required />
+                                    <input type="text" data-ng-model="ItemMaster.ItemPrice" class="form-control" style="width: 250px; margin-left: 5px;"  required />
                                 </td>
                             </tr>
                            
