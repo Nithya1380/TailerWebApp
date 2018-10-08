@@ -37,23 +37,13 @@ ROLLBACK TRAN
 
 
 BEGIN TRAN
-    DECLARE @PickID INT
-	--Executed
-	INSERT INTO PickListMaster(PickListName)
-	SELECT 'AccountCategory'
+   DECLARE @PickListID INT
+   INSERT INTO PickListMaster(PickListName) VALUES('AccountCategory')
 
-	select @PickID=SCOPE_IDENTITY()
+   SELECT @PickListID=SCOPE_IDENTITY()
+   INSERT INTO PickListValues(PickListMasterID,PickListLabel,PickListValue)
+   VALUES(@PickListID,'Customer','Customer'),(@PickListID,'Supplier','Supplier')
 
-	INSERT INTO PickListValues (PickListMasterID,PickListValue,PickListLabel)
-		SELECT @PickID,'Test Acc1' ,'Test Acc1' 
-			FROM PickListMaster
-				WHERE PickListName='AccountCategory'
-
-	INSERT INTO PickListValues (PickListMasterID,PickListValue,PickListLabel)
-		SELECT @PickID,'Test Acc2','Test Acc2'  
-			FROM PickListMaster
-				WHERE PickListName='AccountCategory'
-				
 ROLLBACK TRAN
 GO
 BEGIN TRAN
@@ -62,6 +52,7 @@ BEGIN TRAN
 	INSERT INTO PickListMaster(PickListName)
 	SELECT 'EmployeePosition'
 
+<<<<<<< HEAD
 	select @PickID=SCOPE_IDENTITY()
 
 	INSERT INTO PickListValues (PickListMasterID,PickListValue,PickListLabel)
@@ -71,6 +62,16 @@ BEGIN TRAN
 		  (@PickID, 'Designer', 'Designer'),
 		  (@PickID, 'Owner', 'Owner')		
 				
+=======
+BEGIN TRAN
+   DECLARE @PickListID INT
+   INSERT INTO PickListMaster(PickListName) VALUES('ItemMasterGroup')
+
+   SELECT @PickListID=SCOPE_IDENTITY()
+   INSERT INTO PickListValues(PickListMasterID,PickListLabel,PickListValue)
+   VALUES(@PickListID,'Shirts','Shirts'),(@PickListID,'Pants','Pants')
+
+>>>>>>> c04d10f1d791808acc5b513b3a75a873a77f2865
 ROLLBACK TRAN
 
 

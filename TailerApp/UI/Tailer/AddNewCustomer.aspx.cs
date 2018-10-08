@@ -19,7 +19,7 @@ namespace TailerApp.UI.Tailer
         }
 
         [WebMethod]
-        public static JsonResults AddNewCustomerToDB(Customer Customer)
+        public static JsonResults AddNewCustomerToDB(Customer Customer, CustomerAccount CustomerAccountObj)
         {
             JsonResults returnObj = new JsonResults();
             LoginUser currentUser;
@@ -32,7 +32,40 @@ namespace TailerApp.UI.Tailer
                 }
 
                 CustomerManager customerObj = new CustomerManager();
-                if (customerObj.AddNewCustomer(currentUser.CompanyID, currentUser.UserId, ref Customer))
+                if (customerObj.AddNewCustomer(currentUser.CompanyID, currentUser.UserId, currentUser.UserBranchID, ref Customer, ref CustomerAccountObj))
+                {
+                    returnObj.ErrorCode = 0;
+                    returnObj.ErrorMessage = "";
+                }
+                else
+                {
+                    returnObj.ErrorCode = customerObj.GetLastErrorCode();
+                    returnObj.ErrorMessage = customerObj.GetLastError();
+                }
+            }
+            catch (Exception ex)
+            {
+                Utils.Write(ex);
+            }
+
+            return returnObj;
+        }
+
+        [WebMethod]
+        public static GenericPickList GetAccountCategory()
+        {
+            GenericPickList returnObj = new GenericPickList();
+            LoginUser currentUser;
+            try
+            {
+                if (!GetUserSession(out currentUser))
+                {
+                    returnObj.ErrorCode = -1001;
+                    returnObj.ErrorMessage = "";
+                }
+
+                CustomerManager customerObj = new CustomerManager();
+                if (customerObj.GetPickLists(currentUser.CompanyID, currentUser.UserId, "AccountCategory", out returnObj))
                 {
                     returnObj.ErrorCode = 0;
                     returnObj.ErrorMessage = "";

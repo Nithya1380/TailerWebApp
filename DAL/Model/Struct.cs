@@ -175,10 +175,31 @@ namespace DAL.Model
         public string PickListValue { get; set; }
     }
 
+    public class GenericPickList : JsonResults
+    {
+        public List<PickList> PickListItems { get; set; }
+    }
+
     public class JsonResults
     {
         public int ErrorCode { get; set; }
         public string ErrorMessage { get; set; }
         public string JSonstring { get; set; }
+        public int OutValue { get; set; }
+    }
+
+    public class ItemMaster
+    {
+        public int ItemmasterID { get; set; }
+        public string ItemCode { get; set; }
+        public string ItemDescription { get; set; }
+        public string ItemGroup { get; set; }
+        public string ItemAlias{ get; set; }
+        public string ItemPrice { get; set; }
+    }
+
+    public class ItemMasterList:JsonResults
+    {
+        public List<ItemMaster> ItemsList { get; set; }
     }
 }

@@ -365,12 +365,17 @@ CREATE TABLE PickListValues
 	PickListLabel VARCHAR(50),
 	CONSTRAINT FK_PickListValues_PickListMasterID FOREIGN KEY(PickListMasterID) REFERENCES PickListMaster(PickListMasterID)
 )
+<<<<<<< HEAD
+=======
+
+>>>>>>> c04d10f1d791808acc5b513b3a75a873a77f2865
 
 ALTER TABLE PermissionListMaster ADD IsMenu BIT
 ALTER TABLE CompanyPermissions ADD CompanyID INT
 ALTER TABLE CompanyPermissions ADD CONSTRAINT FK_CompanyPermissions_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID)
 ALTER TABLE Users ADD UserName VARCHAR(150)
 
+<<<<<<< HEAD
 CREATE TABLE EmployeeMaster
 (
 	EmployeeMasterID INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
@@ -420,3 +425,24 @@ BEGIN TRAN
 ROLLBACK
 
  
+=======
+CREATE TABLE ItemMaster
+   (
+	ItemmasterID INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    CompanyID	INT NOT NULL,
+    ItemCode	VARCHAR(50),
+	ItemDescription	VARCHAR(200),
+	ItemGroup	VARCHAR(50),
+	ItemAlias	VARCHAR(100),
+	ItemPrice   MONEY,
+    isDeleted	BIT,
+    CreatedOn	DATETIME,
+    CreatedBy	INT,
+    DeletedOn	DATETIME,
+    DeletedBy	INT
+	CONSTRAINT FK_ItemMaster_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID),
+	CONSTRAINT FK_ItemMaster_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID)
+   )
+ROLLBACK TRAN
+
+>>>>>>> c04d10f1d791808acc5b513b3a75a873a77f2865
