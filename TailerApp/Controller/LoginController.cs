@@ -34,12 +34,12 @@ namespace TailerApp.Controller
 
         }
         public LoginUser ValidateLogin(string loginId, string password, string InstanceName, string IpAddesss, string BrowserInfo,
-               string server, string webSessionID, string OperatingSystem = "", string BrowserVersion = "", string BrowserName = "", 
+               string server, string webSessionID,out List<BranchDetail> userBranchList, string OperatingSystem = "", string BrowserVersion = "", string BrowserName = "",
                string SSOAuthToken = "")
         {
             bool retval = false;
             LoginUser objLoginUser = null;
-           
+            userBranchList = new List<BranchDetail>();
             try
             {
                 SecurityManager securitymanagerObj = new SecurityManager();
@@ -47,7 +47,7 @@ namespace TailerApp.Controller
                 byte[] Encryptedpassword = new System.Text.ASCIIEncoding().GetBytes(Cryptography.Encrypt(password));
 
                 retval = securitymanagerObj._U_ValidateLogin(loginId, password, InstanceName, Encryptedpassword, IpAddesss, BrowserInfo,
-                          server, webSessionID,OperatingSystem, BrowserVersion, BrowserName, SSOAuthToken, out Ulogin);
+                          server, webSessionID, OperatingSystem, BrowserVersion, BrowserName, SSOAuthToken, out Ulogin, out userBranchList);
                 if (retval == true)
                 {
                     objLoginUser = new LoginUser();
@@ -101,7 +101,7 @@ namespace TailerApp.Controller
             return objLoginUser;
         }
 
-        public bool OnLoginSuccess(ref LoginUser objLoginUser, string RedirectPage)
+        public bool OnLoginSuccess(ref LoginUser objLoginUser, ref List<BranchDetail> userBranchList, string RedirectPage)
         {
             bool ret = false;
             bool canRedirct = true;
@@ -123,7 +123,12 @@ namespace TailerApp.Controller
                     //{
                         
                     //}
+
+                    if (userBranchList != null && userBranchList.Count == 1)
+                        objLoginUser.UserBranchID = userBranchList[0].BranchID;
+
                     HttpContext.Current.Session.Add("LoginUser", objLoginUser);
+                    HttpContext.Current.Session.Add("LoginUserBranchList", userBranchList);
                    
                     
                     if (canRedirct)

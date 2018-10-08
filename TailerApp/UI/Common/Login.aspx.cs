@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -37,6 +38,7 @@ namespace TailerApp.UI.Common
         private void LoginProcess(string loginid, string password)
         {
             LoginUser objLoginUser = null;
+            List<BranchDetail> userBranchList = null;
             string InstanceName = string.Empty;
             try
             {
@@ -79,11 +81,11 @@ namespace TailerApp.UI.Common
                 LoginController objLoginController = new LoginController();
                
                 objLoginUser = objLoginController.ValidateLogin(loginid, password, InstanceName, IpAddesss, BrowserInfo, server,
-                               webSessionID, OperatingSystem,BrowserVersion, BrowserName);
+                               webSessionID, out userBranchList, OperatingSystem, BrowserVersion, BrowserName);
                 if (objLoginUser != null)
                 {
                     lblErrorMessage.Text = "";
-                    if (!objLoginController.OnLoginSuccess(ref objLoginUser, redirectToPage))
+                    if (!objLoginController.OnLoginSuccess(ref objLoginUser, ref userBranchList, redirectToPage))
                     {
                         ShowValidationMessage("Failed to Login.");
                     }

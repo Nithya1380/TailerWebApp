@@ -42,6 +42,12 @@ namespace DAL.Model
 
     }
 
+    public class BranchDetail
+    {
+        public int BranchID { get; set; }
+        public string BranchName { get; set; }
+    }
+
     public class CustomerMaster: JsonResults
     {
         public CustomerAccount CustomerAccount { get; set; }

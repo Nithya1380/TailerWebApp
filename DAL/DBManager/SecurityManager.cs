@@ -13,10 +13,11 @@ namespace DAL.DBManager
     {
         public bool _U_ValidateLogin(string LoginId, string Password, string InstanceName, byte[] EncryptedPassword,
                    string IpAddesss, string BrowserInfo, string server, string webSessionID,string OperatingSystem, 
-                   string BrowserVersion,string BrowserName, string SSOAuthToken,out Struct_LoginUser Ulogin)
+                   string BrowserVersion,string BrowserName, string SSOAuthToken,out Struct_LoginUser Ulogin,out List<BranchDetail> userBranchList)
         {
             bool ret = false;
             Ulogin = new Struct_LoginUser();
+            userBranchList = new List<BranchDetail>();
             try
             {
 
@@ -150,6 +151,23 @@ namespace DAL.DBManager
                         else
                             Ulogin.enableAutoSessionOut = false;
 
+                    }
+                    reader.NextResult();
+                    while (reader.Read())
+                    {
+                        BranchDetail item = new BranchDetail();
+                        if (reader["BranchID"] != DBNull.Value)
+                            item.BranchID = Convert.ToInt32(reader["BranchID"]);
+                        else
+                            item.BranchID = 0;
+
+                        if (reader["BranchName"] != DBNull.Value)
+                            item.BranchName = reader["BranchName"].ToString();
+                        else
+                            item.BranchName = "";
+
+                        userBranchList.Add(item);
+                        
                     }
 
                    reader.Close();
