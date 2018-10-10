@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using TailerApp.Common;
@@ -41,7 +42,7 @@ namespace TailerApp.UI.Tailer
                     sbHtml.Append("<div class=\"card\">");
                     sbHtml.Append("<div class=\"row\">");
                     sbHtml.Append("<table class=\"table\">");
-                    sbHtml.Append("<thead><tr><th>Branch</th><th></th></tr></thead>");
+                    sbHtml.Append("<thead><tr><th colspan=\"2\">Select Branch To Continue</th></tr></thead>");
                     sbHtml.Append("<tbody>");
 
                     foreach (BranchDetail item in userBranchList)
@@ -51,7 +52,7 @@ namespace TailerApp.UI.Tailer
                         sbHtml.Append(item.BranchName);
                         sbHtml.Append("</td>");
                         sbHtml.Append("<td>");
-                        sbHtml.Append("<input type=\"button\" value=\"Select\" onclick=\"OnBranchSelection(" + item.BranchID + ")\" />");
+                        sbHtml.Append("<input type=\"button\" value=\"Select\" class=\"btn btn-lg btn-success\" data-ng-click=\"OnBranchSelection(" + item.BranchID + ")\" />");
                         sbHtml.Append("</td>");
                         sbHtml.Append("</tr>");
                     }
@@ -70,6 +71,41 @@ namespace TailerApp.UI.Tailer
             {
                 Utils.Write(ex);
             }
+        }
+
+        [WebMethod]
+        public static JsonResults SelectBranch(int branchID)
+        {
+            JsonResults custList = new JsonResults();
+            LoginUser currentUser;
+            try
+            {
+                if (!GetUserSession(out currentUser))
+                {
+                    custList.ErrorCode = -1001;
+                    custList.ErrorMessage = "";
+                }
+
+                if(branchID!=0)
+                {
+                    currentUser.UserBranchID = branchID;
+                    HttpContext.Current.Session["LoginUser"] = currentUser;
+                    custList.ErrorCode = 0;
+                    custList.ErrorMessage = "";
+                }
+                else
+                {
+                    custList.ErrorCode = -1;
+                    custList.ErrorMessage = "Invalid Branch Selection";
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                Utils.Write(ex);
+            }
+
+            return custList;
         }
     }
 }
