@@ -12,7 +12,9 @@ ALTER PROCEDURE [dbo].[_U_AddModifyUser]
 	@RoleID INT,
 	@Password VARBINARY(50),
 	@isPasswordRegenerated BIT,
-	@isdeleted BIT
+	@isdeleted BIT,
+	@EmployeeID INT,
+	@BranchIDs VARCHAR(2000)
 
 AS
 -- =============================================
@@ -35,8 +37,10 @@ BEGIN TRAN
 
 	IF ISNULL(@UserID,0) = 0
 	BEGIN
-		INSERT INTO Users(CompanyID, LoginID, password, RoleID, Status, isPasswordRegenerated, CreatedOn, CreatedBy, UserName)
-		VALUES(@Company, @LoginID, @Password, @RoleID,'Active', @isPasswordRegenerated, GETDATE(), @user, @UserName)
+		INSERT INTO Users(CompanyID, LoginID, password, RoleID, Status, isPasswordRegenerated, CreatedOn, CreatedBy, UserName, EmployeeID)
+		VALUES(@Company, @LoginID, @Password, @RoleID,'Active', @isPasswordRegenerated, GETDATE(), @user, @UserName, @EmployeeID)
+
+		SET @UserID = SCOPE_IDENTITY()
 	END 
 	ELSE IF ISNULL(@isPasswordRegenerated,0) = 1 AND ISNULL(@UserID,0)>0
 	BEGIN
@@ -53,6 +57,12 @@ BEGIN TRAN
 		UPDATE Users SET UserName = @UserName, LoginID = @LoginID		
 			WHERE CompanyID = @Company AND UserID  = @UserID
 	END
+
+	--IF ISNULL(@BranchIDs,'')!=''
+	--BEGIN
+		
+	--END
+
 COMMIT
 END TRY
 BEGIN CATCH

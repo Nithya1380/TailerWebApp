@@ -17,6 +17,8 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
     $scope.passwordStyle = '';
     $scope.EmployeeList = {};
     $scope.EmployeeMasterID = {};
+    $scope.UserBranchList = {};
+    $scope.BranchIDs = "";
 
     $scope.GetUsersList = function () {            
         $http({
@@ -99,6 +101,31 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
 
     $scope.GetEmployee();
 
+    $scope.GetUserBranch = function (UserID) {
+        $http({
+            method: "POST",
+            url: "UserAndRole.aspx/GetUserBranch",
+            data: { UserID: UserID },
+            dataType: "json",
+            headers: { "Content-Type": "application/json" }
+        }).then(function onSuccess(response) {
+            if (response.data.d.errorCode == 1001) {
+                //Session Expired
+                return false;
+            }
+            if (response.data.d.errorCode != 0) {
+                alert(response.data.d.errorMessage);
+                return false;
+            }
+            else {
+                $scope.UserBranchList = JSON.parse(response.data.d.JSonstring);
+            }
+
+        }, function onFailure(error) {
+
+        });
+    };
+
     $scope.OnUserClick = function (UserID) {
         if (UserID != 0) {
             var Obj = $scope.UserList.filter(function (x) { return x.UserID == UserID })[0];
@@ -137,7 +164,8 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
             method: "POST",
             url: "UserAndRole.aspx/AddModifyUser",
             data: {LoginUserID: $scope.UserID, UserName: $scope.UserName, LoginID: $scope.UserMailID, RoleID: $scope.UserRolsID.RoleID, 
-                Password: $scope.Userpassword, isPasswordRegenerated: $scope.isPasswordRegenerated, isdeleted: $scope.isdeleted, EmpoyeeID: $scope.EmployeeMasterID.EmployeeMasterID
+                Password: $scope.Userpassword, isPasswordRegenerated: $scope.isPasswordRegenerated, isdeleted: $scope.isdeleted,
+                EmpoyeeID: $scope.EmployeeMasterID.EmployeeMasterID, BranchIDs: $scope.BranchIDs
             },
             dataType: "json",
             headers: { "Content-Type": "application/json" }

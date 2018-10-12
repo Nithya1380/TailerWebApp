@@ -29,6 +29,8 @@ namespace DAL.Model
     {
         public string CompanyDetails { get; set; }
         public string AddressDetails { get; set; }
+        public string CompanyList { get; set; }
+        public string BranchList { get; set; }
     }
 
     public class Struct_Branch : JSONReturnData

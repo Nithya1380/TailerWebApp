@@ -144,7 +144,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="email" class=" control-label col-sm-3"><span style="color: red; font-size: 8px; vertical-align: top;">&#10033;</span>Employee</label>
-                                <div class="col-sm-8">
+                                <div class="col-sm-8" ng-disabled="UserID>0">
                                     <select class="form-control" ng-options="Employee.EmployeeName for Employee in EmployeeList track by Employee.EmployeeMasterID"
                                         ng-model="EmployeeMasterID">
                                     </select>
@@ -163,6 +163,14 @@
                                 <div class="col-sm-8">
                                     <input type="password" class="form-control" name="password_confirmation" placeholder="confirm password" ng-model="UserCnfpassword">
                                     <p style="color: green" ng-show="Userpassword!='' && Userpassword==UserCnfpassword">&#10004;</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class=" control-label col-sm-3"><span style="color: red; font-size: 8px; vertical-align: top;">&#10033;</span>Branch</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" ng-options="Employee.EmployeeName for Employee in EmployeeList track by Employee.EmployeeMasterID"
+                                        ng-model="EmployeeMasterID">
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
