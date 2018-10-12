@@ -16,6 +16,11 @@ namespace TailerApp.UI.Common
         public string redirectToPage=string.Empty;
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!IsPostBack)
+            {
+                HttpContext.Current.Session.Clear();
+                HttpContext.Current.Session.Abandon();
+            }
 
         }
 

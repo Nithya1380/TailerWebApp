@@ -926,7 +926,7 @@ namespace DAL.DBManager
 
                switch (retcode)
                {
-                   case 1: ret = true;
+                   case 0: ret = true;
                        break;
                    default: SetError(-1, "Failed to get user branch. Please try again later");
                        break;

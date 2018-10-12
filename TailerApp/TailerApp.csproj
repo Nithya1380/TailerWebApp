@@ -114,6 +114,7 @@
     <Content Include="Scripts\angular-datepicker.js" />
     <Content Include="Scripts\AngularJS\AddModifyRoleController.js" />
     <Content Include="Scripts\AngularJS\angular.js" />
+    <Content Include="Scripts\AngularJS\angularjs-dropdown-multiselect.js" />
     <Content Include="Scripts\AngularJS\BranchController.js" />
     <Content Include="Scripts\AngularJS\CompanyController.js" />
     <Content Include="Scripts\AngularJS\TailerApp.js" />

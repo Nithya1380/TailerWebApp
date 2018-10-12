@@ -25,7 +25,7 @@ BEGIN
 	BEGIN
 		SET @UserBranchList = 
 		(
-			SELECT BranchDetails.BranchID, BranchDetails.BranchName 
+			SELECT BranchDetails.BranchID, BranchDetails.BranchName,COnVERT(BIT,CASE WHEN ISNULL(UserBranch.BranchID,0)!=0 THEN 1 ELSE 0 END) as Checked 
 				FROM BranchDetails WITH(NOLOCK)
 					LEFT OUTER JOIN UserBranch WITH(NOLOCK) ON UserBranch.BranchID = BranchDetails.BranchID 
 							AND UserBranch.CompanyID = @Company AND UserBranch.UserID = @UserID AND ISNULL(UserBranch.isDeleted,0) = 0
@@ -38,7 +38,7 @@ BEGIN
 	BEGIN
 		SET @UserBranchList = 
 		(
-			SELECT BranchDetails.BranchID, BranchDetails.BranchName 
+			SELECT BranchDetails.BranchID, BranchDetails.BranchName,COnVERT(BIT,CASE WHEN ISNULL(UserBranch.BranchID,0)!=0 THEN 1 ELSE 0 END) as Checked 
 				FROM BranchDetails WITH(NOLOCK)
 					INNER JOIN UserBranch WITH(NOLOCK) ON UserBranch.BranchID = BranchDetails.BranchID 
 							AND UserBranch.CompanyID = @Company AND UserBranch.UserID = @UserID AND ISNULL(UserBranch.isDeleted,0) = 0

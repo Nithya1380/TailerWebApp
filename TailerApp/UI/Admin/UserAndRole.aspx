@@ -2,6 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeaderContent" runat="server">
     <script src="../../Scripts/AngularJS/angular.js"></script>
+    <script src="../../Scripts/AngularJS/angularjs-dropdown-multiselect.js"></script>
     <script src="../../Scripts/AngularJS/UserAndRoleController.js"></script>
     <style type="text/css">
         .modal-backdrop {
@@ -168,9 +169,10 @@
                             <div class="form-group">
                                 <label for="email" class=" control-label col-sm-3"><span style="color: red; font-size: 8px; vertical-align: top;">&#10033;</span>Branch</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control" ng-options="Employee.EmployeeName for Employee in EmployeeList track by Employee.EmployeeMasterID"
+                                    <%--<select class="form-control" ng-options="Employee.EmployeeName for Employee in EmployeeList track by Employee.EmployeeMasterID"
                                         ng-model="EmployeeMasterID">
-                                    </select>
+                                    </select>--%>
+                                    <dropdown-multiselect model="BranchIDs" options="UserBranchList"></dropdown-multiselect>
                                 </div>
                             </div>
                             <div class="form-group">

@@ -1,6 +1,6 @@
 ﻿/// <reference path="angular.js" />
 
-var tailerApp = angular.module("TailerApp", []);
+var tailerApp = angular.module("TailerApp", ['angular_MultiselectDropdown']);
 
 tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, $rootScope, $filter) {
     $scope.UserList = {};
@@ -109,16 +109,18 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
             dataType: "json",
             headers: { "Content-Type": "application/json" }
         }).then(function onSuccess(response) {
-            if (response.data.d.errorCode == 1001) {
+            if (response.data.d.ErrorCode == 1001) {
                 //Session Expired
                 return false;
             }
-            if (response.data.d.errorCode != 0) {
-                alert(response.data.d.errorMessage);
+            if (response.data.d.ErrorCode != 0) {
+                alert(response.data.d.ErrorMessage);
                 return false;
             }
             else {
+                
                 $scope.UserBranchList = JSON.parse(response.data.d.JSonstring);
+                
             }
 
         }, function onFailure(error) {
@@ -151,6 +153,7 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
             $scope.passwordStatus = '';
             $scope.passwordStyle = '';
         }
+        $scope.GetUserBranch(UserID);
         $("#div_usermodify").css("display", "block");
 
     };
