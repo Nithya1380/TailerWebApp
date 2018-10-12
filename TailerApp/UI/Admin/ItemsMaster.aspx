@@ -30,7 +30,7 @@
                         return false;
                     }
 
-                    $scope.ItemsList = JSON.parse(response.data.d.ItemsList);
+                    $scope.ItemsList = response.data.d.ItemsList;
 
                 }, function onFailure(error) {
                     alert(response.data.d.ErrorMessage);
@@ -84,7 +84,7 @@
                                     <td>{{Item.ItemDescription}}</td>
                                     <td>{{Item.ItemGroup}}</td>
                                     <td>{{Item.ItemPrice}}</td>
-                                    <td><a href="#" title="Edit Item" data-ng-click="OnAddEditItemClick(Item.ItemmasterID)"><i class="fa fa-dollar" style="font-size:24px;"></i></a></td>
+                                    <td><a href="#" title="Edit Item" data-ng-click="OnAddEditItemClick(Item.ItemmasterID)"><i class="fa fa-pencil" style="font-size:24px;"></i></a></td>
                                 </tr>
                             </tbody>
                         </table>

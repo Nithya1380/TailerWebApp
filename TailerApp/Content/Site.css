@@ -84,7 +84,7 @@ background-color:#fff;
 position:absolute;
   -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-	margin:0 25px;
+	/*margin:0 25px;*/
 	margin-top:3px;
 	z-index:1;
 }

@@ -423,6 +423,10 @@ namespace DAL.DBManager
             return ret;
         }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 36156012fdd97a4d18c770347f480e07d328dc29
         public bool SaveCustomerDetails(int companyID, int userID,int customerID,int customerBranch,ref CustomerMaster customerObj,out int newCustomerID)
         {
             bool ret = false;

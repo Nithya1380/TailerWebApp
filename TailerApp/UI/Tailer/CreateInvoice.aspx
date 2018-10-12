@@ -1,6 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="CreateInvoice.aspx.cs" Inherits="TailerApp.UI.Tailer.CreateInvoice" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeaderContent" runat="server">
     <script src="../../Scripts/AngularJS/angular.js"></script>
+    <link href="../../Scripts/angular-datepicker.css" rel="stylesheet" />
+    <script src="../../Scripts/angular-datepicker.js"></script>
     <style type="text/css">
         .scrollable0panel{
             max-height: 500px;
@@ -9,6 +11,30 @@
         }
     </style>
      <script type="text/javascript">
+         var tailerApp = angular.module("TailerApp", []);
+         tailerApp.controller("CreateInvoiceController", function ($scope, $window, $http, $rootScope) {
+             $scope.InvoiceList = [];
+
+             $scope.AddItem = function () {
+                 var invoice = {
+                     ItemCode: "",
+                     ItemDescription: "",
+                     ItemQuantity: "1",
+                     ItemPrice: "",
+                     ItemDiscount: "",
+                     GST: "",
+                     SGST: "",
+                     AmountPending:""
+                 }
+
+                 $scope.InvoiceList.push(invoice);
+             }
+
+             $scope.RemoveItem = function () {
+                 $scope.InvoiceList.pop();
+             }
+
+         });
      </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -138,7 +164,6 @@
                                         <table class="table">
                                             <thead>
                                                 <tr>
-                                                    <th>Sr.</th>
                                                     <th>Item Code</th>
                                                     <th>Item Description</th>
                                                     <th>Quantity</th>
@@ -149,21 +174,23 @@
                                                     <th>Amount Pend</th>
                                                 </tr>
                                             </thead>
-                                            <tbody data-ng-repeat="customer in CustomerList">
+                                            <tbody data-ng-repeat="Invoice in InvoiceList">
                                                 <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td><input type="text" data-ng-model="Invoice.ItemCode" class="form-control" style="width: 50px;" /> </td>
+                                                    <td><input type="text" data-ng-model="Invoice.ItemDescription" class="form-control" style="width: 150px;" /></td>
+                                                    <td><input type="number" data-ng-model="Invoice.ItemQuantity" class="form-control" style="width: 50px;" /></td>
+                                                    <td><input type="number" data-ng-model="Invoice.ItemPrice" class="form-control" style="width: 50px;" /></td>
+                                                    <td><input type="number" data-ng-model="Invoice.ItemDiscount" class="form-control" style="width: 50px;" /></td>
+                                                    <td><input type="number" data-ng-model="Invoice.GST" class="form-control" style="width: 50px;" /></td>
+                                                    <td><input type="number" data-ng-model="Invoice.SGST" class="form-control" style="width: 50px;" /></td>
+                                                    <td><input type="number" data-ng-model="Invoice.AmountPending" class="form-control" style="width: 100px;" /></td>
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        
+                                        <div>
+                                            <button class="btn btn-sm btn-success" type="button" data-ng-click="AddItem();"><i class="fa fa-plus-circle"></i></button>
+                                            <button class="btn btn-sm btn-success" type="button" data-ng-click="RemoveItem();"><i class="fa fa-minus-circle"></i></button>
+                                        </div>
                                     </div>
                                     <div class="row">
                                         <table style="width:100%" class="profile_table">

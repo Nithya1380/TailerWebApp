@@ -33,6 +33,18 @@
                 return false;
             }
         }
+
+        function openDropDownMenu(divID)
+        {
+            $('#'+divID).show();
+        }
+
+        $(document).click(function (e) {
+            var container = $('.menu_dropdown');
+            if (!container.is(e.target) && container.has(e.target).length === 0 && e.target.className !== "submenu_txt") {
+                container.hide();
+            }
+        });
     </script>
     
     <asp:ContentPlaceHolder ID="HeaderContent" runat="server">
@@ -88,16 +100,10 @@
                 <tbody>
                     <tr>
                         <td>
-                            <div class="sub_menu_sec">
-                                <table>
-                                    <tbody>
-                                        <tr onclick="javascript:onMenuClick('/UI/Tailer/AccountMaster.aspx',0,'')">
-                                            <td style="width: 25px; text-align: center;"><i class="fas fa-university"></i></td>
-                                            <td><span class="submenu_txt">Accounts</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+<<<<<<< HEAD
+=======
+                            
+>>>>>>> 36156012fdd97a4d18c770347f480e07d328dc29
                             <div class="sub_menu_sec">
                                 <table>
                                     <tbody>
@@ -108,8 +114,23 @@
                                     </tbody>
                                 </table>
                             </div>
+<<<<<<< HEAD
+=======
                             <!--end of submenu-->
                             <!--end of submenu-->
+>>>>>>> 36156012fdd97a4d18c770347f480e07d328dc29
+                            <div class="sub_menu_sec">
+                                <table>
+                                    <tbody>
+                                        <tr onclick="javascript:onMenuClick('/UI/Admin/UserAndRole.aspx',0,'')">
+                                            <td style="width: 25px; text-align: center;"><i class="fa fa-retweet"></i></td>
+                                            <td>
+                                                <span class="submenu_txt">User & Role</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                             <div class="sub_menu_sec">
                                 <table>
                                     <tbody>
@@ -120,18 +141,49 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <!--end of submenu-->
                             <div class="sub_menu_sec">
                                 <table>
                                     <tbody>
+<<<<<<< HEAD
                                         <tr onclick="javascript:onMenuClick('/UI/Admin/UserAndRole.aspx',0,'')">
                                             <td style="width: 25px; text-align: center;"><i class="fa fa-retweet"></i></td>
                                             <td><span class="submenu_txt">User & Role</span></td>
 
                                         </tr>
+=======
+                                       <tr onclick="javascript:onMenuClick('/UI/Admin/UserAndRole.aspx',0,'')">
+                                            <td style="width: 25px; text-align: center;"><i class="fa fa-retweet"></i></td>
+                                            <td><span class="submenu_txt">User & Role</span></td>
+>>>>>>> 36156012fdd97a4d18c770347f480e07d328dc29
                                     </tbody>
                                 </table>
                             </div>
+                            <!--end of submenu-->
+                            <div class="sub_menu_sec">
+                                <table>
+                                    <tbody>
+                                        <tr onclick="javascript:openDropDownMenu('div_SetUp')" >
+                                            <td style="width: 25px; text-align: center;"><i class="fa fa-dedent"></i></td>
+                                            <td><span class="submenu_txt">SetUp</span>
+                                                <div class="menu_dropdown" style="display: none;" id="div_SetUp">
+                                                    <div class="sub_menu_drop">
+                                                        <table>
+                                                            <tbody>
+                                                                <tr onclick="javascript:onMenuClick('/UI/Admin/ItemsMaster.aspx',0,'')">
+                                                                    <td style="width: 25px; text-align: center;"><i class="fa fa-asterisk"></i></td>
+                                                                    <td><span class="submenu_txt">Item Master</span></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                                
+                                    
                             <!--end of submenu-->
                             <div class="sub_menu_sec">
                                 <table>

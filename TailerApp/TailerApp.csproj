@@ -159,7 +159,6 @@
     <Content Include="UI\Admin\Branch_AddModify.aspx" />
     <Content Include="UI\Admin\Company_AddModify.aspx" />
     <Content Include="UI\Admin\ItemsMaster.aspx" />
-
     <Content Include="UI\Admin\AddModifyRole.aspx" />
     <Content Include="UI\Admin\AdminHome.aspx" />
     <Content Include="UI\Admin\Branch_AddModify.aspx" />
