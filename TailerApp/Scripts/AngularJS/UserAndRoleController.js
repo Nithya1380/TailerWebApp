@@ -29,7 +29,7 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
             headers: { "Content-Type": "application/json" }
         }).then(function onSuccess(response) {
             if (response.data.d.errorCode == 1001) {
-                //Session Expired
+                SessionOut();
                 return false;
             }
             if (response.data.d.errorCode != 0) {
@@ -56,7 +56,7 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
             headers: { "Content-Type": "application/json" }
         }).then(function onSuccess(response) {
             if (response.data.d.errorCode == 1001) {
-                //Session Expired
+                SessionOut();
                 return false;
             }
             if (response.data.d.errorCode != 0) {
@@ -83,7 +83,7 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
             headers: { "Content-Type": "application/json" }
         }).then(function onSuccess(response) {
             if (response.data.d.ErrorCode == 1001) {
-                //Session Expired
+                SessionOut();
                 return false;
             }
             if (response.data.d.ErrorCode != 0) {
@@ -110,7 +110,7 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
             headers: { "Content-Type": "application/json" }
         }).then(function onSuccess(response) {
             if (response.data.d.ErrorCode == 1001) {
-                //Session Expired
+                SessionOut();
                 return false;
             }
             if (response.data.d.ErrorCode != 0) {
