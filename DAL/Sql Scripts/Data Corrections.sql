@@ -1,6 +1,7 @@
 BEGIN TRAN
-   INSERT INTO HomePages(HomePageName,HomePageURL)
-   SELECT 'Admin Home Page','UI/Admin/AdminHome.aspx' UNION
+	   INSERT INTO HomePages(HomePageName,HomePageURL)
+   SELECT 'Admin Home Page','UI/Admin/AdminHome.aspx' 
+   UNION
    SELECT 'Tailer Home Page','UI/Tailer/TailerHome.aspx'
 ROLLBACK TRAN
 
@@ -12,16 +13,18 @@ BEGIN TRAN
    SELECT 'Test Company','TC',NULL,NULL,GETDATE()
 ROLLBACK TRAN
 
+SELECT *FROM CompanyMaster
 --Create Role
 BEGIN TRAN
    INSERT INTO Roles(CompanyID,RoleName,HomePage)
-   SELECT 3,'Tailer Role Admin',6
+   SELECT 2,'Tailer Role Admin',3
 ROLLBACK TRAN
+
 select *from Roles
 --Create USers
 BEGIN TRAN
    INSERT INTO users(CompanyID,LoginID,[password],RoleID,[Status])
-   SELECT 3,'Matt.mach@gmail.com',0x70774F6D7868467A4F6A6F3D,1003,'Active'
+   SELECT 2,'Matt.mach@gmail.com',0x70774F6D7868467A4F6A6F3D,5,'Active'
 ROLLBACK TRAN
 
 --Create a Customer
@@ -61,7 +64,9 @@ BEGIN TRAN
 		  (@PickID, 'Designer', 'Designer'),
 		  (@PickID, 'Owner', 'Owner')		
 				
+ROLLBACK
 
+GO
 BEGIN TRAN
    DECLARE @PickListID INT
    INSERT INTO PickListMaster(PickListName) VALUES('ItemMasterGroup')
@@ -69,7 +74,6 @@ BEGIN TRAN
    SELECT @PickListID=SCOPE_IDENTITY()
    INSERT INTO PickListValues(PickListMasterID,PickListLabel,PickListValue)
    VALUES(@PickListID,'Shirts','Shirts'),(@PickListID,'Pants','Pants')
-
 
 ROLLBACK TRAN
 

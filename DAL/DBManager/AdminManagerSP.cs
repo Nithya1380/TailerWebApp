@@ -157,7 +157,7 @@ namespace DAL.DBManager
            return ret;
        }
 
-       public bool _C_AddModifyBranch(int CompanyID, int User, int BranchID, string BranchDetails, string AddressDetails)
+       public bool _C_AddModifyBranch(int CompanyID, int User, int BranchID, string BranchDetails, string AddressDetails, string userloginid,  byte[] Password )
        {
            bool ret = false;
            try
@@ -171,6 +171,8 @@ namespace DAL.DBManager
                this.AddSPIntParam("@BranchID", BranchID);
                this.AddSPStringParam("@BranchDetails", BranchDetails);
                this.AddSPStringParam("@AddressDetails", AddressDetails);
+               this.AddSPVarBinaryParam("@Password", Password);
+               this.AddSPStringParam("@UserLoginId", userloginid);
                this.AddSPReturnIntParam("@return");
 
                if (this.ExecuteNonSP(spName) == 1)

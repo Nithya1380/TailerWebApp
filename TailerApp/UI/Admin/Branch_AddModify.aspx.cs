@@ -57,7 +57,7 @@ namespace TailerApp.UI.Admin
         }
 
         [WebMethod]
-        public static JSONReturnData SaveBranchDetails(string CompanyID, string BranchID, string BranchDetails, string AddressDetails)
+        public static JSONReturnData SaveBranchDetails(string CompanyID, string BranchID, string BranchDetails, string AddressDetails, string user, string password)
         {
             JSONReturnData OutPutData = new JSONReturnData();
             TailerApp.Common.LoginUser currentUser;
@@ -69,8 +69,10 @@ namespace TailerApp.UI.Admin
                     OutPutData.errorMessage = "";
                 }
 
+                byte[] EncryptedCurrentpassword = new System.Text.ASCIIEncoding().GetBytes(TailerApp.Common.Cryptography.Encrypt(password));
+
                 AdminManagerSP AdminManager = new AdminManagerSP();
-                if (AdminManager._C_AddModifyBranch(string.IsNullOrEmpty(CompanyID) ? 0 : Convert.ToInt32(CompanyID), currentUser.UserId, string.IsNullOrEmpty(BranchID) ? 0 : Convert.ToInt32(BranchID), BranchDetails, AddressDetails))
+                if (AdminManager._C_AddModifyBranch(string.IsNullOrEmpty(CompanyID) ? 0 : Convert.ToInt32(CompanyID), currentUser.UserId, string.IsNullOrEmpty(BranchID) ? 0 : Convert.ToInt32(BranchID), BranchDetails, AddressDetails, user, EncryptedCurrentpassword))
                 {
                     OutPutData.errorCode = AdminManager.GetLastErrorCode();
                     OutPutData.errorMessage = AdminManager.GetLastError();

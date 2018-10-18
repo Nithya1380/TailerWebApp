@@ -30,6 +30,8 @@ Tailer.controller("BranchController", function ($scope, $window, $http) {
     $scope.BranchID = $window.BranchID;
     $scope.Str_BranchDetails = "";
     $scope.Str_AddressDetails = "";
+    $scope.User = "";
+    $scope.Password = "";
     $scope.BD = {
         BranchName: "",
         BranchLegalName: "",
@@ -71,6 +73,7 @@ Tailer.controller("BranchController", function ($scope, $window, $http) {
     }
 
     $scope.GetBranchDetails = function () {
+
         $http(
            {
                method: "POST",
@@ -109,6 +112,10 @@ Tailer.controller("BranchController", function ($scope, $window, $http) {
     }
 
     $scope.SaveBranchDetails = function () {
+
+        if (!$scope.savevalidate())
+            return false;
+
         $scope.Str_BranchDetails = JSON.stringify($scope.BD);
         $scope.Str_AddressDetails = JSON.stringify($scope.BAD);
         $http(
@@ -116,7 +123,7 @@ Tailer.controller("BranchController", function ($scope, $window, $http) {
                 method: "POST",
                 url: "Branch_AddModify.aspx/SaveBranchDetails",
                 dataType: 'json',
-                data: { CompanyID: $scope.CompanyID, BranchID: $scope.BranchID, BranchDetails: $scope.Str_BranchDetails, AddressDetails: $scope.Str_AddressDetails },
+                data: { CompanyID: $scope.CompanyID, BranchID: $scope.BranchID, BranchDetails: $scope.Str_BranchDetails, AddressDetails: $scope.Str_AddressDetails, user: $scope.User, password: $scope.Password },
                 headers: { "Content-Type": "application/json" }
             }).then(function successCallback(response) {
 
@@ -140,6 +147,34 @@ Tailer.controller("BranchController", function ($scope, $window, $http) {
             });
 
         return false;
+    }
+
+    $scope.savevalidate = function () {
+        var errormsg = "";
+
+        if ($scope.BD.BranchName == "")
+            errormsg += ' - Branch Name \n'
+
+        if ($scope.BD.BranchCode == "")
+            errormsg += ' - Branch Code \n'
+
+        if ($scope.BAD.Address1 == "")
+            errormsg += ' - Address \n'
+
+        if ($scope.BranchID == 0) {
+            if ($scope.User == "")
+                errormsg += ' - User \n'
+            if ($scope.Password == "")
+                errormsg += ' - Password \n'
+        }
+
+        if (errormsg != "") {
+            errormsg = "Please Enter following. \n" + errormsg;
+            $window.alert(errormsg);
+            return false;
+        }
+
+        return true;
     }
 
     $scope.ClosePopup = function () {

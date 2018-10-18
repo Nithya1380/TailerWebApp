@@ -8,7 +8,9 @@ ALTER PROCEDURE [dbo].[_C_AddModifyBranch]
 	@user INT,
 	@BranchID INT,
 	@BranchDetails VARCHAR(4000),
-	@AddressDetails VARCHAR(2000)
+	@AddressDetails VARCHAR(2000),
+	@Password VARBINARY(50),
+	@UserLoginId VARCHAR(50)
 AS
 -- =============================================
 -- Author:	Mahesh
@@ -19,7 +21,7 @@ BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
-	DECLARE @AddressID INT
+	DECLARE @AddressID INT, @Role INT, @EmployeeID INT, @Home INT
 
     -- Insert statements for procedure here
 	IF ISNULL(@CompanyID,0) = 0
@@ -151,6 +153,36 @@ BEGIN
 				PeriodToDate DATETIME,
 				BranchDivision VARCHAR(40)
 			)
+
+		IF EXISTS(SELECT TOP 1 1 FROM Roles WITH(NOLOCK) WHERE CompanyID = @CompanyID AND RoleName = 'Admin' AND ISNULL(isDeleted,0) = 0)
+		BEGIN
+			SELECT TOP 1 @Role = RoleID FROM Roles WITH(NOLOCK) WHERE CompanyID = @CompanyID AND RoleName = 'Admin' AND ISNULL(isDeleted,0) = 0
+			
+			INSERT INTO EmployeeMaster(CompanyID, CreatedBy, CreatedOn, FirstName, LastName)
+			VALUES(@CompanyID, @user, GETDATE(), 'Admin', 'Admin')
+
+			SET @EmployeeID = scope_identity()
+
+			INSERT INTO Users(CompanyID, LoginID, password, RoleID, Status, CreatedOn, CreatedBy, EmployeeID)
+			VALUES(@CompanyID, @UserLoginId, @Password, @Role, 'Active', GETDATE(), @user, @EmployeeID)
+		END
+		ELSE
+		BEGIN
+			SELECT TOP 1 @Home = HomePageID FROM HomePages WITH(NOLOCK) WHERE HomePageURL = 'UI/Tailer/TailerHome.aspx'
+
+			INSERT INTO Roles(CompanyID, RoleName, CreatedOn, CreatedBy, HomePage)
+			VALUES(@CompanyID, 'Admin', GETDATE(), @user, @Home)
+
+			SET @Role = scope_identity()
+
+			INSERT INTO EmployeeMaster(CompanyID, CreatedBy, CreatedOn, FirstName, LastName)
+			VALUES(@CompanyID, @user, GETDATE(), 'Admin', 'Admin')
+
+			SET @EmployeeID = scope_identity()
+
+			INSERT INTO Users(CompanyID, LoginID, password, RoleID, Status, CreatedOn, CreatedBy, EmployeeID)
+			VALUES(@CompanyID, @UserLoginId, @Password, @Role, 'Active', GETDATE(), @user, @EmployeeID)
+		END
 
 	END
 	ELSE IF ISNULL(@BranchID,0)>0
