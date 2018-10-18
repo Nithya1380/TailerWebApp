@@ -292,6 +292,7 @@ namespace DAL.DBManager
                 string spName = "GetPickLists";
                 this.ClearSPParams();
                 this.AddSPIntParam("@companyID", companyID);
+                this.AddSPIntParam("@user", userID);
                 this.AddSPStringParam("@PickListName", PickListName);
                 this.AddSPReturnIntParam("@return");
                 using (SqlDataReader reader = this.ExecuteSelectSP(spName))

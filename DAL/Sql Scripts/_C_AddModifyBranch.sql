@@ -158,8 +158,8 @@ BEGIN
 		BEGIN
 			SELECT TOP 1 @Role = RoleID FROM Roles WITH(NOLOCK) WHERE CompanyID = @CompanyID AND RoleName = 'Admin' AND ISNULL(isDeleted,0) = 0
 			
-			INSERT INTO EmployeeMaster(CompanyID, CreatedBy, CreatedOn, FirstName, LastName)
-			VALUES(@CompanyID, @user, GETDATE(), 'Admin', 'Admin')
+			INSERT INTO EmployeeMaster(CompanyID, CreatedBy, CreatedOn, FirstName, LastName, Position)
+			VALUES(@CompanyID, @user, GETDATE(), 'Admin', 'Admin', 'Admin')
 
 			SET @EmployeeID = scope_identity()
 
