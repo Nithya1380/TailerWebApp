@@ -133,7 +133,7 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
             var Obj = $scope.UserList.filter(function (x) { return x.UserID == UserID })[0];
             $scope.UserRolsID = { RoleID: Obj.RoleID, RoleName: "" };
             $scope.EmployeeMasterID = { EmployeeMasterID: Obj.EmployeeID, EmployeeName: "" };
-            $scope.UserName = Obj.UserName;
+            $scope.UserName = "";
             $scope.UserMailID = Obj.LoginID;
             $scope.Userpassword = "";
             $scope.UserCnfpassword = "";
@@ -197,7 +197,7 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
             }
 
         }, function onFailure(error) {
-
+            debugger
         });
 
         return false;
@@ -226,11 +226,12 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
             }
         }
         else {
-            if ($scope.UserName == "") {
-                $window.alert("Please enter is user name");
-                return false;
-            }
-            else if ($scope.UserMailID == "") {
+            //if ($scope.UserName == "") {
+            //    $window.alert("Please enter is user name");
+            //    return false;
+            //}
+            //else
+                if ($scope.UserMailID == "") {
                 $window.alert("Please enter is mail id");
                 return false;
             }
