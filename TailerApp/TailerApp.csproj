@@ -171,7 +171,6 @@
     <Content Include="UI\Img\PopUpMaster.jpeg" />
     <Content Include="UI\Style\bootstrap.min.css" />
     <Content Include="UI\Style\TailerStyle.css" />
-    <Content Include="UI\Common\Login.aspx" />
     <Content Include="UI\Tailer\AccountMaster.aspx" />
     <Content Include="UI\Tailer\AddNewCustomer.aspx" />
     <Content Include="UI\Tailer\CreateInvoice.aspx" />
