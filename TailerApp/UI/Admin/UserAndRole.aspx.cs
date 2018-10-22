@@ -105,12 +105,9 @@ namespace TailerApp.UI.Admin
                 AdminManagerSP adminObj = new AdminManagerSP();
 
                 if (adminObj._U_AddModifyUser(currentUser.CompanyID, currentUser.UserId, string.IsNullOrEmpty(LoginUserID) ? 0 : Convert.ToInt32(LoginUserID),
-<<<<<<< HEAD
-                    UserName, LoginID, string.IsNullOrEmpty(RoleID) ? 0 : Convert.ToInt32(RoleID), EncryptedCurrentpassword, isPasswordRegenerated, isdeleted, string.IsNullOrEmpty(EmpoyeeID) ? 0 : Convert.ToInt32(EmpoyeeID)))
-=======
-                    UserName, LoginID, string.IsNullOrEmpty(RoleID) ? 0 : Convert.ToInt32(RoleID), EncryptedCurrentpassword, isPasswordRegenerated, isdeleted,
-                    string.IsNullOrEmpty(EmpoyeeID) ? 0 : Convert.ToInt32(EmpoyeeID), BranchIDs))
->>>>>>> 6fce2a7ceeeea247d6f3df7a093bc540211ee124
+                    UserName, LoginID, string.IsNullOrEmpty(RoleID) ? 0 : Convert.ToInt32(RoleID), EncryptedCurrentpassword, isPasswordRegenerated, isdeleted, string.IsNullOrEmpty(EmpoyeeID) ? 0 : Convert.ToInt32(EmpoyeeID), BranchIDs))
+
+
                 {
                     Objuser.errorCode = 0;
                     Objuser.errorMessage = "";
