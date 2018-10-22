@@ -157,7 +157,7 @@ namespace DAL.DBManager
            return ret;
        }
 
-       public bool _C_AddModifyBranch(int CompanyID, int User, int BranchID, string BranchDetails, string AddressDetails)
+       public bool _C_AddModifyBranch(int CompanyID, int User, int BranchID, string BranchDetails, string AddressDetails, string userloginid,  byte[] Password )
        {
            bool ret = false;
            try
@@ -171,6 +171,8 @@ namespace DAL.DBManager
                this.AddSPIntParam("@BranchID", BranchID);
                this.AddSPStringParam("@BranchDetails", BranchDetails);
                this.AddSPStringParam("@AddressDetails", AddressDetails);
+               this.AddSPVarBinaryParam("@Password", Password);
+               this.AddSPStringParam("@UserLoginId", userloginid);
                this.AddSPReturnIntParam("@return");
 
                if (this.ExecuteNonSP(spName) == 1)
@@ -200,7 +202,7 @@ namespace DAL.DBManager
            return ret;
        }
 
-       public bool _C_GetCompanyAndBranchList(int User, out Struct_Company Struct_Company)
+       public bool _C_GetCompanyAndBranchList(int CompanyID, int User, out Struct_Company Struct_Company)
        {
            bool ret = false;
            Struct_Company = new Struct_Company();
@@ -210,6 +212,7 @@ namespace DAL.DBManager
                this.Connect(this.GetConnString());
                string spName = "_C_GetCompanyAndBranchList";
                this.ClearSPParams();
+               this.AddSPIntParam("@CompanyID", CompanyID);
                this.AddSPIntParam("@User", User);
                this.AddSPReturnIntParam("@return");
 
@@ -220,9 +223,14 @@ namespace DAL.DBManager
                    {
 
                        if (reader["CompanyList"] != DBNull.Value)
-                           Struct_Company.CompanyDetails = reader["CompanyList"].ToString();
+                           Struct_Company.CompanyList = reader["CompanyList"].ToString();
                        else
-                           Struct_Company.CompanyDetails = "";
+                           Struct_Company.CompanyList = "";
+
+                       if (reader["BranchList"] != DBNull.Value)
+                           Struct_Company.BranchList = reader["BranchList"].ToString();
+                       else
+                           Struct_Company.BranchList = "";
 
                    }
 
@@ -526,7 +534,8 @@ namespace DAL.DBManager
            }
            return ret;
        }
-       public bool _U_AddModifyUser(int CompanyID, int User, int UserID, string UserName, string LoginID, int RoleID, byte[] Password, bool isPasswordRegenerated, bool isdeleted, int EmployeeID)
+       public bool _U_AddModifyUser(int CompanyID, int User, int UserID, string UserName, string LoginID, int RoleID, byte[] Password,
+           bool isPasswordRegenerated, bool isdeleted, int EmployeeID, string BranchIDs)
        {
            bool ret = false;
            try
@@ -545,6 +554,7 @@ namespace DAL.DBManager
                this.AddSPVarBinaryParam("@Password", Password);
                this.AddSPBoolParam("@isPasswordRegenerated", isPasswordRegenerated);
                this.AddSPBoolParam("@isdeleted", isdeleted);
+               this.AddSPStringParam("@BranchIDs", BranchIDs);
                this.AddSPReturnIntParam("@return");
 
                if (this.ExecuteNonSP(spName) == 1)
@@ -872,6 +882,55 @@ namespace DAL.DBManager
                    case 1: ret = true;
                        break;
                    default: SetError(-1, "Failed to get Position List. Please try again later");
+                       break;
+               }
+           }
+           catch (Exception ex)
+           {
+               ret = false;
+               Utils.Write(ex);
+           }
+           finally
+           {
+               this.ClearSPParams();
+               this.Disconnect();
+           }
+           return ret;
+       }
+
+       public bool GetUserBranch(int companyID, int user, int UserID, bool EncludAllBranch, out JsonResults plist)
+       {
+           plist = new JsonResults();
+           bool ret = false;
+
+           try
+           {
+               this.Connect(this.GetConnString());
+               string spName = "GetUserBranch";
+               this.ClearSPParams();
+               this.AddSPIntParam("@Company", companyID);
+               this.AddSPIntParam("@user", user);
+               this.AddSPIntParam("@UserID", UserID);
+               this.AddSPBoolParam("@EncludAllBranch", EncludAllBranch);
+               this.AddSPReturnIntParam("@return");
+               using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+               {
+                   while (reader.Read())
+                   {
+                       if (!reader.IsDBNull(0))
+                           plist.JSonstring = reader.GetString(0);
+                   }
+
+                   reader.Close();
+               }
+
+               int retcode = this.GetOutValueInt("@return");
+
+               switch (retcode)
+               {
+                   case 0: ret = true;
+                       break;
+                   default: SetError(-1, "Failed to get user branch. Please try again later");
                        break;
                }
            }
