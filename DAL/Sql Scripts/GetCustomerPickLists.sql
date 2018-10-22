@@ -7,33 +7,33 @@ ALTER PROCEDURE DBO.GetCustomerPickLists
 AS
 
 BEGIN
-		EXEC GetPickLists @companyID,'AccountCategory'
+		EXEC GetPickLists @companyID, @UserID, 'AccountCategory'
 
-		EXEC GetPickLists @companyID,'AccountDateCategory'
+		EXEC GetPickLists @companyID, @UserID,'AccountDateCategory'
 
-		EXEC GetPickLists @companyID,'AccountParentType'
+		EXEC GetPickLists @companyID, @UserID,'AccountParentType'
 
-		EXEC GetPickLists @companyID,'AccountReverse'
+		EXEC GetPickLists @companyID, @UserID,'AccountReverse'
 
-		EXEC GetPickLists @companyID,'AccountSch6Group'
+		EXEC GetPickLists @companyID, @UserID,'AccountSch6Group'
 
-		EXEC GetPickLists @companyID,'AccountTDSCategory'
+		EXEC GetPickLists @companyID, @UserID,'AccountTDSCategory'
 
-		EXEC GetPickLists @companyID,'AccountTDSDefault'
+		EXEC GetPickLists @companyID, @UserID,'AccountTDSDefault'
 
-		EXEC GetPickLists @companyID,'AccountType'
+		EXEC GetPickLists @companyID, @UserID,'AccountType'
 
-		EXEC GetPickLists @companyID,'City'
+		EXEC GetPickLists @companyID, @UserID,'City'
 
-		EXEC GetPickLists @companyID,'Country'
+		EXEC GetPickLists @companyID, @UserID,'Country'
 
-		EXEC GetPickLists @companyID,'State'
+		EXEC GetPickLists @companyID, @UserID,'State'
 
-		EXEC GetPickLists @companyID,'SRNames'
+		EXEC GetPickLists @companyID, @UserID,'SRNames'
 
-		EXEC GetPickLists @companyID,'SupplierCategories'
+		EXEC GetPickLists @companyID, @UserID,'SupplierCategories'
 
-		EXEC GetPickLists @companyID,'SupplierTypes'
+		EXEC GetPickLists @companyID, @UserID,'SupplierTypes'
 
 		RETURN 1
 

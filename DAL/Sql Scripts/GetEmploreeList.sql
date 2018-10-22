@@ -45,9 +45,9 @@ BEGIN
 			Address.EmailID,
 			Address.Address1,
 			Address.Address2
-		FROM EmployeeMaster WITH(NOLOCK), Address WITH(NOLOCK)
+		FROM EmployeeMaster WITH(NOLOCK) 
+		LEFT OUTER JOIN Address WITH(NOLOCK) ON Address.CompanyID = @Company AND Address.AddressID = EmployeeMaster.AddressID
 			WHERE EmployeeMaster.CompanyID = @Company AND ISNULL(EmployeeMaster.isDeleted,0)=0
-				AND Address.CompanyID = @Company AND Address.AddressID = EmployeeMaster.AddressID
 		FOR JSON PATH
 		)
 	END

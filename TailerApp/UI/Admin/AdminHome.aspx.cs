@@ -28,7 +28,7 @@ namespace TailerApp.UI.Admin
             {
                 if (!GetUserSession(out currentUser))
                 {
-                    records.errorCode = 10001;
+                    records.errorCode = 1001;
                     records.errorMessage = "";
                 }
                 string EncryptedData = TailerApp.Common.Cryptography.Encrypt(URLdata);
@@ -48,10 +48,17 @@ namespace TailerApp.UI.Admin
         public static Struct_Company GetCompanyAndBranchList()
         {
             Struct_Company records = new Struct_Company();
+            TailerApp.Common.LoginUser currentUser;
             try
             {
+                if (!GetUserSession(out currentUser))
+                {
+                    records.errorCode = 1001;
+                    records.errorMessage = "";
+                }
+
                 AdminManagerSP AdminManager = new AdminManagerSP();
-                if (AdminManager._C_GetCompanyAndBranchList(0, out records))
+                if (!AdminManager._C_GetCompanyAndBranchList(0, currentUser.UserId, out records))
                 {
                     records.errorCode = AdminManager.GetLastErrorCode();
                     records.errorMessage = AdminManager.GetLastError();

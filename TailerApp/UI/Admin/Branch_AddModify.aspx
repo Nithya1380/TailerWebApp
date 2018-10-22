@@ -146,12 +146,12 @@
                     </tr>
                 </table>
                 </div>
-                <h2 class="blueborderline_bottom" style="margin-left:-10px"><div class="slope" style="width:132px"><span>Capillary</span></div></h2>
-                <div class="web_tabletext_center">
+                <h2 class="blueborderline_bottom" style="margin-left:-10px" ng-show="BranchID == 0"><div class="slope" style="width:132px"><span>Capillary</span></div></h2>
+                <div class="web_tabletext_center" ng-show="BranchID == 0">
                 <table class="table table-bordered_second table-condensed table-hover table-striped table-bordered" >
                     <tr>
-                        <td style="text-align:right;">User: </td><td style="text-align:left;"><input type="text" class="web_txtbox" /></td>
-                        <td style="text-align:right;">Password: </td><td style="text-align:left;"><input type="text" class="web_txtbox" /></td>
+                        <td style="text-align:right;">User: </td><td style="text-align:left;"><input type="text" class="web_txtbox" ng-model="User" /></td>
+                        <td style="text-align:right;">Password: </td><td style="text-align:left;"><input type="password" class="web_txtbox" ng-model="Password" /></td>
                         <td style="text-align:right;">Area: </td><td style="text-align:left;"><input type="text" class="web_txtbox" /></td>
                     </tr>
                 </table>

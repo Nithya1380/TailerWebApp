@@ -21,11 +21,10 @@
 
     TailerApp.controller('AdminHomeController', ['$scope', '$window', '$http', '$rootScope', function ($scope, $window, $http, $rootScope) {
         
-        $scope.CompanyAndBranchList = {};
+        $scope.CompanyList = {};
+        $scope.BranchList = {};
 
-        GetCompanyAndBranchList();
-
-        function GetCompanyAndBranchList() {
+        $scope.GetCompanyAndBranchList = function() {
 
             $http(
                {
@@ -41,7 +40,8 @@
                        return false;
                    }
                    else if (response.data.d.errorCode == 0) {
-                       $scope.CompanyAndBranchList = JSON.parse(response.data.d.CompanyDetails);
+                       $scope.CompanyList = JSON.parse(response.data.d.CompanyList);
+                       $scope.BranchList = JSON.parse(response.data.d.BranchList);
                    }
                    else {
 
@@ -56,6 +56,8 @@
                });
 
         }
+
+        $scope.GetCompanyAndBranchList();
 
         $scope.AddEditCompany = function (CompanyID) {
       
@@ -129,7 +131,80 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
   <div ng-app="TailerApp" ng-controller = "AdminHomeController" >
-    <div align="right" style="width:98%; padding-right:10px;">
+      <div class="row">
+            <div>&nbsp;</div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-2 col-sm-2 pull-right" style="margin-bottom:5px">
+                <button class="btn btn-lg btn-success" type="button" data-ng-click="GetCompanyAndBranchList();">&nbsp;Display</button>
+                <button class="btn btn-lg btn-success" type="button" data-ng-click="AddEditCompany(0);">&nbsp;Add Company</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="card">
+                    <div class="">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Company</th>
+                                    <th>Company Code</th>
+                                    <th>Created Date</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>Create Branch</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="Cmp in CompanyList">
+                                <tr>
+                                    <td><a href="#" data-ng-click="AddEditCompany(Cmp.CompanyID)">{{Cmp.CompanyName}}</a></td>
+                                    <td>{{Cmp.CompanyCode}}</td>
+                                    <td>{{Cmp.CompCreatedDate}}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><input type="button" value="Add Branch" ng-click="AddEditBranch(Cmp.CompanyID, 0)"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="card">
+                    <div class="">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Company</th>
+                                    <th>Branch</th>
+                                    <th>Branch Code</th>
+                                    <th>Created Date</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="Bnh in BranchList">
+                                <tr>
+                                    <td>{{Bnh.CompanyName}}</td>
+                                    <td><a href="#" data-ng-click="AddEditBranch(Bnh.CompanyID, Bnh.BranchID)">{{Bnh.BranchName}}</a></td>
+                                    <td>{{Bnh.BranchCode}}</td>
+                                    <td>{{Bnh.BranchCreatedDate}}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+<%--    <div align="right" style="width:98%; padding-right:10px;">
         <input type="button" value="Add Company" ng-click="AddEditCompany(0)"/>
     </div>
     <div>
@@ -186,7 +261,7 @@
             </div>
         </div>
       </div>
-    </div>
+    </div>--%>
   </div>
 </asp:Content>
 

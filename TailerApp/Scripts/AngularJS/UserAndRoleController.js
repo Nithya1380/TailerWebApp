@@ -1,6 +1,6 @@
 ﻿/// <reference path="angular.js" />
 
-var tailerApp = angular.module("TailerApp", []);
+var tailerApp = angular.module("TailerApp", ['angular_MultiselectDropdown']);
 
 tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, $rootScope, $filter) {
     $scope.UserList = {};
@@ -17,6 +17,8 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
     $scope.passwordStyle = '';
     $scope.EmployeeList = {};
     $scope.EmployeeMasterID = {};
+    $scope.UserBranchList = {};
+    $scope.BranchIDs = "";
 
     $scope.GetUsersList = function () {            
         $http({
@@ -27,7 +29,7 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
             headers: { "Content-Type": "application/json" }
         }).then(function onSuccess(response) {
             if (response.data.d.errorCode == 1001) {
-                //Session Expired
+                SessionOut();
                 return false;
             }
             if (response.data.d.errorCode != 0) {
@@ -54,7 +56,7 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
             headers: { "Content-Type": "application/json" }
         }).then(function onSuccess(response) {
             if (response.data.d.errorCode == 1001) {
-                //Session Expired
+                SessionOut();
                 return false;
             }
             if (response.data.d.errorCode != 0) {
@@ -81,7 +83,7 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
             headers: { "Content-Type": "application/json" }
         }).then(function onSuccess(response) {
             if (response.data.d.ErrorCode == 1001) {
-                //Session Expired
+                SessionOut();
                 return false;
             }
             if (response.data.d.ErrorCode != 0) {
@@ -99,12 +101,39 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
 
     $scope.GetEmployee();
 
+    $scope.GetUserBranch = function (UserID) {
+        $http({
+            method: "POST",
+            url: "UserAndRole.aspx/GetUserBranch",
+            data: { UserID: UserID },
+            dataType: "json",
+            headers: { "Content-Type": "application/json" }
+        }).then(function onSuccess(response) {
+            if (response.data.d.ErrorCode == 1001) {
+                SessionOut();
+                return false;
+            }
+            if (response.data.d.ErrorCode != 0) {
+                alert(response.data.d.ErrorMessage);
+                return false;
+            }
+            else {
+                
+                $scope.UserBranchList = JSON.parse(response.data.d.JSonstring);
+                
+            }
+
+        }, function onFailure(error) {
+
+        });
+    };
+
     $scope.OnUserClick = function (UserID) {
         if (UserID != 0) {
             var Obj = $scope.UserList.filter(function (x) { return x.UserID == UserID })[0];
             $scope.UserRolsID = { RoleID: Obj.RoleID, RoleName: "" };
             $scope.EmployeeMasterID = { EmployeeMasterID: Obj.EmployeeID, EmployeeName: "" };
-            $scope.UserName = Obj.UserName;
+            $scope.UserName = "";
             $scope.UserMailID = Obj.LoginID;
             $scope.Userpassword = "";
             $scope.UserCnfpassword = "";
@@ -124,6 +153,7 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
             $scope.passwordStatus = '';
             $scope.passwordStyle = '';
         }
+        $scope.GetUserBranch(UserID);
         $("#div_usermodify").css("display", "block");
 
     };
@@ -137,7 +167,8 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
             method: "POST",
             url: "UserAndRole.aspx/AddModifyUser",
             data: {LoginUserID: $scope.UserID, UserName: $scope.UserName, LoginID: $scope.UserMailID, RoleID: $scope.UserRolsID.RoleID, 
-                Password: $scope.Userpassword, isPasswordRegenerated: $scope.isPasswordRegenerated, isdeleted: $scope.isdeleted, EmpoyeeID: $scope.EmployeeMasterID.EmployeeMasterID
+                Password: $scope.Userpassword, isPasswordRegenerated: $scope.isPasswordRegenerated, isdeleted: $scope.isdeleted,
+                EmpoyeeID: $scope.EmployeeMasterID.EmployeeMasterID, BranchIDs: $scope.BranchIDs
             },
             dataType: "json",
             headers: { "Content-Type": "application/json" }
@@ -166,7 +197,7 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
             }
 
         }, function onFailure(error) {
-
+            debugger
         });
 
         return false;
@@ -195,11 +226,12 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
             }
         }
         else {
-            if ($scope.UserName == "") {
-                $window.alert("Please enter is user name");
-                return false;
-            }
-            else if ($scope.UserMailID == "") {
+            //if ($scope.UserName == "") {
+            //    $window.alert("Please enter is user name");
+            //    return false;
+            //}
+            //else
+                if ($scope.UserMailID == "") {
                 $window.alert("Please enter is mail id");
                 return false;
             }
