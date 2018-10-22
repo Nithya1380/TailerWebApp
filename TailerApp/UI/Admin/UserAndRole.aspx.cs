@@ -87,7 +87,8 @@ namespace TailerApp.UI.Admin
         }
 
         [WebMethod]
-        public static JSONReturnData AddModifyUser(string LoginUserID, string UserName, string LoginID, string RoleID, string Password, bool isPasswordRegenerated, bool isdeleted, string EmpoyeeID)
+        public static JSONReturnData AddModifyUser(string LoginUserID, string UserName, string LoginID, string RoleID, string Password, bool isPasswordRegenerated, bool isdeleted, 
+                    string EmpoyeeID, string BranchIDs)
         {
             JSONReturnData Objuser = new JSONReturnData();
             LoginUser currentUser;
@@ -104,7 +105,12 @@ namespace TailerApp.UI.Admin
                 AdminManagerSP adminObj = new AdminManagerSP();
 
                 if (adminObj._U_AddModifyUser(currentUser.CompanyID, currentUser.UserId, string.IsNullOrEmpty(LoginUserID) ? 0 : Convert.ToInt32(LoginUserID),
+<<<<<<< HEAD
                     UserName, LoginID, string.IsNullOrEmpty(RoleID) ? 0 : Convert.ToInt32(RoleID), EncryptedCurrentpassword, isPasswordRegenerated, isdeleted, string.IsNullOrEmpty(EmpoyeeID) ? 0 : Convert.ToInt32(EmpoyeeID)))
+=======
+                    UserName, LoginID, string.IsNullOrEmpty(RoleID) ? 0 : Convert.ToInt32(RoleID), EncryptedCurrentpassword, isPasswordRegenerated, isdeleted,
+                    string.IsNullOrEmpty(EmpoyeeID) ? 0 : Convert.ToInt32(EmpoyeeID), BranchIDs))
+>>>>>>> 6fce2a7ceeeea247d6f3df7a093bc540211ee124
                 {
                     Objuser.errorCode = 0;
                     Objuser.errorMessage = "";
@@ -157,5 +163,39 @@ namespace TailerApp.UI.Admin
             return emplList;
         }
 
+
+        [WebMethod]
+        public static JsonResults GetUserBranch(string UserID)
+        {
+            JsonResults BranchList = new JsonResults();
+            LoginUser currentUser;
+            try
+            {
+                if (!GetUserSession(out currentUser))
+                {
+                    BranchList.ErrorCode = 1001;
+                    BranchList.ErrorMessage = "";
+                    return BranchList;
+                }
+
+                AdminManagerSP adminObj = new AdminManagerSP();
+                if (adminObj.GetUserBranch(currentUser.CompanyID, currentUser.UserId, string.IsNullOrEmpty(UserID) ? 0 : Convert.ToInt32(UserID), true, out BranchList))
+                {
+                    BranchList.ErrorCode = 0;
+                    BranchList.ErrorMessage = "";
+                }
+                else
+                {
+                    BranchList.ErrorCode = 1;
+                    BranchList.ErrorMessage = "Failed to get branch List. please try again later";
+                }
+            }
+            catch (Exception ex)
+            {
+                Utils.Write(ex);
+            }
+
+            return BranchList;
+        }
     }
 }
