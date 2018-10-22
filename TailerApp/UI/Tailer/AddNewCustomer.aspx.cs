@@ -13,9 +13,18 @@ namespace TailerApp.UI.Tailer
 {
     public partial class AddNewCustomer : PageBase
     {
+        public int contextFrom = 0;
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            try
+            {
+                if (!string.IsNullOrEmpty(Request.QueryString.Get("contextFrom")))
+                    contextFrom = Convert.ToInt32(Request.QueryString.Get("contextFrom"));
+            }
+            catch(Exception ex)
+            {
+                Utils.Write(ex);
+            }
         }
 
         [WebMethod]

@@ -20,6 +20,7 @@ namespace TailerApp.UI.Tailer
                 if (!IsPostBack)
                 {
                     this.SelectUserBranch();
+
                 }
             }
             catch(Exception ex)

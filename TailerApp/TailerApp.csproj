@@ -109,13 +109,17 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <None Include="Properties\PublishProfiles\TailerAppPublish.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\angular-datepicker.css" />
     <Content Include="Scripts\angular-datepicker.js" />
     <Content Include="Scripts\AngularJS\AddModifyRoleController.js" />
     <Content Include="Scripts\AngularJS\angular.js" />
+<<<<<<< HEAD
     <Content Include="Scripts\AngularJS\angularjs-dropdown-multiselect.js" />
     <Content Include="Scripts\AngularJS\autocomplete.js" />
+=======
+>>>>>>> a2cc2c444b4ad57d72fd228277043af0724bc08d
     <Content Include="Scripts\AngularJS\BranchController.js" />
     <Content Include="Scripts\AngularJS\CompanyController.js" />
     <Content Include="Scripts\AngularJS\TailerApp.js" />
@@ -173,6 +177,7 @@
     <Content Include="UI\Style\autocomplete.css" />
     <Content Include="UI\Style\bootstrap.min.css" />
     <Content Include="UI\Style\TailerStyle.css" />
+    <Content Include="UI\Common\Login.aspx" />
     <Content Include="UI\Tailer\AccountMaster.aspx" />
     <Content Include="UI\Tailer\AddNewCustomer.aspx" />
     <Content Include="UI\Tailer\CreateInvoice.aspx" />

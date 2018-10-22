@@ -34,6 +34,13 @@
                  $scope.InvoiceList.pop();
              }
 
+             $scope.OnAddNewCustomerClick = function () {
+                 var left = (screen.width / 2) - (850 / 2);
+                 var top = (screen.height / 2) - (500 / 2);
+                 $window.open("AddNewCustomer.aspx?contextFrom=2", "AddCustomer", 'resizable=yes,location=1,status=1,scrollbars=1,width=850,height=500,top=' + top + ', left=' + left);
+                 return false;
+             };
+
          });
      </script>
 </asp:Content>
@@ -84,7 +91,7 @@
                                     <td>
                                         <span class="profileValue">
                                             <input type="text" data-ng-model="Customer.FirstName" name="Debit" class="form-control-Multiple" style="width: 70%; margin-left: 5px;" maxlength="50" />
-                                           <button class="btn btn-sm btn-success" type="button" title="Order">
+                                           <button class="btn btn-sm btn-success" type="button" title="Order" data-ng-click="OnAddNewCustomerClick()">
                                                <i class="fa fa-address-card-o" aria-hidden="true"></i>
                                             </button>
                                          </span>
