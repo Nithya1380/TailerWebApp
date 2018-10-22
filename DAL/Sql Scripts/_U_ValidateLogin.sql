@@ -82,5 +82,11 @@ BEGIN
 		   AND Users.UserID=@userId
 		   AND Roles.CompanyID=@CompanyID
 
+	SELECT BranchDetails.BranchID, BranchDetails.BranchName  
+		FROM UserBranch WITH(NOLOCK), BranchDetails WITH(NOLOCK)
+			WHERE UserBranch.CompanyID = @CompanyID AND UserBranch.UserID = @userId AND ISNULL(UserBranch.isDeleted,0)=0
+				AND BranchDetails.BranchID = UserBranch.BranchID AND BranchDetails.CompanyID = @CompanyID 
+				AND ISNULL(BranchDetails.isDeleted,0) = 0
+
 	RETURN 1
 END

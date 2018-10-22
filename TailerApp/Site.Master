@@ -13,6 +13,7 @@
         <script src="<%: ResolveUrl("~/Scripts/jquery-1.10.2.js") %>"></script>
         <script src="<%: ResolveUrl("~/Scripts/jquery-1.10.2.min.js") %>"></script>
         <script src="<%: ResolveUrl("~/Scripts/jquery-1.10.2.ui.js") %>"></script>
+        
     </asp:PlaceHolder>
 
     <webopt:bundlereference runat="server" path="~/Content/css" />
@@ -23,6 +24,8 @@
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>--%>
     <script type="text/javascript" lang="javascript">
+        var roleScop = "<%=CURRENT_USER.rolescope%>";
+
         function onMenuClick(url,isPopup, popupFeatures) {
             if(isPopup==true)
             {
@@ -49,6 +52,58 @@
                 container.hide();
             }
         });
+
+        $(document).ready(function () {
+            if (roleScop.indexOf('1,') >= 0)
+                $("#Account").show();
+            else
+                $("#Account").hide();
+
+            if (roleScop.indexOf('16,') >= 0)
+                $("#Employee").show();
+            else
+                $("#Employee").hide();
+
+            if (roleScop.indexOf('2,') >= 0)
+                $("#CustomerList").show();
+            else
+                $("#CustomerList").hide();
+
+            if (roleScop.indexOf('3,') >= 0)
+                $("#UserRole").show();
+            else
+                $("#UserRole").hide();
+
+            if (roleScop.indexOf('4,') >= 0)
+                $("#SetUp").show();
+            else
+                $("#SetUp").hide();
+
+            if (roleScop.indexOf('14,') >= 0)
+                $("#CompanyBranch").show();
+            else
+                $("#CompanyBranch").hide();
+
+            if (roleScop.indexOf('15,') >= 0)
+                $("#ItemMaster").show();
+            else
+                $("#ItemMaster").hide();
+
+            if (roleScop.indexOf('15,') >= 0)
+                $("#Measurements").show();
+            else
+                $("#Measurements").hide();
+            
+
+        });
+        
+        //var tailerApp1 = angular.module("TailerApp1", []);
+
+        //tailerApp1.controller("SiteMasterController", ['$scope', '$window', function ($scope, $window) {
+        //    $scope.roleScop = $window.roleScop;
+
+        //}]);
+
     </script>
     
     <asp:ContentPlaceHolder ID="HeaderContent" runat="server">
@@ -104,7 +159,7 @@
                 <tbody>
                     <tr>
                         <td style="width:90%">
-                            <div class="sub_menu_sec">
+                            <div class="sub_menu_sec" id="Account">
                                 <table>
                                     <tbody>
                                         <tr onclick="javascript:onMenuClick('/UI/Tailer/AccountMaster.aspx',0,'')">
@@ -116,7 +171,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="sub_menu_sec">
+                            <div class="sub_menu_sec" id="Employee">
                                 <table>
                                     <tbody>
                                         <tr onclick="javascript:onMenuClick('/UI/Tailer/EmployeeList.aspx',0,'')">
@@ -127,7 +182,7 @@
                                 </table>
                             </div>
                             <!--end of submenu-->
-                            <div class="sub_menu_sec">
+                            <div class="sub_menu_sec" id="CustomerList">
                                 <table>
                                     <tbody>
                                         <tr onclick="javascript:onMenuClick('/UI/Tailer/CustomerList.aspx',0,'')">
@@ -137,7 +192,17 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="sub_menu_sec">
+                            <div class="sub_menu_sec" id="Measurements">
+                                <table>
+                                    <tbody>
+                                        <tr onclick="javascript:onMenuClick('/UI/Tailer/MeasurementList.aspx',0,'')">
+                                            <td style="width: 25px; text-align: center;"><i class="fa fa-calendar"></i></td>
+                                            <td><span class="submenu_txt">Measurements</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="sub_menu_sec" id="UserRole">
                                 <table>
                                     <tbody>
                                        <tr onclick="javascript:onMenuClick('/UI/Admin/UserAndRole.aspx',0,'')">
@@ -148,14 +213,14 @@
                                 </table>
                             </div>
                             <!--end of submenu-->
-                            <div class="sub_menu_sec">
+                            <div class="sub_menu_sec" id="SetUp" >
                                 <table>
                                     <tbody>
                                         <tr onclick="javascript:openDropDownMenu('div_SetUp')" >
                                             <td style="width: 25px; text-align: center;"><i class="fa fa-dedent"></i></td>
                                             <td><span class="submenu_txt">SetUp</span>
                                                 <div class="menu_dropdown" style="display: none;" id="div_SetUp">
-                                                    <div class="sub_menu_drop" style="float: none;">
+                                                    <div class="sub_menu_drop" style="float: none;" id="CompanyBranch">
                                                         <table>
                                                             <tbody>
                                                                 <tr onclick="javascript:onMenuClick('/UI/Admin/CompanyBranchList.aspx',0,'')">
@@ -165,7 +230,7 @@
                                                             </tbody>
                                                         </table>
                                                     </div>
-                                                    <div class="sub_menu_drop" style="width: 100%;">
+                                                    <div class="sub_menu_drop" style="width: 100%;" id="ItemMaster">
                                                         <table>
                                                             <tbody>
                                                                 <tr onclick="javascript:onMenuClick('/UI/Admin/ItemsMaster.aspx',0,'')">
@@ -180,17 +245,6 @@
                                         </tr>
                                     </tbody>
                                   </table>
-                            </div>
-                            <!--end of submenu-->
-                            <div class="sub_menu_sec" style="display:none">
-                                <table>
-                                    <tbody>
-                                        <tr>
-                                            <td style="width: 25px; text-align: center;"><i class="fa fa-calendar"></i></td>
-                                            <td><span class="submenu_txt">Menu 5</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
                             </div>
                             <!--end of submenu-->
                             <div class="sub_menu_sec" style="display:none">
