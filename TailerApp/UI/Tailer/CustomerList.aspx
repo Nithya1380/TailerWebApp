@@ -48,7 +48,7 @@
             $scope.OnAddNewCustomerClick = function () {
                 var left = (screen.width / 2) - (850 / 2);
                 var top = (screen.height / 2) - (500 / 2);
-                $window.open("AddNewCustomer.aspx", "AddCustomer", 'resizable=yes,location=1,status=1,scrollbars=1,width=850,height=500,top=' + top + ', left=' + left);
+                $window.open("AddNewCustomer.aspx?contextFrom=1", "AddCustomer", 'resizable=yes,location=1,status=1,scrollbars=1,width=850,height=500,top=' + top + ', left=' + left);
                 return false;
             };
         });

@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous" />
    
     <script type="text/javascript">
+        var g_contextFrom = '<%=contextFrom%>';
         var tailerApp = angular.module("TailerApp", ['720kb.datepicker']);
         tailerApp.controller("AddCustomerController", function ($scope, $window, $http, $rootScope, $sce) {
             $scope.Customer = {};
@@ -28,6 +29,7 @@
             $scope.CustomerError = "";
             $scope.AlertClass = "alert-danger";
             $scope.EnableSave = true;
+            $scope.contextFrom = g_contextFrom;
 
             $scope.init = function () {
                 $scope.GetAccountCategory();
@@ -87,7 +89,10 @@
                         $scope.CustomerError = $sce.trustAsHtml("New Customer Added Successfully!");
                         $scope.AlertClass = "alert-success";
                         $scope.EnableSave = false;
-                        $scope.RefreshCustomerList();
+
+                        if ($scope.contextFrom==1)
+                            $scope.RefreshCustomerList();
+
                         return false;
                     }
 
