@@ -159,11 +159,7 @@
                 <tbody>
                     <tr>
                         <td style="width:90%">
-<<<<<<< HEAD
                             <div class="sub_menu_sec" id="Account">
-=======
-                            <div class="sub_menu_sec" style="display:none">
->>>>>>> a2cc2c444b4ad57d72fd228277043af0724bc08d
                                 <table>
                                     <tbody>
                                         <tr onclick="javascript:onMenuClick('/UI/Tailer/AccountMaster.aspx',0,'')">

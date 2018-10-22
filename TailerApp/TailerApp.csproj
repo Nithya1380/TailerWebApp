@@ -115,11 +115,8 @@
     <Content Include="Scripts\angular-datepicker.js" />
     <Content Include="Scripts\AngularJS\AddModifyRoleController.js" />
     <Content Include="Scripts\AngularJS\angular.js" />
-<<<<<<< HEAD
     <Content Include="Scripts\AngularJS\angularjs-dropdown-multiselect.js" />
     <Content Include="Scripts\AngularJS\autocomplete.js" />
-=======
->>>>>>> a2cc2c444b4ad57d72fd228277043af0724bc08d
     <Content Include="Scripts\AngularJS\BranchController.js" />
     <Content Include="Scripts\AngularJS\CompanyController.js" />
     <Content Include="Scripts\AngularJS\TailerApp.js" />
