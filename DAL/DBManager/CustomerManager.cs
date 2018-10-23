@@ -470,5 +470,53 @@ namespace DAL.DBManager
             }
             return ret;
         }
+
+        public bool SearchCustomers(int companyID, int userID,int branchID,string searchText,out JsonResults customerList)
+        {
+            customerList = new JsonResults();
+            bool ret = false;
+
+            try
+            {
+                this.Connect(this.GetConnString());
+                string spName = "SearchCustomer";
+                this.ClearSPParams();
+                this.AddSPIntParam("@companyID", companyID);
+                this.AddSPIntParam("@BranchID", branchID);
+                this.AddSPIntParam("@UserID", userID);
+                this.AddSPStringParam("@SearchText", searchText);
+                this.AddSPReturnIntParam("@return");
+                using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+                {
+                    while (reader.Read())
+                    {
+                        customerList.JSonstring += reader.GetString(0);
+                    }
+
+                    reader.Close();
+                }
+
+                int retcode = this.GetOutValueInt("@return");
+
+                switch (retcode)
+                {
+                    case 1: ret = true;
+                        break;
+                    default: SetError(-1, "Failed to get customer List. Please try again later");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = false;
+                Utils.Write(ex);
+            }
+            finally
+            {
+                this.ClearSPParams();
+                this.Disconnect();
+            }
+            return ret;
+        }
     }
 }
