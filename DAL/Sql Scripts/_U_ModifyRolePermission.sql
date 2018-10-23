@@ -10,8 +10,7 @@ ALTER PROCEDURE [dbo].[_U_ModifyRolePermission]
 	@PermissionAdded VARCHAR(4000),
 	@PermissionRemoved VARCHAR(4000),
 	@RoleID INT,
-	@isDeleted BIT,
-	@HomePage INT
+	@isDeleted BIT
 AS
 -- =============================================
 -- Author: Mahesh
@@ -37,8 +36,8 @@ BEGIN TRAN
 
 	IF ISNULL(@RoleID,0) = 0
 	BEGIN
-		INSERT INTO Roles(CompanyID, RoleName, CreatedOn, CreatedBy, HomePage)
-		VALUES(@Company, @RoleName, GETDATE(), @user, @HomePage)
+		INSERT INTO Roles(CompanyID, RoleName, CreatedOn, CreatedBy)
+		VALUES(@Company, @RoleName, GETDATE(), @user)
 
 		SET @RoleID = SCOPE_IDENTITY()
 	END
@@ -53,7 +52,7 @@ BEGIN TRAN
 	ELSE IF EXISTS(SELECT TOP 1 1 FROM Roles WITH(NOLOCK) WHERE Roles.CompanyID = @Company AND Roles.RoleID = @RoleID AND RoleName != @RoleName)
 	BEGIN
 		UPDATE Roles
-			SET RoleName = @RoleName, HomePage = @HomePage
+			SET RoleName = @RoleName
 		WHERE Roles.CompanyID = @Company AND Roles.RoleID = @RoleID
 	END 
 
