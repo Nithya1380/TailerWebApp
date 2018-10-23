@@ -9,6 +9,9 @@ tailerApp.controller("ModifyRoleController",['$scope', '$window', '$http', '$roo
     $scope.PermissionAdded = "";
     $scope.PermissionRemoved = "";
     $scope.isDeleted = false;
+    $scope.HomePage = { name: "--Select--", id: 0 };
+    $scope.HomePageList = [{ name: "--Select--", id: 0 }, { name: "Admin", id: 4 }, { name: "Biller", id: 5 }];
+
 
     $scope.GetRolePermission = function () {
         $http({
@@ -29,6 +32,7 @@ tailerApp.controller("ModifyRoleController",['$scope', '$window', '$http', '$roo
             else {
                 $scope.RolePermission = JSON.parse(response.data.d.RolePermissions);
                 $scope.RoleName = response.data.d.RoleName;
+                $scope.HomePage = { name: "", id: response.data.d.HomePage };
             }
 
         }, function onFailure(error) {
@@ -55,7 +59,7 @@ tailerApp.controller("ModifyRoleController",['$scope', '$window', '$http', '$roo
         $http({
             method: "POST",
             url: "AddModifyRole.aspx/SaveRolePermission",
-            data: { RoleID: $scope.RoleID, RoleName: $scope.RoleName, PermissionAdded: $scope.PermissionAdded, PermissionRemoved: $scope.PermissionRemoved, isDeleted: $scope.isDeleted },
+            data: { RoleID: $scope.RoleID, RoleName: $scope.RoleName, PermissionAdded: $scope.PermissionAdded, PermissionRemoved: $scope.PermissionRemoved, isDeleted: $scope.isDeleted, HomePage: $scope.HomePage.id },
             dataType: "json",
             headers: { "Content-Type": "application/json" }
         }).then(function onSuccess(response) {
@@ -93,6 +97,10 @@ tailerApp.controller("ModifyRoleController",['$scope', '$window', '$http', '$roo
     function ValidateRolePermission() {
         if ($scope.RoleName == "") {
             $window.alert("Enter Role name");
+            return false;
+        }
+        if ($scope.HomePage.id == 0 || $scope.HomePage.id == null || $scope.HomePage.id == undefined || $scope.HomePage.id == "") {
+            $window.alert("Select Home Page");
             return false;
         }
         return true;

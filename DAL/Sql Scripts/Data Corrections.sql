@@ -1,11 +1,11 @@
 BEGIN TRAN
-	   INSERT INTO HomePages(HomePageName,HomePageURL)
-   SELECT 'Admin Home Page','UI/Admin/AdminHome.aspx' 
-   UNION
-   SELECT 'Tailer Home Page','UI/Tailer/TailerHome.aspx'
+	   INSERT INTO HomePages(HomePageID, HomePageName,HomePageURL)
+	   SELECT 3, 'Admin Home Page','UI/Admin/AdminHome.aspx' 
+	   UNION
+	   SELECT 4, 'Tailer Home Page','UI/Tailer/TailerHome.aspx'
+	   UNION
+	   SELECT 5, 'Create Invoice', 'UI/Tailer/CreateInvoice.aspx'
 ROLLBACK TRAN
-
-select *from HomePages
 
 --Create Company
 BEGIN TRAN
@@ -77,4 +77,25 @@ BEGIN TRAN
 
 ROLLBACK TRAN
 
-
+Go
+BEGIN TRAN
+	INSERT INTO PermissionListMaster(PermissionIndexID, ParentPermissionIndexID, PermissionDesc, IsMenu)
+	VALUES
+		(1,	NULL,'Account',	1),
+		(2,	NULL,'Customer List',1),
+		(3,	NULL,'Users & Role',1),
+		(4,	NULL,'Setup',1),
+		(14,4,'Company & Branch',1),
+		(15,4,'Item Master',1),
+		(5,	NULL,'Company & Branch Setup',0),
+		(6,	NULL,'Account',0),
+		(7,	NULL,'Billing',0),
+		(8,	5,'Modify Company Info',0),
+		(9,	5,'Modify Branch Info',0),
+		(10,6,'Create customer',0),
+		(11,6,'Modify Customer',0),
+		(12,7,'Create Invoice',0),
+		(13,7,'Modfiy Invoice',0),
+		(16, NULL, 'Employee', 1),
+		(17, NULL, 'Measurements', 1)
+ROLLBACK
