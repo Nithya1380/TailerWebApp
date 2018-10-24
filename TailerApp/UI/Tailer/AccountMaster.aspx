@@ -281,7 +281,7 @@
                                             <div class="col-sm-4">
                                                 <select class="form-control" id="drpCategory" data-ng-model="customerMaster.CustomerAccount.AccountCategory"
                                                     data-ng-options="custCat.PickListValue as custCat.PickListLabel for custCat in CustomerPickLists.AccountCategory track by custCat.PickListValue">
-                                                    <option value="">Select Category</option>
+                                                    <option value="null">Select Category</option>
                                                 </select>
                                             </div>
                                         </div>
