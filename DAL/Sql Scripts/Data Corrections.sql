@@ -1,11 +1,11 @@
 BEGIN TRAN
-	   INSERT INTO HomePages(HomePageID, HomePageName,HomePageURL)
-	   SELECT 3, 'Admin Home Page','UI/Admin/AdminHome.aspx' 
-	   UNION
-	   SELECT 4, 'Tailer Home Page','UI/Tailer/TailerHome.aspx'
-	   UNION
-	   SELECT 5, 'Create Invoice', 'UI/Tailer/CreateInvoice.aspx'
+	   INSERT INTO HomePages(HomePageName,HomePageURL)
+   SELECT 'Admin Home Page','UI/Admin/AdminHome.aspx' 
+   UNION
+   SELECT 'Tailer Home Page','UI/Tailer/TailerHome.aspx'
 ROLLBACK TRAN
+
+select *from HomePages
 
 --Create Company
 BEGIN TRAN
@@ -68,15 +68,23 @@ ROLLBACK
 
 GO
 BEGIN TRAN
+   DELETE PickListValues
+      FROM PickListMaster
+      WHERE PickListValues.PickListMasterID=PickListMaster.PickListMasterID
+	    AND PickListMaster.PickListName='ItemMasterGroup'
+
+	DELETE FROM PickListMaster WHERE PickListName='ItemMasterGroup'
+
    DECLARE @PickListID INT
    INSERT INTO PickListMaster(PickListName) VALUES('ItemMasterGroup')
 
    SELECT @PickListID=SCOPE_IDENTITY()
    INSERT INTO PickListValues(PickListMasterID,PickListLabel,PickListValue)
-   VALUES(@PickListID,'Shirts','Shirts'),(@PickListID,'Pants','Pants')
+   VALUES(@PickListID,'Top','Top'),(@PickListID,'Bottom','Bottom'),(@PickListID,'Mix','Mix')
 
 ROLLBACK TRAN
 
+<<<<<<< HEAD
 Go
 BEGIN TRAN
 	INSERT INTO PermissionListMaster(PermissionIndexID, ParentPermissionIndexID, PermissionDesc, IsMenu)
@@ -99,3 +107,8 @@ BEGIN TRAN
 		(16, NULL, 'Employee', 1),
 		(17, NULL, 'Measurements', 1)
 ROLLBACK
+=======
+
+
+
+>>>>>>> 809a9c0883842438b471922fff309aede0ae8aec

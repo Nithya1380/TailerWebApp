@@ -510,13 +510,13 @@
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        <div class="form-group row">
+                                                        <div class="form-group row" style="display:none">
                                                             <label class="checkbox-inline col-sm-2" style="font-weight: bold; margin-left: 20px">
                                                                 <input type="checkbox" class="checkbox" name="last_name" id="chkTDSApplicable"  data-ng-model="customerMaster.CustomerAccount.IsTDSApplicable"/>TDS Applicable
                                                             </label>
                                                         </div>
 
-                                                        <div class="form-group row">
+                                                        <div class="form-group row" style="display:none">
                                                             <label for="drpTDSCategory" class="col-sm-2 lbl-text-right" style="text-align: right">TDS Category</label>
                                                             <div class="col-sm-4">
                                                                 <select class="form-control" id="drpTDSCategory" data-ng-model="customerMaster.CustomerAccount.TDSCategory">
@@ -525,7 +525,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="form-group row">
+                                                        <div class="form-group row" style="display:none">
                                                             <label for="drpDefault" class="col-sm-2 lbl-text-right">Default</label>
                                                             <div class="col-sm-4">
                                                                 <select class="form-control" id="drpDefault" data-ng-model="customerMaster.CustomerAccount.Default">
@@ -541,7 +541,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="form-group row">
+                                                        <div class="form-group row" style="display:none">
                                                             <label for="drpSch6Group" class="col-sm-2 lbl-text-right">Sch6 Group</label>
                                                             <div class="col-sm-4">
                                                                 <select class="form-control" id="drpSch6Group" data-ng-model="customerMaster.CustomerAccount.Sh6Group">

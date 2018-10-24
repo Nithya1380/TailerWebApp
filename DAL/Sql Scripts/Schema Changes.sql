@@ -439,63 +439,8 @@ BEGIN TRAN
 		CONSTRAINT FK_ItemMaster_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID)
 	   )
 
-	SET IDENTITY_INSERT dbo.PermissionListMaster ON
-	SET IDENTITY_INSERT dbo.HomePages ON
-	
 	GO
-	CREATE TABLE MeasurementMaster
-	(
-		MeasurementMasterID INT NOT NULL PRIMARY KEY IDENTITY(1,1),
-		CompanyID INT,
-		AccountID INT,
-		MeasuNo VARCHAR(20),
-		CreatedOn DATETIME DEFAULT GETDATE(),
-		CreatedBy INT,
-		MeasCreatedOn DATETIME,
-		ItemID INT,
-		ItemDesc VARCHAR(30),
-		BodyFit VARCHAR(20),
-		Remark VARCHAR(50),
-		TrialDate DATETIME,
-		DeliDate DATETIME,
-		MeasDate DATETIME,
-		Qty INT,
-		MeasWeight FLOAT,
-		text1 FLOAT,
-		text2 FLOAT,
-		text3 FLOAT,
-		text4 VARCHAR(20),
-		text5 VARCHAR(30),
-		text6 VARCHAR(40),
-		text7 FLOAT,
-		text8 FLOAT,
-		text9 FLOAT,
-		text10 FLOAT,
-		text11 FLOAT,
-		text12 FLOAT,
-		text13 FLOAT,
-		text14 FLOAT,
-		text15 FLOAT,
-		text16 FLOAT,
-		text17 FLOAT,
-		text18 FLOAT,
-		text19 FLOAT,
-		text20 FLOAT,
-		text21 FLOAT,
-		text22 FLOAT,
-		text23 VARCHAR(20),
-		text24 FLOAT,
-		text25 FLOAT,
-		text26 FLOAT,
-		text27 FLOAT,
-		text28 FLOAT,
-		text29 FLOAT,
-		text30 FLOAT,
-		text31 FLOAT,
-		CONSTRAINT FK_MeasurementMaster_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID),
-		CONSTRAINT FK_MeasurementMaster_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID),
-		CONSTRAINT FK_MeasurementMaster_AccountID FOREIGN KEY(AccountID) REFERENCES AccountsMaster(AccountMasterID),
-		CONSTRAINT FK_MeasurementMaster_ItemID FOREIGN KEY(ItemID) REFERENCES ItemMaster(ItemmasterID),
-	)
-
+	ALTER TABLE CustomerMaster ADD BranchID INT
+GO
+ALTER TABLE CustomerMaster ADD CONSTRAINT FK_CustomerMaster_BranchID FOREIGN KEY(BranchID) REFERENCES BranchDetails(BranchID)
 ROLLBACK TRAN
