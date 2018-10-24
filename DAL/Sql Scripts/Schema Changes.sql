@@ -439,4 +439,8 @@ BEGIN TRAN
 		CONSTRAINT FK_ItemMaster_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID)
 	   )
 
+	GO
+	ALTER TABLE CustomerMaster ADD BranchID INT
+GO
+ALTER TABLE CustomerMaster ADD CONSTRAINT FK_CustomerMaster_BranchID FOREIGN KEY(BranchID) REFERENCES BranchDetails(BranchID)
 ROLLBACK TRAN

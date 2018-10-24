@@ -68,13 +68,22 @@ ROLLBACK
 
 GO
 BEGIN TRAN
+   DELETE PickListValues
+      FROM PickListMaster
+      WHERE PickListValues.PickListMasterID=PickListMaster.PickListMasterID
+	    AND PickListMaster.PickListName='ItemMasterGroup'
+
+	DELETE FROM PickListMaster WHERE PickListName='ItemMasterGroup'
+
    DECLARE @PickListID INT
    INSERT INTO PickListMaster(PickListName) VALUES('ItemMasterGroup')
 
    SELECT @PickListID=SCOPE_IDENTITY()
    INSERT INTO PickListValues(PickListMasterID,PickListLabel,PickListValue)
-   VALUES(@PickListID,'Shirts','Shirts'),(@PickListID,'Pants','Pants')
+   VALUES(@PickListID,'Top','Top'),(@PickListID,'Bottom','Bottom'),(@PickListID,'Mix','Mix')
 
 ROLLBACK TRAN
+
+
 
 
