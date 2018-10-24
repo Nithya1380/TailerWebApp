@@ -115,6 +115,7 @@
     <Content Include="Scripts\angular-datepicker.js" />
     <Content Include="Scripts\AngularJS\AddModifyRoleController.js" />
     <Content Include="Scripts\AngularJS\angular.js" />
+    <Content Include="Scripts\AngularJS\autocomplete.js" />
     <Content Include="Scripts\AngularJS\BranchController.js" />
     <Content Include="Scripts\AngularJS\CompanyController.js" />
     <Content Include="Scripts\AngularJS\TailerApp.js" />
@@ -169,6 +170,7 @@
     <Content Include="UI\Common\Login.aspx" />
     <Content Include="UI\Img\12345.jpeg" />
     <Content Include="UI\Img\PopUpMaster.jpeg" />
+    <Content Include="UI\Style\autocomplete.css" />
     <Content Include="UI\Style\bootstrap.min.css" />
     <Content Include="UI\Style\TailerStyle.css" />
     <Content Include="UI\Common\Login.aspx" />
@@ -178,6 +180,8 @@
     <Content Include="UI\Tailer\CustomerList.aspx" />
     <Content Include="UI\Tailer\EmployeeList.aspx" />
     <Content Include="UI\Tailer\EmployeeMaster.aspx" />
+    <Content Include="UI\Tailer\Measurement.aspx" />
+    <Content Include="UI\Tailer\MeasurementList.aspx" />
     <Content Include="UI\Tailer\TailerHome.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config">
@@ -352,6 +356,20 @@
     </Compile>
     <Compile Include="UI\Tailer\EmployeeMaster.aspx.designer.cs">
       <DependentUpon>EmployeeMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tailer\Measurement.aspx.cs">
+      <DependentUpon>Measurement.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Tailer\Measurement.aspx.designer.cs">
+      <DependentUpon>Measurement.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tailer\MeasurementList.aspx.cs">
+      <DependentUpon>MeasurementList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Tailer\MeasurementList.aspx.designer.cs">
+      <DependentUpon>MeasurementList.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Tailer\TailerHome.aspx.cs">
       <DependentUpon>TailerHome.aspx</DependentUpon>

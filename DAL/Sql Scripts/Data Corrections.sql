@@ -84,7 +84,6 @@ BEGIN TRAN
 
 ROLLBACK TRAN
 
-<<<<<<< HEAD
 Go
 BEGIN TRAN
 	INSERT INTO PermissionListMaster(PermissionIndexID, ParentPermissionIndexID, PermissionDesc, IsMenu)
@@ -107,8 +106,3 @@ BEGIN TRAN
 		(16, NULL, 'Employee', 1),
 		(17, NULL, 'Measurements', 1)
 ROLLBACK
-=======
-
-
-
->>>>>>> 809a9c0883842438b471922fff309aede0ae8aec

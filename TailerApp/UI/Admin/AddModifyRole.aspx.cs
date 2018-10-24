@@ -21,7 +21,7 @@ namespace TailerApp.UI.Admin
         }
 
         [WebMethod]
-        public static JSONReturnData SaveRolePermission(string RoleID, string RoleName, string PermissionAdded, string PermissionRemoved, bool isDeleted)
+        public static JSONReturnData SaveRolePermission(string RoleID, string RoleName, string PermissionAdded, string PermissionRemoved, bool isDeleted, string HomePage)
         {
             JSONReturnData ObjRole = new JSONReturnData();
             LoginUser currentUser;
@@ -35,7 +35,7 @@ namespace TailerApp.UI.Admin
                 }
 
                 AdminManagerSP adminObj = new AdminManagerSP();
-                if (!adminObj._U_ModifyRolePermission(currentUser.CompanyID, currentUser.UserId, RoleName, string.IsNullOrEmpty(RoleID) ? 0 : Convert.ToInt32(RoleID), PermissionAdded, PermissionRemoved, isDeleted, out ObjRole))
+                if (!adminObj._U_ModifyRolePermission(currentUser.CompanyID, currentUser.UserId, RoleName, string.IsNullOrEmpty(RoleID) ? 0 : Convert.ToInt32(RoleID), PermissionAdded, PermissionRemoved, isDeleted, string.IsNullOrEmpty(HomePage) ? 0 : Convert.ToInt32(HomePage), out ObjRole))
                 {
                     ObjRole.errorCode = adminObj.GetLastErrorCode();
                     ObjRole.errorMessage = adminObj.GetLastError();
