@@ -17,6 +17,7 @@
             $scope.ItemList = {};
             $scope.SelectedItem = { ItemmasterID: 0, ItemDescription: '-Select-' };
             $scope.AccountCode = "";
+            $scope.MeasurementField = [];
 
             $scope.GetMeasurementMaster = function () {
                 $scope.MeasurementDetails = {};
@@ -36,9 +37,14 @@
                         alert(response.data.d.ErrorMessage);
                         return false;
                     }
+                    
+                    if (response.data.d.JSonstring2 != null && response.data.d.JSonstring2 != "")
+                        $scope.MeasurementField = JSON.parse(response.data.d.JSonstring2);
 
-                    $scope.MeasurementDetails = JSON.parse(response.data.d.JSonstring)[0];
-                    $scope.AccountCode = $scope.MeasurementDetails.AccountID;
+                    if (response.data.d.JSonstring != null && response.data.d.JSonstring != "") {
+                        $scope.MeasurementDetails = JSON.parse(response.data.d.JSonstring)[0];
+                        $scope.AccountCode = $scope.MeasurementDetails.AccountID;
+                    }                   
 
                     $scope.SelectedItem = { ItemmasterID: $scope.MeasurementDetails.ItemID, ItemDescription: '' };
 
@@ -49,7 +55,7 @@
 
             $scope.GetItemList = function () {
                 $scope.ItemList = {};
-
+                  
                 $http({
                     method: "POST",
                     url: "Measurement.aspx/GetItemList",
@@ -74,9 +80,9 @@
                 });
             };
 
-            if ($scope.MeasurementID != 0) {
-                $scope.GetMeasurementMaster();
-            }
+
+            $scope.GetMeasurementMaster();
+
 
             $scope.GetItemList();
 
@@ -85,12 +91,21 @@
 
                 $scope.MeasurementDetails.AccountID = $scope.AccountList.filter(function (x) { return x.AccountCode == $scope.AccountCode })[0].AccountMasterID;
 
+                $scope.MeasurementField.forEach(function (item, index) {
+                    var FValue = "";
+                    $scope.MeasurementField[index].FieldValue.forEach(function (_item, _index) {
+                        FValue += _item.val + ",";
+                    });
+                    $scope.MeasurementField[index].FValue = FValue;
+                });
+
                 var MeasurementDetails = JSON.stringify($scope.MeasurementDetails);
+                var MeasurementField = JSON.stringify($scope.MeasurementField);
 
                 $http({
                     method: "POST",
                     url: "Measurement.aspx/SaveMeasurementMaster",
-                    data: { MeasurMasterID: $scope.MeasurementID, MeasurDetails: MeasurementDetails },
+                    data: { MeasurMasterID: $scope.MeasurementID, MeasurDetails: MeasurementDetails, MeasurementField: MeasurementField },
                     dataType: "json",
                     headers: { "Content-Type": "application/json" }
                 }).then(function onSuccess(response) {
@@ -188,6 +203,26 @@
                 //console.log("Suggestion selected: " + suggestion);
 
             };
+
+            $scope.PerList
+		        = [{ name: 'Menu1', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
+			         { name: 'Menu2', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
+			         { name: 'Menu3', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
+			         { name: 'Menu4', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
+			         { name: 'Menu6', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
+			         { name: 'Menu7', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
+			         { name: 'Menu8', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
+			         { name: 'Menu9', id: [{ val: 0 }], isRep: false },
+		        ];
+
+            $scope.PayerSourceIDs = '';
+
+            //$scope.PerList.SetSeletedOptions($scope.PayerSourceIDs);
+
+            $scope.AddItemToList = function (Obj) {
+                debugger;
+                Obj.$parent.Per.FieldValue.push({ val: 0 });
+            }
 
         });
     </script>
@@ -297,7 +332,7 @@
                                                         </td>
                                                         <td>
                                                             <span class="profileValue">
-                                                                <input type="text" data-ng-model="MeasurementDetails.ItemDesc" />
+                                                                <input type="text" class="form-control" style="width:50%" data-ng-model="MeasurementDetails.ItemDesc" />
                                                             </span>
                                                         </td>
                                                     </tr>
@@ -309,14 +344,18 @@
                             </div>
                             <div class="panel-collapse collapse in">
                                 <div class="panel-body">
-                                    <div class="form-group row">
-                                        <label for="txtFullName" class="col-sm-1 lbl-text-right">Body/Fit</label>
-                                        <div class="col-sm-1">
-                                            <input type="text" class="form-control" ng-model="MeasurementDetails.BodyFit">
+                                    <div class="row">
+                                        <div class="col-sm-2">
+                                            <label for="txtFullName" class="lbl-text-right">Body/Fit</label>
+                                            <div style="padding-left: 20px; padding-bottom: 5px;">
+                                                <input type="text" class="form-control" style="padding-left: 20px;" ng-model="MeasurementDetails.BodyFit">
+                                             </div>
                                         </div>
-                                        <label for="txtFullName" class="col-sm-1 lbl-text-right">Remark</label>
                                         <div class="col-sm-4">
-                                            <input type="text" class="form-control" ng-model="MeasurementDetails.Remark">
+                                            <label for="txtFullName" class="lbl-text-right">Remark</label>
+                                            <div style="padding-left: 20px; padding-bottom: 5px;">
+                                                <input type="text" class="form-control" ng-model="MeasurementDetails.Remark">
+                                            </div>
                                         </div>
                                         <%--<label for="drpSex" class="col-sm-1 lbl-text-right">Sex</label>
                                         <div class="col-sm-1">
@@ -326,7 +365,53 @@
                                             </select>
                                         </div>--%>
                                     </div>
-                                    <div class="form-group row">
+                                     <div class="row">
+                                         <div class="col-sm-8">
+                                             <div class="row">
+                                                 <div class="col-sm-4" ng-repeat="Per in MeasurementField">
+                                                     <label for="drpSex" class="lbl-text-right">{{Per.FieldName}}</label>
+			                                        <div ng-repeat="id in Per.FieldValue" style="padding-left: 20px; padding-bottom: 5px;">
+				                                        <input type="number"  class="form-control" ng-model="id.val" style="text-align: right; width:50%;" />
+				                                        <i ng-show="$last && $parent.Per.isRrepeat" class="fa fa-plus-square" ng-click="AddItemToList(this)"></i>
+			                                        </div>
+		                                          </div>
+                                             </div>
+                                         </div>
+                                         <div class="col-sm-4">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label class="lbl-text-right">Trial Date</label>
+                                                    <input type="text" class="form-control" ng-model="MeasurementDetails.TrialDate">
+                                                </div>
+                                             </div>
+                                             <div class="row">
+                                                <div class="col-sm-6">
+                                                        <label for="drpSex" class="lbl-text-right">Deli Date</label>
+                                                        <input type="text" class="form-control" ng-model="MeasurementDetails.DeliDate">
+                                                </div>
+                                             </div>
+                                             <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label for="drpSex" class="lbl-text-right">Date</label>
+                                                    <input type="text" class="form-control" ng-model="MeasurementDetails.MeasDate">
+                                                </div>
+                                             </div>
+                                             <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label for="drpSex" class="lbl-text-right">Qty</label>
+                                                    <input type="number" class="form-control" ng-model="MeasurementDetails.Qty">
+                                                </div>
+                                              </div>
+                                             <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label for="drpSex" class="lbl-text-right">Weight</label>
+                                                    <input type="number" class="form-control" ng-model="MeasurementDetails.MeasWeight">
+                                                </div>
+                                              </div>
+                                         </div>
+                                     </div>
+                                    
+                                    <%--<div class="form-group row">
                                         <label for="txtFullName" class="col-sm-1 lbl-text-right">Length</label>
                                         <div class="col-sm-1">
                                             <input type="number" class="form-control"  ng-model="MeasurementDetails.text1">
@@ -342,15 +427,15 @@
                                          <label for="drpSex" class="col-sm-1 lbl-text-right">Trial Date</label>
                                         <div class="col-sm-1">
                                             <input type="text" class="form-control" ng-model="MeasurementDetails.TrialDate">
-                                            <%--<input type="number" class="form-control" ng-model="MeasurementDetails.text3">--%>
+                                            <%--<input type="number" class="form-control" ng-model="MeasurementDetails.text3">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <%--<label for="txtAddress1" class="col-sm-1 lbl-text-right">Address Line 1</label>--%>
+                                        <%--<label for="txtAddress1" class="col-sm-1 lbl-text-right">Address Line 1</label>
                                         <div class="col-sm-1">
                                             <input type="text" class="form-control" ng-model="MeasurementDetails.text4" />
                                         </div>
-                                        <%--<label for="txtAddress2" class="col-sm-1 lbl-text-right">Address Line 2</label>--%>
+                                        <%--<label for="txtAddress2" class="col-sm-1 lbl-text-right">Address Line 2</label>
                                         <div class="col-sm-1">
                                             <input type="text" class="form-control" ng-model="MeasurementDetails.text5" />
                                         </div>
@@ -364,7 +449,7 @@
                                         <label for="drpSex" class="col-sm-1 lbl-text-right">Deli Date</label>
                                         <div class="col-sm-1">
                                             <input type="text" class="form-control" ng-model="MeasurementDetails.DeliDate">
-                                            <%--<input type="number" class="form-control" ng-model="MeasurementDetails.text3">--%>
+                                            <%--<input type="number" class="form-control" ng-model="MeasurementDetails.text3">
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -479,7 +564,7 @@
                                             <input type="number" class="form-control text-sameLine" ng-model="MeasurementDetails.text30" />
                                             <input type="number" class="form-control text-sameLine" ng-model="MeasurementDetails.text31" />
                                         </div>
-                                    </div>
+                                    </div>--%>
                                 </div>
                             </div>
                         </div>

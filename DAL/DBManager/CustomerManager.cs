@@ -539,6 +539,9 @@ namespace DAL.DBManager
                     {
                         if (!reader.IsDBNull(0))
                             Measu.JSonstring = reader.GetString(0);
+
+                        if (!reader.IsDBNull(1))
+                            Measu.JSonstring2 = reader.GetString(1);
                     }
                     reader.Close();
                 }
@@ -565,7 +568,7 @@ namespace DAL.DBManager
             return ret;
         }
 
-        public bool SaveMeasurementMaster(int CompanyID, int User, int MeasurementMasterID, string Measurement, out JsonResults Measu)
+        public bool SaveMeasurementMaster(int CompanyID, int User, int MeasurementMasterID, string Measurement, string MeasurementField, out JsonResults Measu)
         {
             bool ret = false;
             Measu = new JsonResults();
@@ -578,6 +581,7 @@ namespace DAL.DBManager
                 this.AddSPIntParam("@CompanyID", CompanyID);
                 this.AddSPIntParam("@user", User);
                 this.AddSPStringParam("@Measurement", Measurement);
+                this.AddSPStringParam("@MeasurementField", MeasurementField);
                 this.AddSPIntParam("@MeasurementMasterID", MeasurementMasterID);
                 this.AddSPReturnIntParam("@return");
 

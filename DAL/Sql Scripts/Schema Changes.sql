@@ -507,4 +507,85 @@ SET IDENTITY_INSERT dbo.HomePages ON
 
 
 ROLLBACK TRAN
+GO
+BEGIN TRAN
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text1 
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text2 
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text3 
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text4 
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text5 
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text6 
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text7 
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text8 
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text9 
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text10
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text11
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text12
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text13
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text14
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text15
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text16
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text17
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text18
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text19
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text20
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text21
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text22
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text23
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text24
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text25
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text26
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text27
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text28
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text29
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text30
+	 ALTER TABLE MeasurementMaster DROP  COLUMN text31
+ROLLBACK
+GO
+BEGIN TRAN
+	CREATE TABLE MeasurementFieldMaster(
+		MeasurementFieldID INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+		FieldName VARCHAR(50),
+		isRrepeat BIT,
+		OrderBy INT,
+		CreateOn DATETIME DEFAULT GETDATE(),
+		CreatedBy INT,
 
+		CONSTRAINT FK_MeasurementFieldMaster_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID),
+	) 
+ROLLBACK
+BEGIN TRAN
+	INSERT INTO MeasurementFieldMaster(FieldName, isRrepeat, OrderBy)
+	VALUES('Length', 1, 1),
+		  ('Soluder', 1, 2),
+		  ('Sleev', 1, 3),
+		  ('B.L.', 0, 4),
+		  ('Chest', 1, 5),
+		  ('weast', 1, 6),
+		  ('Seat', 1, 7),
+		  ('Neck', 1, 8),
+		  ('alt+8', 1, 9),
+		  ('loose Sleev', 1, 10),
+		  ('CC', 1, 11),
+		  ('text28', 1, 12),
+		  ('Bottom', 1, 13)
+
+ROLLBACK
+GO
+BEGIN TRAN
+	CREATE TABLE MeasurementFieldDetail(
+		MeasurementFieldDetailID INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+		CompanyID INT,
+		MeasurementFieldID INT,
+		MeasurementMasterID INT,
+		FieldValue VARCHAR(500),
+		CreatedOn DATETIME DEFAULT GETDATE(),
+		CreatedBy INT,
+
+		CONSTRAINT FK_MeasurementFieldDetail_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID),
+		CONSTRAINT FK_MeasurementFieldDetail_MeasurementFieldID FOREIGN KEY(MeasurementFieldID) REFERENCES MeasurementFieldMaster(MeasurementFieldID),
+		CONSTRAINT FK_MeasurementFieldDetail_MeasurementMasterID FOREIGN KEY(MeasurementMasterID) REFERENCES MeasurementMaster(MeasurementMasterID),
+		CONSTRAINT FK_MeasurementFieldDetail_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID),
+	)
+	
+ROLLBACK

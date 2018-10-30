@@ -22,7 +22,7 @@ namespace TailerApp.UI.Tailer
         }
 
         [WebMethod]
-        public static JsonResults SaveMeasurementMaster(string MeasurMasterID, string MeasurDetails)
+        public static JsonResults SaveMeasurementMaster(string MeasurMasterID, string MeasurDetails, string MeasurementField)
         {
             JsonResults Measur = new JsonResults();
             LoginUser currentUser;
@@ -36,7 +36,7 @@ namespace TailerApp.UI.Tailer
                 }
 
                 CustomerManager adminObj = new CustomerManager();
-                if (!adminObj.SaveMeasurementMaster(currentUser.CompanyID, currentUser.UserId, string.IsNullOrEmpty(MeasurMasterID) ? 0 : Convert.ToInt32(MeasurMasterID), MeasurDetails, out Measur))
+                if (!adminObj.SaveMeasurementMaster(currentUser.CompanyID, currentUser.UserId, string.IsNullOrEmpty(MeasurMasterID) ? 0 : Convert.ToInt32(MeasurMasterID), MeasurDetails, MeasurementField, out Measur))
                 {
                     Measur.ErrorCode = adminObj.GetLastErrorCode();
                     Measur.ErrorMessage = adminObj.GetLastError();
