@@ -191,6 +191,7 @@ namespace DAL.Model
         public int ErrorCode { get; set; }
         public string ErrorMessage { get; set; }
         public string JSonstring { get; set; }
+        public string JSonstring2 { get; set; }
         public int OutValue { get; set; }
     }
 
