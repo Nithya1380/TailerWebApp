@@ -545,6 +545,7 @@ GO
 BEGIN TRAN
 	CREATE TABLE MeasurementFieldMaster(
 		MeasurementFieldID INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+		CompanyID INT,
 		FieldName VARCHAR(50),
 		isRrepeat BIT,
 		OrderBy INT,
@@ -552,6 +553,7 @@ BEGIN TRAN
 		CreatedBy INT,
 
 		CONSTRAINT FK_MeasurementFieldMaster_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID),
+		CONSTRAINT FK_MeasurementFieldMaster_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID),
 	) 
 ROLLBACK
 BEGIN TRAN
@@ -589,3 +591,15 @@ BEGIN TRAN
 	)
 	
 ROLLBACK
+
+GO
+BEGIN TRAn
+	SET IDENTITY_INSERT dbo.PermissionListMaster ON
+	INSERT INTO PermissionListMaster(PermissionIndexID, ParentPermissionIndexID, PermissionDesc, Status, CreatedOn, IsMenu)
+	VALUES(18, 4, 'Measurement Field',NULL, GETDATE(), 1)
+
+	INSERT INTO CompanyPermissions(PermissionIndexID, CreatedOn, CompanyID)
+	SELECT 18, GETDATE(), CompanyID FROM CompanyMaster
+
+ROLLBACK
+

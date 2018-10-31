@@ -726,5 +726,93 @@ namespace DAL.DBManager
             }
             return ret;
         }
+
+        public bool GetMeasurementField(int companyID, int userID, out JsonResults Measu)
+        {
+            Measu = new JsonResults();
+            bool ret = false;
+
+            try
+            {
+                this.Connect(this.GetConnString());
+                string spName = "GetMeasurementField";
+                this.ClearSPParams();
+                this.AddSPIntParam("@CompanyID", companyID);
+                this.AddSPIntParam("@user", userID);
+
+                using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+                {
+                    while (reader.Read())
+                    {
+                        if (!reader.IsDBNull(0))
+                            Measu.JSonstring = reader.GetString(0);
+                    }
+                    reader.Close();
+                }
+                int retcode = this.GetOutValueInt("@return");
+                switch (retcode)
+                {
+                    case 0: ret = true;
+                        break;
+
+                    default: SetError(-1, "Failed to get Measurement field. Please try again later");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = false;
+                Utils.Write(ex);
+            }
+            finally
+            {
+                this.ClearSPParams();
+                this.Disconnect();
+            }
+            return ret;
+        }
+
+        public bool SaveMeasurementField(int CompanyID, int User, string MeasurField)
+        {
+            bool ret = false;
+
+            try
+            {
+                this.Connect(this.GetConnString());
+                string spName = "SaveMeasurementField";
+                this.ClearSPParams();
+                this.AddSPIntParam("@CompanyID", CompanyID);
+                this.AddSPIntParam("@user", User);
+                this.AddSPStringParam("@MeasurementField", MeasurField);
+                this.AddSPReturnIntParam("@return");
+
+                this.ExecuteNonSP(spName);
+
+                int retcode = this.GetOutValueInt("@return");
+                switch (retcode)
+                {
+                    case 0:
+                        ret = true;
+                        break;
+
+                    default:
+                        SetError(1, "Failed to save Measurement field. Please try again later.");
+                        break;
+                }
+
+            }
+            catch (Exception e)
+            {
+                SetError(-100, "Failed to save Measurement field. Please try again later");
+                Utils.Write(0, 0, "CustomerManager", "SaveMeasurementField", "", "", e);
+            }
+            finally
+            {
+                this.ClearSPParams();
+                this.Disconnect();
+            }
+            return ret;
+        }
+
     }
 }
