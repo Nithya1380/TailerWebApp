@@ -208,4 +208,67 @@ namespace DAL.Model
     {
         public List<ItemMaster> ItemsList { get; set; }
     }
+
+    public class InvoicePickLists : JsonResults
+    {
+        public InvoicePickLists()
+        {
+            this.AccountSeries = new List<PickList>();
+            this.InvoiceLessCategory = new List<PickList>();
+            this.InvoiceTaxCategory = new List<PickList>();
+            this.Designers = new List<EmployeePositions>();
+            this.Masters = new List<EmployeePositions>();
+            this.SalesReps = new List<EmployeePositions>();
+        }
+        public List<PickList> AccountSeries { get; set; }
+        public List<PickList> InvoiceLessCategory { get; set; }
+        public List<PickList> InvoiceTaxCategory { get; set; }
+        public List<EmployeePositions> Masters { get; set; }
+        public List<EmployeePositions> Designers { get; set; }
+        public List<EmployeePositions> SalesReps { get; set; }
+
+    }
+    public class EmployeePositions
+    {
+        public int EmployeeMasterID { get; set; }
+        public string EmployeeName { get; set; }
+    }
+
+    public class CustomerInvoice
+    {
+        public string InvoiceSeries { get; set; }
+        public string MobileNumber { get; set; }
+        public string BillNumber { get; set; }
+        public string InvoiceDate { get; set; }
+        public int CustomerID { get; set; }
+        public string TrailDate { get; set; }
+        public string TrailTime { get; set; }
+        public int SalesRepID { get; set; }
+        public int MasterID { get; set; }
+        public int DesignerID { get; set; }
+        public string DeliveryDate { get; set; }
+        public string DeliveryTime { get; set; }
+        public string PaymentNumber { get; set; }
+        public string InvoiceLessCategory { get; set; }
+        public string LessRs { get; set; }
+        public string LessRsAmount { get; set; }
+        public string Remarks { get; set; }
+        public string NetAmount { get; set; }
+       
+
+    }
+
+    public class CustomerInvoiceList
+    {
+        public int ItemMasterID { get; set; }
+        public string ItemCode { get; set; }
+        public string ItemDescription { get; set; }
+        public string ItemQuantity { get; set; }
+        public string ItemPrice { get; set; }
+        public string ItemDiscount { get; set; }
+        public string GST { get; set; }
+        public string SGST { get; set; }
+        public string AmountPending { get; set; }
+
+    }
 }

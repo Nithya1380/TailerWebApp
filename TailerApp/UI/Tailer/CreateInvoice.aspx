@@ -3,11 +3,11 @@
     <%--<link href="../../Content/angular-auto-complete.css" rel="stylesheet" />
     <script src="../../Scripts/angular-auto-complete.js"></script>--%>
      <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
+    
     <script src="../../Scripts/AngularJS/angular.js"></script>
     <link href="../../Scripts/angular-datepicker.css" rel="stylesheet" />
     <script src="../../Scripts/angular-datepicker.js"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.3.2/ui-bootstrap-tpls.js" ></script>
     <style type="text/css">
         .scrollable0panel{
             max-height: 500px;
@@ -229,14 +229,28 @@
              });
          }
 
-         var tailerApp = angular.module("TailerApp", []);//'autoCompleteModule'
-         tailerApp.controller("CreateInvoiceController", function ($scope, $window, $http, $rootScope) {
+         var tailerApp = angular.module("TailerApp", ['ui.bootstrap']);//'autoCompleteModule'
+         tailerApp.controller("CreateInvoiceController", function ($scope, $window, $http, $rootScope, $filter, $sce) {
              $scope.InvoiceList = [];
              $scope.TotalAmount = 0.00;
              $scope.CustInvoice = {};
+             $scope.InvoicePickLists = {};
+             $scope.ItemCodes = [];
+             $scope.customerID = 0;
+
+             $scope.init = function () {
+                 $scope.ShowError = false;
+                 $scope.InvoiceError ='';
+                 $scope.AlertClass = "alert-danger";
+                 $scope.InvoicePickLists = {};
+                 $scope.GetInvoiceDropdowns();
+                 $scope.GetItemCodes();
+                 $scope.AddItem();
+             }
 
              $scope.AddItem = function () {
                  var invoice = {
+                     ItemMasterID:0,
                      ItemCode: "",
                      ItemDescription: "",
                      ItemQuantity: 1,
@@ -267,6 +281,17 @@
                  if (InvoiceItem != null && InvoiceItem != undefined && !isNaN(InvoiceItem.ItemQuantity) && !isNaN(InvoiceItem.ItemPrice))
                  {
                      InvoiceItem.AmountPending = parseInt(InvoiceItem.ItemQuantity) * parseFloat(InvoiceItem.ItemPrice);
+
+                     if (parseFloat(InvoiceItem.AmountPending) > 0)
+                     {
+                         if (!isNaN(InvoiceItem.ItemDiscount) && parseFloat(InvoiceItem.ItemDiscount) > 0)
+                             InvoiceItem.AmountPending = InvoiceItem.AmountPending - (parseFloat(InvoiceItem.AmountPending) * (parseFloat(InvoiceItem.ItemDiscount) / 100.00));
+
+                         InvoiceItem.GST = parseFloat(InvoiceItem.AmountPending) * (18.00 / 100.00);
+                         InvoiceItem.AmountPending = InvoiceItem.AmountPending + InvoiceItem.GST;
+                     }
+                         
+
                      $scope.CalculateTotal();
                  }
              }
@@ -307,6 +332,169 @@
              //    }
              //}
 
+             $scope.GetInvoiceDropdowns = function () {
+                 $scope.CustomerPickLists = {};
+
+                 $http({
+                     method: "POST",
+                     url: "CreateInvoice.aspx/GetInvoicePickLists",
+                     data: { customerID: $scope.customerID },
+                     dataType: "json",
+                     headers: { contentType: "application/json" }
+                 }).then(function onSuccess(response) {
+                     if (response.data.d.ErrorCode == -1001) {
+                         //Session Expired
+                         return false;
+                     }
+                     if (response.data.d.ErrorCode != 0) {
+                         alert(response.data.d.ErrorMessage);
+                         return false;
+                     }
+
+                     $scope.InvoicePickLists = response.data.d;
+
+                 }, function onFailure(error) {
+
+                 });
+             };
+
+             $scope.GetItemCodes = function () {
+                 if ($scope.ItemCodes == null || $scope.ItemCodes.length==0) {
+                     $scope.ItemCodes = [];
+                     try {
+                         $http(
+                        {
+                            method: "POST",
+                            url: "CreateInvoice.aspx/SearchItems",
+                            dataType: 'json',
+                            data: {searchText:''},
+                            headers: {
+                                "Content-Type": "application/json"
+                            }
+                        }).then(function successCallback(response) {
+                            if (response.data.d.JSonstring != "")
+                                $scope.ItemCodes = JSON.parse(response.data.d.JSonstring);
+                            else
+                                $window.alert("There are no Items.")
+
+                        }, function errorCallback(response) {
+                            $scope.WarningMessages = "Failed to load Items list";
+                            $log.info(response);
+                        });
+                     }
+                     catch (err) {
+                         alert(err);
+                     }
+                 }
+
+                 return $scope.ItemCodes;
+             }
+
+             $scope.onItemSelect = function ($item, $model, $label, $index)
+             {
+                 var invoice = {
+                     ItemMasterID:$item.ItemmasterID,
+                     ItemCode: $item.ItemCode,
+                     ItemDescription: $item.ItemDescription,
+                     ItemQuantity: 1,
+                     ItemPrice: $item.ItemPrice,
+                     ItemDiscount: "",
+                     GST: "",
+                     SGST: "",
+                     AmountPending:""
+                 }
+
+                 $scope.InvoiceList[$index] = invoice;
+
+                 $scope.onItemChange($scope.InvoiceList[$index]);
+             }
+
+             $scope.ValidateInvoiceCreation = function () {
+                 var errors = "";
+                 var isWrongItemExists = false;
+                 if (isNaN($scope.CustInvoice.CustomerID) || parseInt($scope.CustInvoice.CustomerID)==0) {
+                     errors = '<li>Customer Name</li>';
+                 }
+                 if ($scope.CustInvoice.MobileNumber == '' || $scope.CustInvoice.MobileNumber == null) {
+                     errors += '<li>Mobile Number</li>';
+                 }
+                 //if (isNaN($scope.CustInvoice.MasterID)|| $scope.CustInvoice.MasterID == null) {
+                 //    errors += '<li>Master</li>';
+                 //}
+                 //if (isNaN($scope.CustInvoice.DesignerID)|| $scope.CustInvoice.DesignerID == null) {
+                 //    errors += '<li>Designer</li>';
+                 //}
+                 if($scope.InvoiceList==null || $scope.InvoiceList.length==0)
+                 {
+                     errors += '<li>Invoice Line Items</li>';
+                 }
+                 else {
+                     angular.forEach($scope.InvoiceList, function (invoice) {
+                         if (isNaN(invoice.ItemMasterID) || invoice.ItemMasterID == null || invoice.ItemMasterID==0) {
+                             isWrongItemExists = true;
+                         }
+                     });
+
+                     if (isWrongItemExists)
+                     {
+                         errors += '<li>Enter Correct Item Code</li>';
+                     }
+                 }
+
+                 
+
+                 if (errors != "") {
+                     $scope.ShowError = true;
+                     $scope.InvoiceError = $sce.trustAsHtml('<ul>' + errors + '</ul>');
+                     $scope.AlertClass = "alert-danger";
+                     return false;
+                 }
+
+                 return true;
+
+             }
+
+             $scope.onCreateInvoiceClick = function () {
+                 $scope.ShowError = false;
+                 $scope.InvoiceError = "";
+
+                 if (!$scope.ValidateInvoiceCreation())
+                     return false;
+
+                
+
+                 $http({
+                     method: "POST",
+                     url: "CreateInvoice.aspx/CreateNewInvoice",
+                     data: { customerInvoice: $scope.CustInvoice, InvoiceList: $scope.InvoiceList },
+                     dataType: "json",
+                     headers: { "Content-Type": "application/json" }
+                 }).then(function onSuccess(response) {
+                     if (response.data.d.ErrorCode == -1001) {
+                         //Session Expired
+                         return false;
+                     }
+                     if (response.data.d.ErrorCode != 0) {
+                         $scope.ShowError = true;
+                         $scope.InvoiceError = $sce.trustAsHtml(response.data.d.ErrorMessage);
+                         return false;
+                     }
+                     else {
+                         $scope.ShowError = true;
+                         $scope.InvoiceError = $sce.trustAsHtml("Invoice Created Successfully! <b> Bill Number :" + response.data.d.JSonstring+"<b>");
+                         $scope.AlertClass = "alert-success";
+                        
+                         return false;
+                     }
+
+                 }, function onFailure(error) {
+                     $scope.ShowError = true;
+                     $scope.InvoiceError = response.data.d.ErrorCode;
+                 });
+
+
+             };
+
          });
      </script>
 </asp:Content>
@@ -325,30 +513,31 @@
                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Series:</span></td>
                                     <td>
                                         <span class="profileValue">
-                                            <select id="drplst_Series" class="form-control-Multiple" style="width: 150px;">
-                                                <option>None</option>
+                                            <select class="form-control" id="drpSeries" data-ng-model="CustInvoice.InvoiceSeries" style="width:80%"
+                                                    data-ng-options="custCat.PickListValue as custCat.PickListLabel for custCat in InvoicePickLists.AccountSeries track by custCat.PickListValue">
+                                                    <option value="">None</option>
                                             </select>
                                         </span>
-                                        <button class="btn btn-sm btn-success" type="button" title="Normal">
+                                        <button class="btn btn-sm btn-success" type="button" title="Normal" style="display:none">
                                               <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
                                             </button>
                                     </td>
                                      <td style="text-align: right" class="back_shade"><span class="profileLabel">Mobile:</span></td>
                                     <td >
                                         <span class="profileValue">
-                                            <input type="text" data-ng-model="Customer.FirstName" name="Debit" class="form-control" style="width: 95%; margin-left: 5px;" maxlength="10" />
+                                            <input type="text" data-ng-model="CustInvoice.MobileNumber" name="MobileNumber" class="form-control" style="width: 95%; margin-left: 5px;" maxlength="10" />
                                         </span>
                                     </td>
                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Bill#:</span></td>
                                     <td >
                                         <span class="profileValue">
-                                            <input type="text" data-ng-model="Customer.FirstName" name="Debit" class="form-control" style="width: 95%; margin-left: 5px;" maxlength="10" />
+                                            <input type="text" data-ng-model="CustInvoice.BillNumber" name="BillNumber" class="form-control" style="width: 95%; margin-left: 5px;" maxlength="10" />
                                         </span>
                                     </td>
                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Date:</span></td>
                                     <td >
                                         <span class="profileValue">
-                                            <input type="text" data-ng-model="Customer.FirstName" name="Debit" class="form-control-Multiple" style="width: 100px; margin-left: 5px;" maxlength="10" />
+                                            <input type="text" data-ng-model="CustInvoice.InvoiceDate" name="InvoiceDate" class="form-control-Multiple" style="width: 100px; margin-left: 5px;" maxlength="10" />
                                         </span>
                                     </td>
                                 </tr>
@@ -356,7 +545,7 @@
                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Customer:</span></td>
                                     <td>
                                         <span class="profileValue">
-                                            <input type="text" data-ng-model="Customer.CustomerName" name="Debit" id="txtCustomer" class="form-control-Multiple autopop-textbox-Search" 
+                                            <input type="text" data-ng-model="CustInvoice.CustomerName" name="Debit" id="txtCustomer" class="form-control-Multiple autopop-textbox-Search" 
                                                 style="width: 70%; margin-left: 5px;" maxlength="50"
                                                  placeholder="{{CustInvoice.CustomerName}}"
                                                 onblur="OnClientBlur(this);" onfocus="_OnTextBoxFocus(this)"
@@ -371,8 +560,8 @@
                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Trail Date:</span></td>
                                     <td >
                                         <span class="profileValue">
-                                            <input type="text" data-ng-model="Customer.FirstName" name="Debit" class="form-control-Multiple" style="width: 100px; margin-left: 5px;" maxlength="10" />
-                                            <input type="text" data-ng-model="Customer.FirstName" name="Debit" class="form-control-Multiple" style="width: 60px; margin-left: 5px;" maxlength="10" />
+                                            <input type="text" data-ng-model="CustInvoice.TrailDate" name="TrailDate" class="form-control-Multiple" style="width: 100px; margin-left: 5px;" maxlength="10" />
+                                            <input type="text" data-ng-model="CustInvoice.TrailTime" name="TrailTime" class="form-control-Multiple" style="width: 60px; margin-left: 5px;" maxlength="10" />
                                             <button class="btn btn-sm btn-success" type="button" title="Book">
                                                 <i class="fa fa-book" aria-hidden="true"></i>
                                             </button>
@@ -388,15 +577,19 @@
                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Sales Rep:</span></td>
                                     <td>
                                         <span class="profileValue">
-                                            <input type="text" data-ng-model="Customer.FirstName" name="Debit" class="form-control-Multiple" style="width: 95%; margin-left: 5px;" maxlength="50" />
+                                            <select class="form-control" id="drpInvoiceSalesRep" data-ng-model="CustInvoice.SalesRepID" style="width: 95%; margin-left: 5px;" 
+                                                     data-ng-options="custCat.EmployeeMasterID as custCat.EmployeeName for custCat in InvoicePickLists.SalesReps track by custCat.EmployeeMasterID">
+                                                 <option value="">Select</option>
+                                             </select>
+                                            
                                         </span>
                                         
                                     </td>
                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Delivery Date:</span></td>
                                     <td >
                                         <span class="profileValue">
-                                            <input type="text" data-ng-model="Customer.FirstName" name="Debit" class="form-control-Multiple" style="width: 100px; margin-left: 5px;" maxlength="10" />
-                                            <input type="text" data-ng-model="Customer.FirstName" name="Debit" class="form-control-Multiple" style="width: 60px; margin-left: 5px;" maxlength="10" />
+                                            <input type="text" data-ng-model="CustInvoice.DeliveryDate" name="DeliveryDate" class="form-control-Multiple" style="width: 100px; margin-left: 5px;" maxlength="10" />
+                                            <input type="text" data-ng-model="CustInvoice.DeliveryTime" name="DeliveryTime" class="form-control-Multiple" style="width: 60px; margin-left: 5px;" maxlength="10" />
                                            <button class="btn btn-sm btn-success" type="button" title="Refresh">
                                                 <i class="fa fa-refresh" aria-hidden="true"></i>
                                             </button>
@@ -406,14 +599,21 @@
                                 <tr>
                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Master:</span></td>
                                     <td>
+
                                         <span class="profileValue">
-                                            <input type="text" data-ng-model="Customer.FirstName" name="Debit" class="form-control-Multiple" style="width: 95%; margin-left: 5px;" maxlength="50" />
+                                            <select class="form-control" id="drpInvoiceMaster" data-ng-model="CustInvoice.MasterID" style="width: 95%; margin-left: 5px;" 
+                                                     data-ng-options="custCat.EmployeeMasterID as custCat.EmployeeName for custCat in InvoicePickLists.Masters track by custCat.EmployeeMasterID">
+                                                 <option value="">Select</option>
+                                             </select>
                                         </span>
                                     </td>
                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Designer:</span></td>
                                     <td>
                                         <span class="profileValue">
-                                            <input type="text" data-ng-model="Customer.FirstName" name="Debit" class="form-control-Multiple" style="width: 95%; margin-left: 5px;" maxlength="50" />
+                                            <select class="form-control" id="drpInvoiceDesigner" data-ng-model="CustInvoice.DesignerID" style="width: 95%; margin-left: 5px;" 
+                                                     data-ng-options="custCat.EmployeeMasterID as custCat.EmployeeName for custCat in InvoicePickLists.Designers track by custCat.EmployeeMasterID">
+                                                 <option value="">Select</option>
+                                             </select>
                                         </span>
                                     </td>
                                     <td colspan="4" style="text-align:right">
@@ -425,6 +625,11 @@
                     </div>
                 </div>
                 <!--end of card-->
+            </div>
+        </div>
+        <div class="row">
+             <div class="alert" data-ng-class="AlertClass" data-ng-show="ShowError">
+                <span data-ng-bind-html="InvoiceError" ></span>
             </div>
         </div>
         <div class="row">
@@ -458,12 +663,18 @@
                                             </thead>
                                             <tbody data-ng-repeat="Invoice in InvoiceList">
                                                 <tr>
-                                                    <td><input type="text" data-ng-model="Invoice.ItemCode" class="form-control ItemAutoComplete" style="width: 50px;" onblur="OnItemBlur(this);" onfocus="_OnTextBoxFocusItem(this)"  /> </td>
+                                                    <td>
+                                                        <input type="text"  placeholder="Type Item Code" style="width: 80px;" data-ng-model="Invoice.ItemCode" class="form-control"
+                                                               typeahead-on-select="onItemSelect($item, $model, $label, $index);"
+                                                               uib-typeahead="Item.ItemCode as Item.ItemCode for Item in ItemCodes |  filter:{ItemCode:$viewValue} | limitTo:50" 
+                                                               data-ng-focus="GetItemCodes()" typeahead-show-hint="true" typeahead-min-length="0"  
+                                                         />   
+                                                    </td>
                                                     <td><input type="text" data-ng-model="Invoice.ItemDescription" class="form-control" style="width: 150px;" /></td>
                                                     <td><input type="number" data-ng-model="Invoice.ItemQuantity" class="form-control" style="width: 50px;" data-ng-change="onItemChange(Invoice)" /></td>
                                                     <td><input type="number" data-ng-model="Invoice.ItemPrice" class="form-control" style="width: 80px;" data-ng-change="onItemChange(Invoice)" /></td>
-                                                    <td><input type="number" data-ng-model="Invoice.ItemDiscount" class="form-control" style="width: 50px;" /></td>
-                                                    <td><input type="number" data-ng-model="Invoice.GST" class="form-control" style="width: 50px;" /></td>
+                                                    <td><input type="number" data-ng-model="Invoice.ItemDiscount" class="form-control" style="width: 80px;" data-ng-change="onItemChange(Invoice)" /></td>
+                                                    <td><input type="number" data-ng-model="Invoice.GST" class="form-control" style="width: 80px;" data-ng-change="onItemChange(Invoice)" /></td>
                                                     <td><input type="number" data-ng-model="Invoice.SGST" class="form-control" style="width: 50px;" /></td>
                                                     <td><input type="number" data-ng-model="Invoice.AmountPending" class="form-control" style="width: 100px;" /></td>
                                                 </tr>
@@ -481,23 +692,24 @@
                                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Payment:</span></td>
                                                     <td >
                                                         <span class="profileValue">
-                                                            <input type="text" data-ng-model="Customer.FirstName" name="Debit" class="form-control-Multiple" style="width: 250px; margin-left: 5px;" maxlength="50" />
+                                                            <input type="text" data-ng-model="CustInvoice.PaymentNumber" name="Debit" class="form-control-Multiple" style="width: 250px; margin-left: 5px;" maxlength="50" />
                                                         </span>
                                                     </td>
                                                      <td style="text-align: right" class="back_shade"><span class="profileLabel">Other Less & Rs:</span></td>
                                                     <td >
                                                         <span class="profileValue" >
-                                                            <select id="drplst_OtherLessRs" class="form-control-Multiple" style="width: 150px;">
-                                                                <option>None</option>
+                                                            <select class="form-control" id="drpInvoiceLess" data-ng-model="CustInvoice.InvoiceLessCategory" style="width: 150px;"
+                                                                   data-ng-options="custCat.PickListValue as custCat.PickListLabel for custCat in InvoicePickLists.InvoiceLessCategory track by custCat.PickListValue">
+                                                                 <option value="">None</option>
                                                             </select>
-                                                            <input type="number" data-ng-model="Customer.FirstName" name="Debit" class="form-control-Multiple" style="width: 100px; margin-left: 5px;" />
+                                                            
                                                         </span>
                                                     </td>
                                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Less(%) & Rs:</span></td>
                                                     <td >
                                                         <span class="profileValue" >
-                                                            <input type="number" data-ng-model="Customer.FirstName" name="Debit" class="form-control-Multiple" style="width: 80px; margin-left: 5px;"  />
-                                                            <input type="number" data-ng-model="Customer.FirstName" name="Debit" class="form-control-Multiple" style="width: 150px; margin-left: 5px;"  />
+                                                            <input type="number" data-ng-model="CustInvoice.LessRs" name="LessRs" class="form-control-Multiple" style="width: 80px; margin-left: 5px;"  />
+                                                            <input type="number" data-ng-model="CustInvoice.LessRsAmount" name="LessRsAmount" class="form-control-Multiple" style="width: 150px; margin-left: 5px;"  />
                                                         </span>
                                                     </td>
                                                 </tr>
@@ -505,14 +717,15 @@
                                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Remarks:</span></td>
                                                     <td >
                                                         <span class="profileValue">
-                                                            <input type="text" data-ng-model="Customer.FirstName" name="Debit" class="form-control-Multiple" style="width: 250px; margin-left: 5px;" maxlength="50" />
+                                                            <input type="text" data-ng-model="CustInvoice.Remarks" name="Remarks" class="form-control-Multiple" style="width: 250px; margin-left: 5px;" maxlength="50" />
                                                         </span>
                                                     </td>
                                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Tax:</span></td>
                                                     <td >
                                                         <span class="profileValue" >
-                                                            <select id="drplst_Tax" class="form-control">
-                                                                <option></option>
+                                                            <select class="form-control" id="drpInvoiceTax" data-ng-model="CustInvoice.InvoiceLessCategory" 
+                                                                   data-ng-options="custCat.PickListValue as custCat.PickListLabel for custCat in InvoicePickLists.InvoiceTaxCategory track by custCat.PickListValue">
+                                                                 <option value="">None</option>
                                                             </select>
                                                         </span>
                                                     </td>

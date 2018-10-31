@@ -75,7 +75,7 @@ namespace TailerApp.UI.Tailer
                 else
                 {
                     custList.ErrorCode = -1;
-                    custList.ErrorMessage = "Failed to get Customer List. please try again later";
+                    custList.ErrorMessage = "Failed to get Items List. please try again later";
                 }
             }
             catch (Exception ex)
@@ -84,6 +84,77 @@ namespace TailerApp.UI.Tailer
             }
 
             return custList;
+        }
+
+        [WebMethod]
+        public static InvoicePickLists GetInvoicePickLists(string customerID)
+        {
+            InvoicePickLists invoicePickLists = new InvoicePickLists();
+            LoginUser currentUser;
+            try
+            {
+                if (!GetUserSession(out currentUser))
+                {
+                    invoicePickLists.ErrorCode = -1001;
+                    invoicePickLists.ErrorMessage = "";
+                }
+
+                CustomerManager customerObj = new CustomerManager();
+                if (customerObj.GetInvoicePickLists(currentUser.CompanyID, string.IsNullOrEmpty(customerID) ? 0 : Convert.ToInt32(customerID), currentUser.UserId,
+                                                  out invoicePickLists))
+                {
+                    invoicePickLists.ErrorCode = 0;
+                    invoicePickLists.ErrorMessage = "";
+                }
+                else
+                {
+                    invoicePickLists.ErrorCode = -1;
+                    invoicePickLists.ErrorMessage = "Failed to get dropdowns. please try again later";
+                }
+            }
+            catch (Exception ex)
+            {
+                Utils.Write(ex);
+            }
+
+            return invoicePickLists;
+        }
+
+        [WebMethod]
+        public static JsonResults CreateNewInvoice(CustomerInvoice customerInvoice, List<CustomerInvoiceList> InvoiceList)
+        {
+            JsonResults returnObj = new JsonResults();
+            LoginUser currentUser;
+            string billNumber = "";
+            try
+            {
+                if (!GetUserSession(out currentUser))
+                {
+                    returnObj.ErrorCode = -1001;
+                    returnObj.ErrorMessage = "";
+                }
+
+                CustomerManager customerObj = new CustomerManager();
+                if (customerObj.CreateNewInvoice(currentUser.CompanyID, currentUser.UserId, currentUser.UserBranchID, ref customerInvoice, ref InvoiceList, out billNumber))
+                {
+                    returnObj.ErrorCode = 0;
+                    returnObj.ErrorMessage = "";
+
+
+                    returnObj.JSonstring = billNumber;
+                }
+                else
+                {
+                    returnObj.ErrorCode = customerObj.GetLastErrorCode();
+                    returnObj.ErrorMessage = customerObj.GetLastError();
+                }
+            }
+            catch (Exception ex)
+            {
+                Utils.Write(ex);
+            }
+
+            return returnObj;
         }
     }
 }
