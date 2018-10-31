@@ -519,6 +519,7 @@ namespace DAL.DBManager
             return ret;
         }
 
+
         public bool GetInvoicePickLists(int companyID, int customerID, int userID, out InvoicePickLists invoicePickLists)
         {
             invoicePickLists = new InvoicePickLists();
@@ -616,7 +617,261 @@ namespace DAL.DBManager
                 this.Disconnect();
             }
             return ret;
+         }
+
+        public bool GetMeasurementMaster(int companyID, int userID, int MeasurementMasterID, out JsonResults Measu)
+        {
+            Measu = new JsonResults();
+            bool ret = false;
+
+            try
+            {
+                this.Connect(this.GetConnString());
+                string spName = "GetMeasurementMaster";
+                this.ClearSPParams();
+                this.AddSPIntParam("@CompanyID", companyID);
+                this.AddSPIntParam("@user", userID);
+                this.AddSPIntParam("@MeasurementMasterID", MeasurementMasterID);
+
+                using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+                {
+                    while (reader.Read())
+                    {
+                        if (!reader.IsDBNull(0))
+                            Measu.JSonstring = reader.GetString(0);
+
+                        if (!reader.IsDBNull(1))
+                            Measu.JSonstring2 = reader.GetString(1);
+                    }
+                    reader.Close();
+                }
+                int retcode = this.GetOutValueInt("@return");
+                switch (retcode)
+                {
+                    case 0: ret = true;
+                        break;
+
+                    default: SetError(-1, "Failed to get Measurement. Please try again later");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = false;
+                Utils.Write(ex);
+            }
+            finally
+            {
+                this.ClearSPParams();
+                this.Disconnect();
+            }
+            return ret;
         }
+
+        public bool SaveMeasurementMaster(int CompanyID, int User, int MeasurementMasterID, string Measurement, string MeasurementField, out JsonResults Measu)
+        {
+            bool ret = false;
+            Measu = new JsonResults();
+
+            try
+            {
+                this.Connect(this.GetConnString());
+                string spName = "SaveMeasurementMaster";
+                this.ClearSPParams();
+                this.AddSPIntParam("@CompanyID", CompanyID);
+                this.AddSPIntParam("@user", User);
+                this.AddSPStringParam("@Measurement", Measurement);
+                this.AddSPStringParam("@MeasurementField", MeasurementField);
+                this.AddSPIntParam("@MeasurementMasterID", MeasurementMasterID);
+                this.AddSPReturnIntParam("@return");
+
+                using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+                {
+
+                    while (reader.Read())
+                    {
+
+                        if (!reader.IsDBNull(0))
+                            Measu.OutValue = reader.GetInt32(0);
+                        else
+                            Measu.OutValue = 0;
+                    }
+                    reader.Close();
+
+                    int retcode = this.GetOutValueInt("@return");
+                    switch (retcode)
+                    {
+                        case 0:
+                            ret = true;
+                            break;
+
+                        default:
+                            SetError(1, "Failed to save Measurement. Please try again later.");
+                            break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                SetError(-100, "Failed to save Measurement. Please try again later");
+                Utils.Write(0, 0, "CustomerManager", "SaveMeasurementMaster", "", "", e);
+            }
+            finally
+            {
+                this.ClearSPParams();
+                this.Disconnect();
+            }
+            return ret;
+        }
+
+        public bool GetMeasurementList(int CompanyID, int User, out JsonResults Measu)
+        {
+            bool ret = false;
+            Measu = new JsonResults();
+            try
+            {
+                this.Connect(this.GetConnString());
+                string spName = "GetMeasurementList";
+                this.ClearSPParams();
+                this.AddSPIntParam("@Company", CompanyID);
+                this.AddSPIntParam("@User", User);
+                this.AddSPReturnIntParam("@return");
+
+                using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+                {
+                    while (reader.Read())
+                    {
+
+                        if (!reader.IsDBNull(0))
+                            Measu.JSonstring = reader.GetString(0);
+                        else
+                            Measu.JSonstring = "";
+                    }
+
+                    reader.Close();
+                    int retcode = this.GetOutValueInt("@return");
+
+                    switch (retcode)
+                    {
+                        case 0:
+                            ret = true;
+                            break;
+
+                        default:
+                            SetError(1, "Failed to get employee. Please try again later");
+                            break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                SetError(1, "Failed to get Measurement List . Please try again later");
+                Utils.Write(0, 0, "CustomerManager", "GetEmployeeMasterDetails", "", "", e);
+            }
+            finally
+            {
+                this.ClearSPParams();
+                this.Disconnect();
+            }
+            return ret;
+        }
+
+
+        public bool GetAccountList(int CompanyID, int User, out JsonResults Accou)
+        {
+
+            bool ret = false;
+            Accou = new JsonResults();
+            try
+            {
+                this.Connect(this.GetConnString());
+                string spName = "GetAccountList";
+                this.ClearSPParams();
+                this.AddSPIntParam("@Company", CompanyID);
+                this.AddSPIntParam("@user", User);
+                this.AddSPReturnIntParam("@return");
+
+                using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+                {
+                    while (reader.Read())
+                    {
+                        if (!reader.IsDBNull(0))
+                            Accou.JSonstring = reader.GetString(0);
+                        else
+                            Accou.JSonstring = "";
+                    }
+
+                    reader.Close();
+                    int retcode = this.GetOutValueInt("@return");
+                    switch (retcode)
+                    {
+                        case 0:
+                            ret = true;
+                            break;
+                        default:
+                            SetError(1, "Failed to get Account List. Please try again later");
+                            break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                SetError(1, "Failed to get Account List . Please try again later");
+                Utils.Write(0, 0, "CustomerManager", "GetAccountList", "", "", e);
+            }
+            finally
+            {
+                this.ClearSPParams();
+                this.Disconnect();
+            }
+            return ret;
+        }
+
+        public bool GetMeasurementField(int companyID, int userID, out JsonResults Measu)
+        {
+            Measu = new JsonResults();
+            bool ret = false;
+
+            try
+            {
+                this.Connect(this.GetConnString());
+                string spName = "GetMeasurementField";
+                this.ClearSPParams();
+                this.AddSPIntParam("@CompanyID", companyID);
+                this.AddSPIntParam("@user", userID);
+
+                using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+                {
+                    while (reader.Read())
+                    {
+                        if (!reader.IsDBNull(0))
+                            Measu.JSonstring = reader.GetString(0);
+                    }
+                    reader.Close();
+                }
+                int retcode = this.GetOutValueInt("@return");
+                switch (retcode)
+                {
+                    case 0: ret = true;
+                        break;
+
+                    default: SetError(-1, "Failed to get Measurement field. Please try again later");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = false;
+                Utils.Write(ex);
+            }
+            finally
+            {
+                this.ClearSPParams();
+                this.Disconnect();
+            }
+            return ret;
+        }
+
 
         public bool CreateNewInvoice(int companyID, int userID, int customerBranch, ref CustomerInvoice customerInvoice, ref List<CustomerInvoiceList> customerInvoiceList, out string billNumber)
         {
@@ -663,5 +918,47 @@ namespace DAL.DBManager
             }
             return ret;
         }
+        public bool SaveMeasurementField(int CompanyID, int User, string MeasurField)
+        {
+            bool ret = false;
+
+            try
+            {
+                this.Connect(this.GetConnString());
+                string spName = "SaveMeasurementField";
+                this.ClearSPParams();
+                this.AddSPIntParam("@CompanyID", CompanyID);
+                this.AddSPIntParam("@user", User);
+                this.AddSPStringParam("@MeasurementField", MeasurField);
+                this.AddSPReturnIntParam("@return");
+
+                this.ExecuteNonSP(spName);
+
+                int retcode = this.GetOutValueInt("@return");
+                switch (retcode)
+                {
+                    case 0:
+                        ret = true;
+                        break;
+
+                    default:
+                        SetError(1, "Failed to save Measurement field. Please try again later.");
+                        break;
+                }
+
+            }
+            catch (Exception e)
+            {
+                SetError(-100, "Failed to save Measurement field. Please try again later");
+                Utils.Write(0, 0, "CustomerManager", "SaveMeasurementField", "", "", e);
+            }
+            finally
+            {
+                this.ClearSPParams();
+                this.Disconnect();
+            }
+            return ret;
+        }
+
     }
 }
