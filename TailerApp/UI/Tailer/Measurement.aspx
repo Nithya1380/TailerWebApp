@@ -7,7 +7,7 @@
     <script src="../../Scripts/angular-datepicker.js"></script>
     <link href="../../Scripts/CalendarControl.css" rel="stylesheet" />
     <link href="../../Scripts/angular-datepicker.css" rel="stylesheet" />
-
+    <script src="../../Scripts/ui-bootstrap-tpls-1.3.2.js"></script>
     <script type="text/javascript" lang="javascript">
 
         var MeasurementID = "<%=MeasurementID%>";
@@ -92,7 +92,7 @@
             $scope.SaveMeasurementMaster = function () {
                 $scope.MeasurementDetails.ItemID = $scope.SelectedItem.ItemmasterID;
 
-                //$scope.MeasurementDetails.AccountID = $scope.AccountList.filter(function (x) { return x.AccountCode == $scope.AccountCode })[0].AccountMasterID;
+                $scope.MeasurementDetails.AccountID = $scope.MeasurementDetails.Account.AccountMasterID;
 
                 $scope.MeasurementField.forEach(function (item, index) {
                     var FValue = "";
@@ -296,8 +296,8 @@
                                                             <%--<span class="profileValue">--%>
                                                                 <%--<input type="text" data-ng-model="MeasurementDetails.AccountCode" />--%>
                                                                 <%--<autocomplete ng-model="AccountCode" attr-placeholder="number" click-activation="true" data="AccountArry" on-Select="doSomethingElse"></autocomplete>--%>
-                                                            <input type="text"  placeholder="Enter number" 
-			                                                  style="max-width:120px;" ng-model="MeasurementDetails.Account"  
+                                                            <input type="text"  placeholder="Enter number" class="form-control"
+			                                                  style="max-width:220px;" ng-model="MeasurementDetails.Account"  
 			                                                        typeahead-on-select="onSelect($item, $model, $label, this);"
 			                                                        uib-typeahead="Account as Account.AccountCode for Account in AccountList |  filter:{name:$viewValue} | limitTo:10" 
 			                                                        typeahead-show-hint="true" typeahead-min-length="0"  class="web_txtbox"/>   
@@ -323,7 +323,7 @@
                                                         <td class="back_shade" style="text-align: right;"><span class="profileLabel">Account Name:</span></td>
                                                         <td>
                                                             <span class="profileValue">
-                                                                <input name="Debit" class="form-control-Multiple ng-pristine ng-untouched ng-valid ng-empty ng-valid-maxlength" style="width: 70%; margin-left: 5px;" type="text" maxlength="50" data-ng-model="MeasurementDetails.AccountName">
+                                                                <input name="Debit" class="form-control-Multiple ng-pristine ng-untouched ng-valid ng-empty ng-valid-maxlength" style="width: 70%; margin-left: 5px;" type="text" maxlength="50" data-ng-model="MeasurementDetails.Account.AccountName">
                                                             </span>
                                                         </td>
                                                         <td>{{result}}</td>
