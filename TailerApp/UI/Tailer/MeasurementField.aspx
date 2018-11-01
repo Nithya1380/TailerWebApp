@@ -66,19 +66,31 @@
 
                 });
             };
+            
+
+            $scope.movedown = function (order) {
+                $scope.MeasurField.forEach(function (item, index) {
+                    if (item.OrderBy == order)
+                        $scope.MeasurField[index].OrderBy = order + 1;
+                    else if (item.orderby == order + 1)
+                        $scope.MeasurField[index].OrderBy = item.OrderBy - 1;
+
+                });
+            }
+
+            $scope.moveup = function (order) {
+                $scope.MeasurField.foreach(function (item, index) {
+                    if (item.OrderBy == order)
+                        $scope.MeasurField[index].OrderBy = order - 1;
+                    else if (item.OrderBy == order - 1)
+                        $scope.MeasurField[index].OrderBy = item.OrderBy + 1;
+
+                });
+            }
 
             $scope.AddNewMeasurementField = function () {
-
-            }
-
-            $scope.movedown = function (obj, i) {
-                debugger
-                obj.Measur.OrderBy = obj.Measur.OrderBy + 1;
-            }
-
-            $scope.moveup = function (obj, i) {
-                debugger
-                obj.Measur.OrderBy = obj.Measur.OrderBy - 1;
+                var or = $scope.MeasurField.length + 1;
+                $scope.MeasurField.push({ FieldName: '', MeasurementFieldID: 0, isRrepeat: false, OrderBy: or });
             }
 
         });
@@ -100,7 +112,7 @@
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="card">
                     <div class="row">
-                        <table class="table">
+                        <table class="table table-hover">
                             <thead>
                                 <tr>
                                     <th style="width:40%">Field Name</th>
@@ -113,8 +125,8 @@
                                 <tr>
                                     <td><input type="text" maxlength="50" class="form-control"  ng-model="Measur.FieldName" style="width:70%" /></td>
                                     <td><input type="checkbox" ng-model="Measur.isRrepeat" /></td>
-                                    <td><a ng-show="!$last" ng-click="movedown(this, $index)"><i class="fa fa-angle-down" style="font-size:36px"></i></a></td>
-                                    <td><a ng-show="!$first" ng-click="moveup(this, $index)"><i class="fa fa-angle-up" style="font-size:36px"></i></a></td>
+                                    <td><a ng-show="!$last" ng-click="movedown(Measur.OrderBy)"><i class="fa fa-angle-down" style="font-size:36px"></i></a></td>
+                                    <td><a ng-show="!$first" ng-click="moveup(Measur.OrderBy)"><i class="fa fa-angle-up" style="font-size:36px"></i></a></td>
                                 </tr>
                             </tbody>
                         </table>

@@ -12,7 +12,34 @@
 
         var MeasurementID = "<%=MeasurementID%>";
 
-        var tailerApp = angular.module("TailerApp", [ '720kb.datepicker', 'ui.bootstrap']);
+        var tailerApp = angular.module("TailerApp", ['720kb.datepicker', 'ui.bootstrap']);
+
+        tailerApp.directive('validCalendarDate', function () {
+            return {
+                require: 'ngModel',
+                link: function (scope, element, attr, ngModelCtrl) {
+                    var InputText = undefined;
+                    element.on('blur', function () {
+                        InputText = element[0].value;
+                        if (InputText != '' && InputText != undefined) {
+                            if (!validateUSDate(InputText)) {
+                                alert('Invalid Date');
+                                InputText = "";
+                                element[0].focus();
+                            }
+                            else {
+                                InputText = trimString(InputText);
+                            }
+                        }
+                        ngModelCtrl.$setViewValue(InputText);
+                        ngModelCtrl.$render();
+                    });
+                    return InputText;
+                }
+            };
+        });
+
+
         tailerApp.controller("MeasurementController", function ($scope, $window, $http, $rootScope) {
             $scope.MeasurementID = $window.MeasurementID;
             $scope.MeasurementDetails = {};
@@ -97,7 +124,8 @@
                 $scope.MeasurementField.forEach(function (item, index) {
                     var FValue = "";
                     $scope.MeasurementField[index].FieldValue.forEach(function (_item, _index) {
-                        FValue += _item.val + ",";
+                        if (_item.val != '' && _item.val != null && _item.val != undefined)
+                            FValue += _item.val + ",";
                     });
                     $scope.MeasurementField[index].FValue = FValue;
                 });
@@ -280,7 +308,7 @@
                                         <i class="fa fa-close"></i>Delete
                                     </button>--%>
                                     <button class="client_btn" type="button" ng-click="onClose();" data-toggle="dropdown" style="border-color: #FFA87D !important; background-color: #FFA87D">
-                                        <i class="fa fa-close"></i>Cancel
+                                        <i class="fa fa-close"></i>Close
                                     </button>
                                 </div>
                             </div>
@@ -315,7 +343,11 @@
                                                         <td class="back_shade" style="text-align: right;"><span class="profileLabel">Create Date:</span></td>
                                                         <td>
                                                             <span class="profileValue">
-                                                                <input name="Debit" class="form-control ng-pristine ng-untouched ng-valid ng-empty ng-valid-maxlength" style="width: 95%; margin-left: 5px;" type="text" maxlength="10" data-ng-model="MeasurementDetails.MeasCreatedOn">
+                                                                <%--<input name="Debit" class="form-control ng-pristine ng-untouched ng-valid ng-empty ng-valid-maxlength" style="width: 95%; margin-left: 5px;" type="text" maxlength="10" data-ng-model="MeasurementDetails.MeasCreatedOn">--%>
+                                                                <datepicker  date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; float: none;">
+					                                                <input type="text" class="form-control" tabindex="2000" valid-calendar-date ng-model="MeasurementDetails.MeasCreatedOn" 
+						                                                style="width:110px;"/> 
+				                                                </datepicker>
                                                             </span>
                                                         </td>
                                                     </tr>
@@ -326,7 +358,7 @@
                                                                 <input name="Debit" class="form-control-Multiple ng-pristine ng-untouched ng-valid ng-empty ng-valid-maxlength" style="width: 70%; margin-left: 5px;" type="text" maxlength="50" data-ng-model="MeasurementDetails.Account.AccountName">
                                                             </span>
                                                         </td>
-                                                        <td>{{result}}</td>
+                                                        <td></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -400,9 +432,9 @@
                                             <div class="row">
                                                 <div class="col-sm-6">
                                                     <label class="lbl-text-right">Trial Date</label>
-                                                    <datepicker  date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; margin-right: 110px;">
+                                                    <datepicker  date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; float: none;">
 					                                    <input type="text" class="form-control" tabindex="2000" valid-calendar-date ng-model="MeasurementDetails.TrialDate" 
-						                                    class="form-control" style="width:110px;"/> 
+						                                    style="width:110px;"/> 
 				                                    </datepicker>
                                                     
                                                 </div>
@@ -411,9 +443,9 @@
                                                 <div class="col-sm-6">
                                                         <label for="drpSex" class="lbl-text-right">Deli Date</label>
                                                         <%--<input type="text" class="form-control" ng-model="MeasurementDetails.DeliDate">--%>
-                                                        <datepicker  date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; margin-right: 110px;">
+                                                        <datepicker  date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; float: none;">
 					                                        <input type="text" class="form-control" tabindex="2000" valid-calendar-date ng-model="MeasurementDetails.DeliDate" 
-						                                        class="form-control" style="width:110px;"/> 
+						                                        style="width:110px;"/> 
 				                                        </datepicker>
                                                 </div>
                                              </div>
@@ -421,9 +453,9 @@
                                                 <div class="col-sm-6">
                                                     <label for="drpSex" class="lbl-text-right">Date</label>
                                                     <%--<input type="text" class="form-control" ng-model="MeasurementDetails.MeasDate">--%>
-                                                    <datepicker  date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; margin-right: 110px;">
+                                                    <datepicker  date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; float: none;">
 					                                    <input type="text" class="form-control" tabindex="2000" valid-calendar-date ng-model="MeasurementDetails.MeasDate" 
-						                                    class="form-control" style="width:110px;"/> 
+						                                    style="width:110px;"/> 
 				                                    </datepicker>
                                                 </div>
                                              </div>
