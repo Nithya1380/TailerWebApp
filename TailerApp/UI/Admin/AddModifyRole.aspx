@@ -294,10 +294,14 @@
     <div ng-controller="ModifyRoleController">
     <div class="form-horizontal" style="margin-left:15px;" role="form">
 	    <div class="form-group" style="margin:10px;">
-            <label class="control-label col-sm-2" style="padding-right:0px;"><span style="color: red; font-size: 8px; vertical-align: top;">&#10033;</span>Role Name</label> 
+            <label class="control-label col-sm-2" style="padding-right:0px; width:13%"><span style="color: red; font-size: 8px; vertical-align: top;">&#10033;</span>Role Name</label> 
             <div class="col-sm-3">
                 <input type="text" class="form-control"  placeholder="Role name" ng-model="RoleName" />
-            </div>                           
+            </div> 
+            <label class="control-label col-sm-2" style="padding-right:0px; width:13%"><span style="color: red; font-size: 8px; vertical-align: top;">&#10033;</span>Home Page</label> 
+            <div class="col-sm-3" style="padding:5px; width:15%;">
+                <select ng-options="option.name for option in HomePageList track by option.id" ng-model="HomePage" style="padding:2px;"></select>
+            </div>                            
             <div class="col-sm-7 text-right">
                 <button class="client_btn" type="button" ng-click="SaveRolePermission()" data-toggle="dropdown" style="border-color: #00A5A8 !important; background-color: #00B5B8">
                     <i class="fa fa-save"></i> Save

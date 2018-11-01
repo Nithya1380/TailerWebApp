@@ -191,6 +191,7 @@ namespace DAL.Model
         public int ErrorCode { get; set; }
         public string ErrorMessage { get; set; }
         public string JSonstring { get; set; }
+        public string JSonstring2 { get; set; }
         public int OutValue { get; set; }
     }
 
@@ -208,6 +209,7 @@ namespace DAL.Model
     {
         public List<ItemMaster> ItemsList { get; set; }
     }
+
 
     public class InvoicePickLists : JsonResults
     {
@@ -254,7 +256,7 @@ namespace DAL.Model
         public string LessRsAmount { get; set; }
         public string Remarks { get; set; }
         public string NetAmount { get; set; }
-       
+
 
     }
 
