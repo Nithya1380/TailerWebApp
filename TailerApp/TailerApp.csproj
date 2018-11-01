@@ -181,6 +181,7 @@
     <Content Include="UI\Tailer\EmployeeList.aspx" />
     <Content Include="UI\Tailer\EmployeeMaster.aspx" />
     <Content Include="UI\Tailer\Measurement.aspx" />
+    <Content Include="UI\Tailer\MeasurementField.aspx" />
     <Content Include="UI\Tailer\MeasurementList.aspx" />
     <Content Include="UI\Tailer\TailerHome.aspx" />
     <Content Include="ViewSwitcher.ascx" />
@@ -363,6 +364,13 @@
     </Compile>
     <Compile Include="UI\Tailer\Measurement.aspx.designer.cs">
       <DependentUpon>Measurement.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tailer\MeasurementField.aspx.cs">
+      <DependentUpon>MeasurementField.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Tailer\MeasurementField.aspx.designer.cs">
+      <DependentUpon>MeasurementField.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Tailer\MeasurementList.aspx.cs">
       <DependentUpon>MeasurementList.aspx</DependentUpon>
