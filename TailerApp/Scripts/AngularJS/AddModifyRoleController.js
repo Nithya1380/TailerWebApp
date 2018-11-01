@@ -18,7 +18,7 @@ tailerApp.controller("ModifyRoleController",['$scope', '$window', '$http', '$roo
 
     $scope.HomePage = { name: "--Select--", id: 0 };
 
-    $scope.HomePageList = [{ name: "--Select--", id: 0 }, { name: "Admin", id: 4 }, { name: "Biller", id: 5 }];
+    $scope.HomePageList = [{ name: "--Select--", id: 0 }, { name: "Admin", id: 1 }, { name: "Biller", id: 2 }];
 
 
     $scope.GetRolePermission = function () {

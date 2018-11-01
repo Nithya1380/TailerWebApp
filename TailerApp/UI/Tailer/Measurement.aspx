@@ -3,13 +3,16 @@
 <asp:Content ID="content_Head" runat="server" ContentPlaceHolderID="HeaderContent">
     <link href="../Style/autocomplete.css" rel="stylesheet" />
     <script src="../../Scripts/AngularJS/angular.js"></script>
-    <script src="../../Scripts/AngularJS/autocomplete.js"></script>
+   <%-- <script src="../../Scripts/AngularJS/autocomplete.js"></script>--%>
+    <script src="../../Scripts/angular-datepicker.js"></script>
+    <link href="../../Scripts/CalendarControl.css" rel="stylesheet" />
+    <link href="../../Scripts/angular-datepicker.css" rel="stylesheet" />
 
     <script type="text/javascript" lang="javascript">
 
         var MeasurementID = "<%=MeasurementID%>";
 
-        var tailerApp = angular.module("TailerApp", ['autocomplete']);
+        var tailerApp = angular.module("TailerApp", [ '720kb.datepicker', 'ui.bootstrap']);
         tailerApp.controller("MeasurementController", function ($scope, $window, $http, $rootScope) {
             $scope.MeasurementID = $window.MeasurementID;
             $scope.MeasurementDetails = {};
@@ -43,7 +46,7 @@
 
                     if (response.data.d.JSonstring != null && response.data.d.JSonstring != "") {
                         $scope.MeasurementDetails = JSON.parse(response.data.d.JSonstring)[0];
-                        $scope.AccountCode = $scope.MeasurementDetails.AccountID;
+                        //$scope.AccountCode = $scope.MeasurementDetails.AccountID;
                     }                   
 
                     $scope.SelectedItem = { ItemmasterID: $scope.MeasurementDetails.ItemID, ItemDescription: '' };
@@ -89,7 +92,7 @@
             $scope.SaveMeasurementMaster = function () {
                 $scope.MeasurementDetails.ItemID = $scope.SelectedItem.ItemmasterID;
 
-                $scope.MeasurementDetails.AccountID = $scope.AccountList.filter(function (x) { return x.AccountCode == $scope.AccountCode })[0].AccountMasterID;
+                //$scope.MeasurementDetails.AccountID = $scope.AccountList.filter(function (x) { return x.AccountCode == $scope.AccountCode })[0].AccountMasterID;
 
                 $scope.MeasurementField.forEach(function (item, index) {
                     var FValue = "";
@@ -159,16 +162,16 @@
 
                     $scope.AccountList = JSON.parse(response.data.d.JSonstring);
 
-                    angular.forEach($scope.AccountList, function (value, key) {
-                        $scope.AccountArry.push(value.AccountCode);
-                    });
+                    //angular.forEach($scope.AccountList, function (value, key) {
+                    //    $scope.AccountArry.push(value.AccountCode);
+                    //});
 
-                    debugger
-                    $scope.AccountArry.then(function (data) {
+                    //debugger
+                    //$scope.AccountArry.then(function (data) {
 
-                        $scope.AccountArry = data;
+                    //    $scope.AccountArry = data;
 
-                    });
+                    //});
 
                 }, function onFailure(error) {
 
@@ -178,53 +181,59 @@
             $scope.GetAccountList();
            
 
-            //$scope.getmovies = function () {
+            ////$scope.getmovies = function () {
 
-            //    return $scope.AccountArry;
+            ////    return $scope.AccountArry;
+
+            ////}
+
+            //$scope.doSomething = function (typedthings) {
+            //    debugger
+            //    //console.log("Do something like reload data with this: " + typedthings);
+
+            //    //$scope.newmovies = MovieRetriever.getmovies(typedthings);
+
+            //    //$scope.newmovies.then(function (data) {
+
+            //    //    $scope.movies = data;
+
+            //    //});
 
             //}
 
-            $scope.doSomething = function (typedthings) {
-                debugger
-                //console.log("Do something like reload data with this: " + typedthings);
+            //$scope.doSomethingElse = function (suggestion) {
+            //    debugger
+            //    //console.log("Suggestion selected: " + suggestion);
 
-                //$scope.newmovies = MovieRetriever.getmovies(typedthings);
+            //};
 
-                //$scope.newmovies.then(function (data) {
+            //$scope.PerList
+		    //    = [{ name: 'Menu1', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
+			//         { name: 'Menu2', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
+			//         { name: 'Menu3', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
+			//         { name: 'Menu4', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
+			//         { name: 'Menu6', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
+			//         { name: 'Menu7', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
+			//         { name: 'Menu8', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
+			//         { name: 'Menu9', id: [{ val: 0 }], isRep: false },
+		    //    ];
 
-                //    $scope.movies = data;
+            //$scope.PayerSourceIDs = '';
 
-                //});
-
-            }
-
-            $scope.doSomethingElse = function (suggestion) {
-                debugger
-                //console.log("Suggestion selected: " + suggestion);
-
-            };
-
-            $scope.PerList
-		        = [{ name: 'Menu1', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
-			         { name: 'Menu2', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
-			         { name: 'Menu3', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
-			         { name: 'Menu4', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
-			         { name: 'Menu6', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
-			         { name: 'Menu7', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
-			         { name: 'Menu8', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
-			         { name: 'Menu9', id: [{ val: 0 }], isRep: false },
-		        ];
-
-            $scope.PayerSourceIDs = '';
-
-            //$scope.PerList.SetSeletedOptions($scope.PayerSourceIDs);
+            ////$scope.PerList.SetSeletedOptions($scope.PayerSourceIDs);
 
             $scope.AddItemToList = function (Obj) {
                 debugger;
                 Obj.$parent.Per.FieldValue.push({ val: 0 });
             }
 
+            $scope.onSelect = function ($item, $model, $label, Obj) {
+                return false;
+            }
+
         });
+
+
     </script>
 
     <style>
@@ -243,6 +252,11 @@
             width:50%;
             float:left;
         }
+
+         ._720kb-datepicker-calendar-day._720kb-datepicker-today {
+              background:#2e6e9e;
+              color:white;
+         }
 
     </style>
     
@@ -281,7 +295,12 @@
                                                         <td>
                                                             <%--<span class="profileValue">--%>
                                                                 <%--<input type="text" data-ng-model="MeasurementDetails.AccountCode" />--%>
-                                                                <autocomplete ng-model="AccountCode" attr-placeholder="number" click-activation="true" data="AccountArry" on-Select="doSomethingElse"></autocomplete>
+                                                                <%--<autocomplete ng-model="AccountCode" attr-placeholder="number" click-activation="true" data="AccountArry" on-Select="doSomethingElse"></autocomplete>--%>
+                                                            <input type="text"  placeholder="Enter number" 
+			                                                  style="max-width:120px;" ng-model="MeasurementDetails.Account"  
+			                                                        typeahead-on-select="onSelect($item, $model, $label, this);"
+			                                                        uib-typeahead="Account as Account.AccountCode for Account in AccountList |  filter:{name:$viewValue} | limitTo:10" 
+			                                                        typeahead-show-hint="true" typeahead-min-length="0"  class="web_txtbox"/>   
                                                             <%--</span>
                                                             <button title="Normal" class="btn btn-sm btn-success" type="button">
                                                                 Refresh
@@ -381,19 +400,31 @@
                                             <div class="row">
                                                 <div class="col-sm-6">
                                                     <label class="lbl-text-right">Trial Date</label>
-                                                    <input type="text" class="form-control" ng-model="MeasurementDetails.TrialDate">
+                                                    <datepicker  date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; margin-right: 110px;">
+					                                    <input type="text" class="form-control" tabindex="2000" valid-calendar-date ng-model="MeasurementDetails.TrialDate" 
+						                                    class="form-control" style="width:110px;"/> 
+				                                    </datepicker>
+                                                    
                                                 </div>
                                              </div>
                                              <div class="row">
                                                 <div class="col-sm-6">
                                                         <label for="drpSex" class="lbl-text-right">Deli Date</label>
-                                                        <input type="text" class="form-control" ng-model="MeasurementDetails.DeliDate">
+                                                        <%--<input type="text" class="form-control" ng-model="MeasurementDetails.DeliDate">--%>
+                                                        <datepicker  date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; margin-right: 110px;">
+					                                        <input type="text" class="form-control" tabindex="2000" valid-calendar-date ng-model="MeasurementDetails.DeliDate" 
+						                                        class="form-control" style="width:110px;"/> 
+				                                        </datepicker>
                                                 </div>
                                              </div>
                                              <div class="row">
                                                 <div class="col-sm-6">
                                                     <label for="drpSex" class="lbl-text-right">Date</label>
-                                                    <input type="text" class="form-control" ng-model="MeasurementDetails.MeasDate">
+                                                    <%--<input type="text" class="form-control" ng-model="MeasurementDetails.MeasDate">--%>
+                                                    <datepicker  date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; margin-right: 110px;">
+					                                    <input type="text" class="form-control" tabindex="2000" valid-calendar-date ng-model="MeasurementDetails.MeasDate" 
+						                                    class="form-control" style="width:110px;"/> 
+				                                    </datepicker>
                                                 </div>
                                              </div>
                                              <div class="row">
