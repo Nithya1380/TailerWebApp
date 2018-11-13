@@ -32,7 +32,7 @@ namespace TailerApp.UI.Tailer
                 }
 
                 CustomerManager customerObj = new CustomerManager();
-                if (customerObj.GetCustomerList(currentUser.CompanyID, currentUser.UserId, out invoiceList))
+                if (customerObj.GetInvoiceList(currentUser.CompanyID, currentUser.UserId, out invoiceList))
                 {
                     invoiceList.ErrorCode = 0;
                     invoiceList.ErrorMessage = "";
