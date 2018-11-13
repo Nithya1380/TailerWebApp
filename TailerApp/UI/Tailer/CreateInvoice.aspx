@@ -418,12 +418,12 @@
                  if ($scope.CustInvoice.MobileNumber == '' || $scope.CustInvoice.MobileNumber == null) {
                      errors += '<li>Mobile Number</li>';
                  }
-                 //if (isNaN($scope.CustInvoice.MasterID)|| $scope.CustInvoice.MasterID == null) {
-                 //    errors += '<li>Master</li>';
-                 //}
-                 //if (isNaN($scope.CustInvoice.DesignerID)|| $scope.CustInvoice.DesignerID == null) {
-                 //    errors += '<li>Designer</li>';
-                 //}
+                 if (isNaN($scope.CustInvoice.MasterID)|| $scope.CustInvoice.MasterID == null) {
+                     errors += '<li>Master</li>';
+                 }
+                 if (isNaN($scope.CustInvoice.DesignerID)|| $scope.CustInvoice.DesignerID == null) {
+                     errors += '<li>Designer</li>';
+                 }
                  if($scope.InvoiceList==null || $scope.InvoiceList.length==0)
                  {
                      errors += '<li>Invoice Line Items</li>';
@@ -641,9 +641,9 @@
                                 <li class="active"><a data-toggle="tab" href="#ItemTab">Item</a></li>
                                 <li><a data-toggle="tab" href="#CreditCardTab">Credit Card</a></li>
                                 <li><a data-toggle="tab" href="#TaxTab">Tax</a></li>
-                                <li><a data-toggle="tab" href="#BarCodeTab">Bar Code</a></li>
-                                <li><a data-toggle="tab" href="#PhotoTab">Photo</a></li>
-                                <li><a data-toggle="tab" href="#FollowupBarCodeTab">Followup Bar Code</a></li>
+                                <li style="display:none"><a data-toggle="tab" href="#BarCodeTab">Bar Code</a></li>
+                                <li style="display:none"><a data-toggle="tab" href="#PhotoTab">Photo</a></li>
+                                <li style="display:none"><a data-toggle="tab" href="#FollowupBarCodeTab">Followup Bar Code</a></li>
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane active" id="ItemTab">
@@ -674,9 +674,9 @@
                                                     <td><input type="number" data-ng-model="Invoice.ItemQuantity" class="form-control" style="width: 50px;" data-ng-change="onItemChange(Invoice)" /></td>
                                                     <td><input type="number" data-ng-model="Invoice.ItemPrice" class="form-control" style="width: 80px;" data-ng-change="onItemChange(Invoice)" /></td>
                                                     <td><input type="number" data-ng-model="Invoice.ItemDiscount" class="form-control" style="width: 80px;" data-ng-change="onItemChange(Invoice)" /></td>
-                                                    <td><input type="number" data-ng-model="Invoice.GST" class="form-control" style="width: 80px;" data-ng-change="onItemChange(Invoice)" /></td>
-                                                    <td><input type="number" data-ng-model="Invoice.SGST" class="form-control" style="width: 50px;" /></td>
-                                                    <td><input type="number" data-ng-model="Invoice.AmountPending" class="form-control" style="width: 100px;" /></td>
+                                                    <td><input type="number" data-ng-model="Invoice.GST" class="form-control" style="width: 80px;" data-ng-disabled="true" data-ng-change="onItemChange(Invoice)" /></td>
+                                                    <td><input type="number" data-ng-model="Invoice.SGST" class="form-control" style="width: 50px;" data-ng-disabled="true" /></td>
+                                                    <td><input type="number" data-ng-model="Invoice.AmountPending" class="form-control" style="width: 100px;" data-ng-disabled="true" /></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -692,7 +692,10 @@
                                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Payment:</span></td>
                                                     <td >
                                                         <span class="profileValue">
-                                                            <input type="text" data-ng-model="CustInvoice.PaymentNumber" name="Debit" class="form-control-Multiple" style="width: 250px; margin-left: 5px;" maxlength="50" />
+                                                            <select class="form-control" id="drpInvoicePaymentMethod" data-ng-model="CustInvoice.PaymentNumber" style="width:250px;"
+                                                                   data-ng-options="custCat.PickListValue as custCat.PickListLabel for custCat in InvoicePickLists.InvoicePaymentMethod track by custCat.PickListValue">
+                                                                 <option value="">Select</option>
+                                                            </select>
                                                         </span>
                                                     </td>
                                                      <td style="text-align: right" class="back_shade"><span class="profileLabel">Other Less & Rs:</span></td>
@@ -708,6 +711,7 @@
                                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Less(%) & Rs:</span></td>
                                                     <td >
                                                         <span class="profileValue" >
+
                                                             <input type="number" data-ng-model="CustInvoice.LessRs" name="LessRs" class="form-control-Multiple" style="width: 80px; margin-left: 5px;"  />
                                                             <input type="number" data-ng-model="CustInvoice.LessRsAmount" name="LessRsAmount" class="form-control-Multiple" style="width: 150px; margin-left: 5px;"  />
                                                         </span>
@@ -732,7 +736,7 @@
                                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Net Amount:</span></td>
                                                     <td >
                                                         <span class="profileValue">
-                                                            <input type="text" data-ng-model="CustInvoice.NetAmount" name="Debit" class="form-control" style="width: 250px; margin-left: 5px;" maxlength="50" />
+                                                            <input type="text" data-ng-model="CustInvoice.NetAmount" name="Debit" class="form-control" data-ng-disabled="true" style="width: 250px; margin-left: 5px;" maxlength="50" />
                                                         </span>
                                                     </td>
                                                 </tr>

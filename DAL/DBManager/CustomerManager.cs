@@ -565,6 +565,16 @@ namespace DAL.DBManager
                     invoicePickLists.InvoiceTaxCategory = Newtonsoft.Json.JsonConvert.DeserializeObject<List<PickList>>(dropdowns);
 
                     reader.NextResult();
+
+                    dropdowns = string.Empty;
+                    while (reader.Read())
+                    {
+                        dropdowns += reader.GetString(0);
+                    }
+
+                    invoicePickLists.InvoicePaymentMethod = Newtonsoft.Json.JsonConvert.DeserializeObject<List<PickList>>(dropdowns);
+
+                    reader.NextResult();
                     dropdowns = string.Empty;
                     while (reader.Read())
                     {

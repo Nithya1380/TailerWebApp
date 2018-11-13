@@ -179,12 +179,12 @@
                                   </table>
                             </div>
                             <!--end of submenu-->
-                            <div class="sub_menu_sec" style="display:none">
+                             <div class="sub_menu_sec">
                                 <table>
                                     <tbody>
-                                        <tr>
+                                        <tr onclick="javascript:onMenuClick('/UI/Tailer/InvoiceList.aspx',0,'')">
                                             <td style="width: 25px; text-align: center;"><i class="fa fa-calendar"></i></td>
-                                            <td><span class="submenu_txt">Menu 5</span></td>
+                                            <td><span class="submenu_txt">Invoice List</span></td>
                                         </tr>
                                     </tbody>
                                 </table>

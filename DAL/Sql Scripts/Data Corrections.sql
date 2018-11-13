@@ -84,6 +84,27 @@ BEGIN TRAN
 
 ROLLBACK TRAN
 
+BEGIN TRAN
+   DECLARE @PickListID INT
+   INSERT INTO PickListMaster(PickListName) VALUES('InvoicePaymentMethod')
+
+   SELECT @PickListID=SCOPE_IDENTITY()
+   INSERT INTO PickListValues(PickListMasterID,PickListLabel,PickListValue)
+   VALUES(@PickListID,'Cash','Cash'),(@PickListID,'Credit Card','Credit Card'),(@PickListID,'Debit Card','Debit Card')
+
+ROLLBACK TRAN
+
+BEGIN TRAN
+   DECLARE @PickListID INT
+   INSERT INTO PickListMaster(PickListName) VALUES('InvoiceLessCategory')
+
+   SELECT @PickListID=SCOPE_IDENTITY()
+   INSERT INTO PickListValues(PickListMasterID,PickListLabel,PickListValue)
+   VALUES(@PickListID,'On A/C. Cash','On A/C. Cash'),(@PickListID,'Goods Return','Goods Return')
+   ,(@PickListID,'Complain','Complain'),(@PickListID,'On A/C. Cr.Card','On A/C. Cr.Card'),(@PickListID,'Other','Other')
+
+ROLLBACK TRAN
+
 
 
 
