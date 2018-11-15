@@ -20,10 +20,11 @@ BEGIN TRY
 	BEGIN TRAN
 		MERGE MeasurementFieldMaster AS TARGET
 		USING (
-				SELECT MeasurementFieldID, FieldName, isRrepeat, OrderBy FROM OPENJSON(@MeasurementField)  
+				SELECT MeasurementFieldID, FieldName, isRrepeat, OrderBy, ItemGroup FROM OPENJSON(@MeasurementField)  
 					WITH (
 						MeasurementFieldID INT,
 						FieldName VARCHAR(50),
+						ItemGroup VARCHAR(50) '$.ItemGroup.PickListValue',
 						isRrepeat BIT,
 						OrderBy INT
 			  )) AS SOURCE 
@@ -31,10 +32,11 @@ BEGIN TRY
 		WHEN MATCHED THEN
 			UPDATE SET TARGET.FieldName = SOURCE.FieldName, 
 					   TARGET.isRrepeat = SOURCE.isRrepeat,
-					   TARGET.OrderBy = SOURCE.OrderBy
+					   TARGET.OrderBy = SOURCE.OrderBy,
+					   TARGET.ItemGroup = SOURCE.ItemGroup
 		WHEN NOT MATCHED BY TARGET THEN 
-		 INSERT (FieldName, isRrepeat, OrderBy) 
-		 VALUES (SOURCE.FieldName, SOURCE.isRrepeat, SOURCE.OrderBy);
+		 INSERT (FieldName, isRrepeat, OrderBy, ItemGroup, CompanyID) 
+		 VALUES (SOURCE.FieldName, SOURCE.isRrepeat, SOURCE.OrderBy, SOURCE.ItemGroup, @CompanyID);
 		--WHEN NOT MATCHED BY SOURCE THEN 
 		--DELETE;
 

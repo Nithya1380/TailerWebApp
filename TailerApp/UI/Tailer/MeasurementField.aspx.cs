@@ -82,5 +82,38 @@ namespace TailerApp.UI.Tailer
             return Measur;
         }
 
+        [WebMethod]
+        public static JsonResults GetItemGroups()
+        {
+            JsonResults returnObj = new JsonResults();
+            LoginUser currentUser;
+            try
+            {
+                if (!GetUserSession(out currentUser))
+                {
+                    returnObj.ErrorCode = 1001;
+                    returnObj.ErrorMessage = "";
+                }
+
+                AdminManagerSP customerObj = new AdminManagerSP();
+                if (customerObj.GetPickLists(currentUser.CompanyID, currentUser.UserId, "ItemMasterGroup", out returnObj))
+                {
+                    returnObj.ErrorCode = 0;
+                    returnObj.ErrorMessage = "";
+                }
+                else
+                {
+                    returnObj.ErrorCode = customerObj.GetLastErrorCode();
+                    returnObj.ErrorMessage = customerObj.GetLastError();
+                }
+            }
+            catch (Exception ex)
+            {
+                Utils.Write(ex);
+            }
+
+            return returnObj;
+        }
+
     }
 }

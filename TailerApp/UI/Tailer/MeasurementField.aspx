@@ -7,6 +7,7 @@
         var tailerApp = angular.module("TailerApp", []);
         tailerApp.controller("MeasurFieldController", function ($scope, $window, $http, $rootScope) {
             $scope.MeasurField = {};
+            $scope.ItemGroupPickLists = {};
 
             $scope.init = function () {
                 $scope.MeasurField = {};
@@ -38,6 +39,35 @@
                     debugger
                 });
             };
+
+
+            $scope.GetItemGroups = function () {
+                $scope.ItemGroupPickLists = {};
+
+                $http({
+                    method: "POST",
+                    url: "MeasurementField.aspx/GetItemGroups",
+                    data: {},
+                    dataType: "json",
+                    headers: { contentType: "application/json" }
+                }).then(function onSuccess(response) {
+                    if (response.data.d.ErrorCode == 1001) {
+                        $window.SessionOut();
+                        return false;
+                    }
+                    if (response.data.d.ErrorCode != 0) {
+                        alert(response.data.d.ErrorMessage);
+                        return false;
+                    }
+
+                    $scope.ItemGroupPickLists = JSON.parse(response.data.d.JSonstring);
+
+                }, function onFailure(error) {
+
+                });
+            };
+
+            $scope.GetItemGroups();
 
             $scope.GetMeasurementField();
 
@@ -116,6 +146,7 @@
                             <thead>
                                 <tr>
                                     <th style="width:40%">Field Name</th>
+                                    <th style="width:40%">Item Group</th>
                                     <th style="width:40%">Rrepeat</th>
                                     <th style="width:5%"></th>
                                     <th style="width:5%"></th>
@@ -124,6 +155,12 @@
                             <tbody ng-repeat="Measur in MeasurField | orderBy : 'OrderBy'">
                                 <tr>
                                     <td><input type="text" maxlength="50" class="form-control"  ng-model="Measur.FieldName" style="width:70%" /></td>
+                                    <td>
+                                        <select class="form-control" style="width:40%" data-ng-model="Measur.ItemGroup"
+                                            data-ng-options="option.PickListLabel for option in ItemGroupPickLists track by option.PickListValue">
+                                               <option value="">Select Group</option>
+                                        </select>
+                                    </td>
                                     <td><input type="checkbox" ng-model="Measur.isRrepeat" /></td>
                                     <td><a ng-show="!$last" ng-click="movedown(Measur.OrderBy)"><i class="fa fa-angle-down" style="font-size:36px"></i></a></td>
                                     <td><a ng-show="!$first" ng-click="moveup(Measur.OrderBy)"><i class="fa fa-angle-up" style="font-size:36px"></i></a></td>

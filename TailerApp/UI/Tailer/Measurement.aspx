@@ -113,8 +113,11 @@
 
             $scope.GetMeasurementMaster();
 
-
             $scope.GetItemList();
+
+            $scope.MeasurementFieldfilter = function (group) {
+                return $scope.MeasurementField.filter(function (x) { return x.ItemGroup == group });
+            }
 
             $scope.SaveMeasurementMaster = function () {
                 $scope.MeasurementDetails.ItemID = $scope.SelectedItem.ItemmasterID;
@@ -373,7 +376,7 @@
                                             <table class="profile_table" style="width: 100%;">
                                                 <tbody>
                                                     <tr>
-                                                        <td class="back_shade" style="text-align: right;">
+                                                        <td class="back_shade" style="text-align: right; width:30%">
                                                             <span class="profileLabel">
                                                                  <select class="form-control"
                                                                     ng-options="option.ItemDescription for option in ItemList track by option.ItemmasterID"
@@ -381,10 +384,13 @@
                                                                 </select>
                                                             </span>
                                                         </td>
-                                                        <td>
+                                                        <td style="width:30%">
                                                             <span class="profileValue">
-                                                                <input type="text" class="form-control" style="width:50%" data-ng-model="MeasurementDetails.ItemDesc" />
+                                                                <input type="text" class="form-control" style="width:100%" data-ng-model="MeasurementDetails.ItemDesc" />
                                                             </span>
+                                                        </td>
+                                                        <td style="width:30%">
+                                                            {{SelectedItem.ItemGroup}}
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -419,7 +425,7 @@
                                      <div class="row">
                                          <div class="col-sm-8">
                                              <div class="row">
-                                                 <div class="col-sm-4" ng-repeat="Per in MeasurementField">
+                                                 <div class="col-sm-4" ng-repeat="Per in MeasurementFieldfilter(SelectedItem.ItemGroup);">
                                                      <label for="drpSex" class="lbl-text-right">{{Per.FieldName}}</label>
 			                                        <div ng-repeat="id in Per.FieldValue" style="padding-left: 20px; padding-bottom: 5px;">
 				                                        <input type="number"  class="form-control" ng-model="id.val" style="text-align: right; width:50%;" />

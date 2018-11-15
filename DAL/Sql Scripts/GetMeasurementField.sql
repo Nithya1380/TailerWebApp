@@ -27,6 +27,8 @@ BEGIN
 				MeasurementFieldID,
 				FieldName,
 				isRrepeat,
+				ItemGroup [ItemGroup.PickListValue],
+				ItemGroup [ItemGroup.PickListLabel],
 				OrderBy
 			FROM MeasurementFieldMaster WITH(NOLOCK) WHERE CompanyID = @CompanyID
 				ORDER BY OrderBy
