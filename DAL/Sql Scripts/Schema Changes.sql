@@ -507,69 +507,6 @@ SET IDENTITY_INSERT dbo.HomePages ON
 
 
 ROLLBACK TRAN
-<<<<<<< HEAD
-
-BEGIN TRAN
-   CREATE TABLE Invoices
-   (
-	InvoiceID	INT NOT NULL PRIMARY KEY IDENTITY(1,1),
-    CompanyID	INT NOT NULL,
-	CustomerID  INT NOT NULL,
-    BillNumber	VARCHAR(100),
-    isDeleted	BIT,
-    CreatedOn	DATETIME,
-    CreatedBy	INT,
-    DeletedOn	DATETIME,
-    DeletedBy	INT,
-	InvoiceSeries VARCHAR(100),
-	MobileNumber VARCHAR(20),
-	InvoiceDate DATETIME,
-	TrailDate DATETIME,
-	TrailTime DATETIME,
-	SalesRepID INT,
-	MasterID INT,
-	DesignerID INT,
-	DeliveryDate DATETIME,
-	DeliveryTime DATETIME,
-	PaymentNumber VARCHAR(100),
-	InvoiceLessCategory VARCHAR(100),
-	LessRs FLOAT,
-	LessRsAmount MONEY,
-	Remarks VARCHAR(100),
-	NetAmount MONEY
-	CONSTRAINT FK_Invoices_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID),
-	CONSTRAINT FK_Invoices_CustomerID FOREIGN KEY(CustomerID) REFERENCES CustomerMaster(CustomerMasterID),
-	CONSTRAINT FK_Invoices_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID),
-	CONSTRAINT FK_Invoices_DeletedBy FOREIGN KEY(DeletedBy) REFERENCES Users(UserID)
-   )
-
-   CREATE TABLE InvoiceDetails
-   (
-      InvoiceDetailID	INT NOT NULL PRIMARY KEY IDENTITY(1,1),
-      CompanyID	INT NOT NULL,
-	  InvoiceID  INT NOT NULL,
-	  ItemMasterID INT NOT NULL,
-      isDeleted	BIT,
-      CreatedOn	DATETIME,
-      CreatedBy	INT,
-      DeletedOn	DATETIME,
-      DeletedBy	INT,
-	  ItemCode	VARCHAR(50),
-	  ItemDescription	VARCHAR(200),
-	  ItemQuantity INT,
-	  ItemPrice MONEY,
-	  ItemDiscount FLOAT,
-	  GST FLOAT,
-	  SGST FLOAT,
-	  AmountPending MONEY,
-	  CONSTRAINT FK_InvoiceDetails_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID),
-	  CONSTRAINT FK_InvoiceDetails_InvoiceID FOREIGN KEY(InvoiceID) REFERENCES Invoices(InvoiceID),
-	  CONSTRAINT FK_InvoiceDetails_ItemMasterID FOREIGN KEY(ItemMasterID) REFERENCES ItemMaster(ItemMasterID),
-	  CONSTRAINT FK_InvoiceDetails_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID),
-	  CONSTRAINT FK_InvoiceDetails_DeletedBy FOREIGN KEY(DeletedBy) REFERENCES Users(UserID) 
-   )
-ROLLBACK TRAN
-=======
 GO
 BEGIN TRAN
 	 ALTER TABLE MeasurementMaster DROP  COLUMN text1 
@@ -652,7 +589,7 @@ BEGIN TRAN
 		CONSTRAINT FK_MeasurementFieldDetail_MeasurementMasterID FOREIGN KEY(MeasurementMasterID) REFERENCES MeasurementMaster(MeasurementMasterID),
 		CONSTRAINT FK_MeasurementFieldDetail_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID),
 	)
-	
+
 ROLLBACK
 
 GO
@@ -666,4 +603,68 @@ BEGIN TRAn
 
 ROLLBACK
 
->>>>>>> 890572a6a1b3195707e9f38d78ac0c015641d754
+
+BEGIN TRAN
+   CREATE TABLE Invoices
+   (
+	InvoiceID	INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+    CompanyID	INT NOT NULL,
+	CustomerID  INT NOT NULL,
+    BillNumber	VARCHAR(100),
+    isDeleted	BIT,
+    CreatedOn	DATETIME,
+    CreatedBy	INT,
+    DeletedOn	DATETIME,
+    DeletedBy	INT,
+	InvoiceSeries VARCHAR(100),
+	MobileNumber VARCHAR(20),
+	InvoiceDate DATETIME,
+	TrailDate DATETIME,
+	TrailTime DATETIME,
+	SalesRepID INT,
+	MasterID INT,
+	DesignerID INT,
+	DeliveryDate DATETIME,
+	DeliveryTime DATETIME,
+	PaymentNumber VARCHAR(100),
+	InvoiceLessCategory VARCHAR(100),
+	LessRs FLOAT,
+	LessRsAmount MONEY,
+	Remarks VARCHAR(100),
+	NetAmount MONEY
+	CONSTRAINT FK_Invoices_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID),
+	CONSTRAINT FK_Invoices_CustomerID FOREIGN KEY(CustomerID) REFERENCES CustomerMaster(CustomerMasterID),
+	CONSTRAINT FK_Invoices_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID),
+	CONSTRAINT FK_Invoices_DeletedBy FOREIGN KEY(DeletedBy) REFERENCES Users(UserID)
+   )
+
+   CREATE TABLE InvoiceDetails
+   (
+      InvoiceDetailID	INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+      CompanyID	INT NOT NULL,
+	  InvoiceID  INT NOT NULL,
+	  ItemMasterID INT NOT NULL,
+      isDeleted	BIT,
+      CreatedOn	DATETIME,
+      CreatedBy	INT,
+      DeletedOn	DATETIME,
+      DeletedBy	INT,
+	  ItemCode	VARCHAR(50),
+	  ItemDescription	VARCHAR(200),
+	  ItemQuantity INT,
+	  ItemPrice MONEY,
+	  ItemDiscount FLOAT,
+	  GST FLOAT,
+	  SGST FLOAT,
+	  AmountPending MONEY,
+	  CONSTRAINT FK_InvoiceDetails_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID),
+	  CONSTRAINT FK_InvoiceDetails_InvoiceID FOREIGN KEY(InvoiceID) REFERENCES Invoices(InvoiceID),
+	  CONSTRAINT FK_InvoiceDetails_ItemMasterID FOREIGN KEY(ItemMasterID) REFERENCES ItemMaster(ItemMasterID),
+	  CONSTRAINT FK_InvoiceDetails_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID),
+	  CONSTRAINT FK_InvoiceDetails_DeletedBy FOREIGN KEY(DeletedBy) REFERENCES Users(UserID) 
+   )
+ROLLBACK TRAN
+
+ALTER TABLE MeasurementFieldMaster ADD ItemGroup VARCHAR(50)
+
+UPDATE MeasurementFieldMaster SET ItemGroup = 'Top'

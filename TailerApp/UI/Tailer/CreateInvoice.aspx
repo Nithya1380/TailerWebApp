@@ -24,8 +24,8 @@
              ItemAutoComplete();
          });
 
-         
-         
+
+
 
          function CustomerAutoComplete(id) {
              $("#" + id).autocomplete({
@@ -37,9 +37,9 @@
                  },
                  select: function (event, ui) {
                      $(this).val(ui.item.CustomerName);
-                      $('#_HIDDEN_CUSTOMER_ID').val(ui.item.CustomerMasterID);
+                     $('#_HIDDEN_CUSTOMER_ID').val(ui.item.CustomerMasterID);
                      _CLIENT_HIDDEN_NAME = ui.item.CustomerName;
-                                     
+
 
                      return false;
                  },
@@ -58,7 +58,7 @@
 
 
          function OnClientBlur(txtClientID) {
-             
+
              var element = angular.element($('#txtCustomer'));
              var controller = element.controller();
              var scope = element.scope();
@@ -71,7 +71,7 @@
              }
              else {
                  scope.$apply(function () {
-                     
+
                      scope.CustInvoice.CustomerID = angular.element(document.getElementById("_HIDDEN_CUSTOMER_ID")).val();
                      if (scope.CustInvoice.CustomerID == 0 || scope.CustInvoice.CustomerID == undefined || scope.CustInvoice.CustomerID == null || scope.CustInvoice.CustomerID == "") {
                          element.val("");
@@ -96,12 +96,12 @@
          }
 
          function GetCustomerBySearchKey(request, response) {
-              var _Url = "CreateInvoice.aspx/SearchCustomers";
-            
+             var _Url = "CreateInvoice.aspx/SearchCustomers";
+
              $.ajax({
                  type: "POST",
                  url: _Url,
-                 data: JSON.stringify({searchText:request.term}), 
+                 data: JSON.stringify({ searchText: request.term }),
                  contentType: "application/json; charset=utf-8",
                  dataType: "json",
                  dataFilter: function (data) {
@@ -139,7 +139,7 @@
                  select: function (event, ui) {
                      $(this).val(ui.item.ItemCode);
                      $(this).data('ItemmasterID', ui.item.ItemmasterID);
-                    
+
                      return false;
                  },
                  open: function () {
@@ -196,7 +196,7 @@
 
          function GetItemBySearchKey(request, response) {
              var _Url = "CreateInvoice.aspx/SearchItems";
-       
+
              $.ajax({
                  type: "POST",
                  url: _Url,
@@ -240,7 +240,7 @@
 
              $scope.init = function () {
                  $scope.ShowError = false;
-                 $scope.InvoiceError ='';
+                 $scope.InvoiceError = '';
                  $scope.AlertClass = "alert-danger";
                  $scope.InvoicePickLists = {};
                  $scope.GetInvoiceDropdowns();
@@ -250,7 +250,7 @@
 
              $scope.AddItem = function () {
                  var invoice = {
-                     ItemMasterID:0,
+                     ItemMasterID: 0,
                      ItemCode: "",
                      ItemDescription: "",
                      ItemQuantity: 1,
@@ -258,7 +258,7 @@
                      ItemDiscount: "",
                      GST: "",
                      SGST: "",
-                     AmountPending:""
+                     AmountPending: ""
                  }
 
                  $scope.InvoiceList.push(invoice);
@@ -276,34 +276,29 @@
                  return false;
              };
 
-             $scope.onItemChange=function(InvoiceItem)
-             {
-                 if (InvoiceItem != null && InvoiceItem != undefined && !isNaN(InvoiceItem.ItemQuantity) && !isNaN(InvoiceItem.ItemPrice))
-                 {
+             $scope.onItemChange = function (InvoiceItem) {
+                 if (InvoiceItem != null && InvoiceItem != undefined && !isNaN(InvoiceItem.ItemQuantity) && !isNaN(InvoiceItem.ItemPrice)) {
                      InvoiceItem.AmountPending = parseInt(InvoiceItem.ItemQuantity) * parseFloat(InvoiceItem.ItemPrice);
 
-                     if (parseFloat(InvoiceItem.AmountPending) > 0)
-                     {
+                     if (parseFloat(InvoiceItem.AmountPending) > 0) {
                          if (!isNaN(InvoiceItem.ItemDiscount) && parseFloat(InvoiceItem.ItemDiscount) > 0)
                              InvoiceItem.AmountPending = InvoiceItem.AmountPending - (parseFloat(InvoiceItem.AmountPending) * (parseFloat(InvoiceItem.ItemDiscount) / 100.00));
 
                          InvoiceItem.GST = parseFloat(InvoiceItem.AmountPending) * (18.00 / 100.00);
                          InvoiceItem.AmountPending = InvoiceItem.AmountPending + InvoiceItem.GST;
                      }
-                         
+
 
                      $scope.CalculateTotal();
                  }
              }
 
-             $scope.CalculateTotal=function()
-             {
+             $scope.CalculateTotal = function () {
                  $scope.TotalAmount = 0.00;
-                 if($scope.InvoiceList!=null && $scope.InvoiceList!=undefined)
-                 {
+                 if ($scope.InvoiceList != null && $scope.InvoiceList != undefined) {
                      angular.forEach($scope.InvoiceList, function (InvoiceItem) {
                          if (InvoiceItem != null && InvoiceItem != undefined && !isNaN(InvoiceItem.AmountPending)) {
-                             $scope.TotalAmount+=InvoiceItem.AmountPending;
+                             $scope.TotalAmount += InvoiceItem.AmountPending;
                          }
                      });
                  }
@@ -359,7 +354,7 @@
              };
 
              $scope.GetItemCodes = function () {
-                 if ($scope.ItemCodes == null || $scope.ItemCodes.length==0) {
+                 if ($scope.ItemCodes == null || $scope.ItemCodes.length == 0) {
                      $scope.ItemCodes = [];
                      try {
                          $http(
@@ -367,7 +362,7 @@
                             method: "POST",
                             url: "CreateInvoice.aspx/SearchItems",
                             dataType: 'json',
-                            data: {searchText:''},
+                            data: { searchText: '' },
                             headers: {
                                 "Content-Type": "application/json"
                             }
@@ -390,10 +385,9 @@
                  return $scope.ItemCodes;
              }
 
-             $scope.onItemSelect = function ($item, $model, $label, $index)
-             {
+             $scope.onItemSelect = function ($item, $model, $label, $index) {
                  var invoice = {
-                     ItemMasterID:$item.ItemmasterID,
+                     ItemMasterID: $item.ItemmasterID,
                      ItemCode: $item.ItemCode,
                      ItemDescription: $item.ItemDescription,
                      ItemQuantity: 1,
@@ -401,7 +395,7 @@
                      ItemDiscount: "",
                      GST: "",
                      SGST: "",
-                     AmountPending:""
+                     AmountPending: ""
                  }
 
                  $scope.InvoiceList[$index] = invoice;
@@ -412,36 +406,34 @@
              $scope.ValidateInvoiceCreation = function () {
                  var errors = "";
                  var isWrongItemExists = false;
-                 if (isNaN($scope.CustInvoice.CustomerID) || parseInt($scope.CustInvoice.CustomerID)==0) {
+                 if (isNaN($scope.CustInvoice.CustomerID) || parseInt($scope.CustInvoice.CustomerID) == 0) {
                      errors = '<li>Customer Name</li>';
                  }
                  if ($scope.CustInvoice.MobileNumber == '' || $scope.CustInvoice.MobileNumber == null) {
                      errors += '<li>Mobile Number</li>';
                  }
-                 if (isNaN($scope.CustInvoice.MasterID)|| $scope.CustInvoice.MasterID == null) {
+                 if (isNaN($scope.CustInvoice.MasterID) || $scope.CustInvoice.MasterID == null) {
                      errors += '<li>Master</li>';
                  }
-                 if (isNaN($scope.CustInvoice.DesignerID)|| $scope.CustInvoice.DesignerID == null) {
+                 if (isNaN($scope.CustInvoice.DesignerID) || $scope.CustInvoice.DesignerID == null) {
                      errors += '<li>Designer</li>';
                  }
-                 if($scope.InvoiceList==null || $scope.InvoiceList.length==0)
-                 {
+                 if ($scope.InvoiceList == null || $scope.InvoiceList.length == 0) {
                      errors += '<li>Invoice Line Items</li>';
                  }
                  else {
                      angular.forEach($scope.InvoiceList, function (invoice) {
-                         if (isNaN(invoice.ItemMasterID) || invoice.ItemMasterID == null || invoice.ItemMasterID==0) {
+                         if (isNaN(invoice.ItemMasterID) || invoice.ItemMasterID == null || invoice.ItemMasterID == 0) {
                              isWrongItemExists = true;
                          }
                      });
 
-                     if (isWrongItemExists)
-                     {
+                     if (isWrongItemExists) {
                          errors += '<li>Enter Correct Item Code</li>';
                      }
                  }
 
-                 
+
 
                  if (errors != "") {
                      $scope.ShowError = true;
@@ -461,7 +453,7 @@
                  if (!$scope.ValidateInvoiceCreation())
                      return false;
 
-                
+
 
                  $http({
                      method: "POST",
@@ -481,9 +473,9 @@
                      }
                      else {
                          $scope.ShowError = true;
-                         $scope.InvoiceError = $sce.trustAsHtml("Invoice Created Successfully! <b> Bill Number :" + response.data.d.JSonstring+"<b>");
+                         $scope.InvoiceError = $sce.trustAsHtml("Invoice Created Successfully! <b> Bill Number :" + response.data.d.JSonstring + "<b>");
                          $scope.AlertClass = "alert-success";
-                        
+
                          return false;
                      }
 

@@ -76,7 +76,7 @@
                         //$scope.AccountCode = $scope.MeasurementDetails.AccountID;
                     }                   
 
-                    $scope.SelectedItem = { ItemmasterID: $scope.MeasurementDetails.ItemID, ItemDescription: '' };
+                    $scope.SelectedItem = $scope.MeasurementDetails.SelectedItem;
 
                 }, function onFailure(error) {
 
@@ -262,6 +262,21 @@
                 return false;
             }
 
+            $scope.PrintMeasurementMaster = function () {
+
+                var width = 850;
+                var height = 800;
+                var left = (screen.width / 2) - (width / 2);
+                var top = ((screen.height / 2) - (height / 2)) - 50;
+                var windowFeatures = "width=" + width + ",height=" + height + ",status,resizable,scrollbars,modal,left=" + left + ",top=" + top + "";
+                var URL = "../Tailer/PrintMeasurement.aspx?"
+                var URLdata = "MeasurementID=" + $scope.MeasurementID;
+                var winName = "Print Measurement"
+                var navigateurl = URL + URLdata;
+                var winobj = window.open(navigateurl, winName, windowFeatures);
+                winobj.focus();
+            }
+
         });
 
 
@@ -312,6 +327,9 @@
                                     </button>--%>
                                     <button class="client_btn" type="button" ng-click="onClose();" data-toggle="dropdown" style="border-color: #FFA87D !important; background-color: #FFA87D">
                                         <i class="fa fa-close"></i>Close
+                                    </button>
+                                    <button class="client_btn" type="button" ng-click="PrintMeasurementMaster();" data-toggle="dropdown" style="border-color: #766DE9 !important; background-color: #766DE9">
+                                        <i class="fa fa-print"></i>Print
                                     </button>
                                 </div>
                             </div>

@@ -11,7 +11,7 @@ using TailerApp.Common;
 
 namespace TailerApp.UI.Tailer
 {
-    public partial class InvoiceList : PageBase
+    public partial class MeasurementList : PageBase
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -19,28 +19,29 @@ namespace TailerApp.UI.Tailer
         }
 
         [WebMethod]
-        public static JsonResults GetInvoiceList()
+        public static JsonResults GetMeasurementList()
         {
-            JsonResults invoiceList = new JsonResults();
+            JsonResults MeasurList = new JsonResults();
             LoginUser currentUser;
             try
             {
                 if (!GetUserSession(out currentUser))
                 {
-                    invoiceList.ErrorCode = -1001;
-                    invoiceList.ErrorMessage = "";
+                    MeasurList.ErrorCode = 1001;
+                    MeasurList.ErrorMessage = "";
+                    return MeasurList;
                 }
 
                 CustomerManager customerObj = new CustomerManager();
-                if (customerObj.GetInvoiceList(currentUser.CompanyID, currentUser.UserId, currentUser.UserBranchID, out invoiceList))
+                if (customerObj.GetMeasurementList(currentUser.CompanyID, currentUser.UserId, out MeasurList))
                 {
-                    invoiceList.ErrorCode = 0;
-                    invoiceList.ErrorMessage = "";
+                    MeasurList.ErrorCode = 0;
+                    MeasurList.ErrorMessage = "";
                 }
                 else
                 {
-                    invoiceList.ErrorCode = -1;
-                    invoiceList.ErrorMessage = "Failed to get Invoice List. please try again later";
+                    MeasurList.ErrorCode = -1;
+                    MeasurList.ErrorMessage = "Failed to get Employee List. please try again later";
                 }
             }
             catch (Exception ex)
@@ -48,7 +49,7 @@ namespace TailerApp.UI.Tailer
                 Utils.Write(ex);
             }
 
-            return invoiceList;
+            return MeasurList;
         }
     }
 }

@@ -19,6 +19,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -115,6 +116,7 @@
     <Content Include="Scripts\angular-datepicker.js" />
     <Content Include="Scripts\AngularJS\AddModifyRoleController.js" />
     <Content Include="Scripts\AngularJS\angular.js" />
+    <Content Include="Scripts\AngularJS\autocomplete.js" />
     <Content Include="Scripts\AngularJS\BranchController.js" />
     <Content Include="Scripts\AngularJS\CompanyController.js" />
     <Content Include="Scripts\AngularJS\TailerApp.js" />
@@ -169,6 +171,7 @@
     <Content Include="UI\Common\Login.aspx" />
     <Content Include="UI\Img\12345.jpeg" />
     <Content Include="UI\Img\PopUpMaster.jpeg" />
+    <Content Include="UI\Style\autocomplete.css" />
     <Content Include="UI\Style\bootstrap.min.css" />
     <Content Include="UI\Style\TailerStyle.css" />
     <Content Include="UI\Common\Login.aspx" />
@@ -178,6 +181,11 @@
     <Content Include="UI\Tailer\CustomerList.aspx" />
     <Content Include="UI\Tailer\EmployeeList.aspx" />
     <Content Include="UI\Tailer\EmployeeMaster.aspx" />
+    <Content Include="UI\Tailer\InvoiceList.aspx" />
+    <Content Include="UI\Tailer\Measurement.aspx" />
+    <Content Include="UI\Tailer\MeasurementField.aspx" />
+    <Content Include="UI\Tailer\MeasurementList.aspx" />
+    <Content Include="UI\Tailer\PrintMeasurement.aspx" />
     <Content Include="UI\Tailer\TailerHome.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config">
@@ -353,6 +361,41 @@
     <Compile Include="UI\Tailer\EmployeeMaster.aspx.designer.cs">
       <DependentUpon>EmployeeMaster.aspx</DependentUpon>
     </Compile>
+    <Compile Include="UI\Tailer\InvoiceList.aspx.cs">
+      <DependentUpon>InvoiceList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Tailer\InvoiceList.aspx.designer.cs">
+      <DependentUpon>InvoiceList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tailer\Measurement.aspx.cs">
+      <DependentUpon>Measurement.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Tailer\Measurement.aspx.designer.cs">
+      <DependentUpon>Measurement.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tailer\MeasurementField.aspx.cs">
+      <DependentUpon>MeasurementField.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Tailer\MeasurementField.aspx.designer.cs">
+      <DependentUpon>MeasurementField.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tailer\MeasurementList.aspx.cs">
+      <DependentUpon>MeasurementList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Tailer\MeasurementList.aspx.designer.cs">
+      <DependentUpon>MeasurementList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tailer\PrintMeasurement.aspx.cs">
+      <DependentUpon>PrintMeasurement.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Tailer\PrintMeasurement.aspx.designer.cs">
+      <DependentUpon>PrintMeasurement.aspx</DependentUpon>
+    </Compile>
     <Compile Include="UI\Tailer\TailerHome.aspx.cs">
       <DependentUpon>TailerHome.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -385,7 +428,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>54858</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

@@ -5,14 +5,13 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace TailerApp.UI.Admin
+namespace TailerApp.UI.Tailer
 {
-    public partial class Admin : System.Web.UI.MasterPage
+    public partial class PrintMeasurement : System.Web.UI.Page
     {
-        public string ApplicationVirtualPath = string.Empty; 
         protected void Page_Load(object sender, EventArgs e)
         {
-            ApplicationVirtualPath = TailerApp.Common.Utils.ApplicationVirtualPath; 
+
         }
     }
 }
