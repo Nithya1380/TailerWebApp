@@ -210,7 +210,6 @@ namespace DAL.Model
         public List<ItemMaster> ItemsList { get; set; }
     }
 
-
     public class InvoicePickLists : JsonResults
     {
         public InvoicePickLists()
@@ -221,10 +220,13 @@ namespace DAL.Model
             this.Designers = new List<EmployeePositions>();
             this.Masters = new List<EmployeePositions>();
             this.SalesReps = new List<EmployeePositions>();
+            this.InvoicePaymentMethod = new List<PickList>();
         }
         public List<PickList> AccountSeries { get; set; }
         public List<PickList> InvoiceLessCategory { get; set; }
         public List<PickList> InvoiceTaxCategory { get; set; }
+        public List<PickList> InvoicePaymentMethod { get; set; }
+        
         public List<EmployeePositions> Masters { get; set; }
         public List<EmployeePositions> Designers { get; set; }
         public List<EmployeePositions> SalesReps { get; set; }
@@ -256,7 +258,7 @@ namespace DAL.Model
         public string LessRsAmount { get; set; }
         public string Remarks { get; set; }
         public string NetAmount { get; set; }
-
+       
 
     }
 

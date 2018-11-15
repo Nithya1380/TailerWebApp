@@ -304,7 +304,7 @@ namespace DAL.DBManager
            return ret;
        }
 
-       public bool _U_ModifyRolePermission(int CompanyID, int User, string RoleName, int RoleID, string PermissionAdded, string PermissionRemoved, bool isDeleted, int HomePage, out JSONReturnData Struct_Perm)
+       public bool _U_ModifyRolePermission(int CompanyID, int User, string RoleName, int RoleID, string PermissionAdded, string PermissionRemoved, bool isDeleted, out JSONReturnData Struct_Perm)
        {
            bool ret = false;
            Struct_Perm = new JSONReturnData();
@@ -321,7 +321,6 @@ namespace DAL.DBManager
                this.AddSPStringParam("@PermissionAdded", PermissionAdded);
                this.AddSPStringParam("@PermissionRemoved", PermissionRemoved);
                this.AddSPBoolParam("@isDeleted", isDeleted);
-               this.AddSPIntParam("@HomePage", HomePage); 
                this.AddSPReturnIntParam("@return");
 
                using (SqlDataReader reader = this.ExecuteSelectSP(spName))
@@ -445,11 +444,6 @@ namespace DAL.DBManager
                            Struct_Perm.RoleName = reader.GetString(0);
                        else
                            Struct_Perm.RoleName = "";
-
-                       if (!reader.IsDBNull(1))
-                           Struct_Perm.HomePage = reader.GetInt32(1);
-                       else
-                           Struct_Perm.HomePage = 0; 
 
                    }
                    reader.NextResult();

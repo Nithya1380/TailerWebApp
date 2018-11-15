@@ -22,32 +22,6 @@
     <script type="text/javascript">
         var g_contextFrom = '<%=contextFrom%>';
         var tailerApp = angular.module("TailerApp", ['720kb.datepicker']);
-
-        tailerApp.directive('validCalendarDate', function () {
-            return {
-                require: 'ngModel',
-                link: function (scope, element, attr, ngModelCtrl) {
-                    var InputText = undefined;
-                    element.on('blur', function () {
-                        InputText = element[0].value;
-                        if (InputText != '' && InputText != undefined) {
-                            if (!validateUSDate(InputText)) {
-                                alert('Invalid Date');
-                                InputText = "";
-                                element[0].focus();
-                            }
-                            else {
-                                InputText = trimString(InputText);
-                            }
-                        }
-                        ngModelCtrl.$setViewValue(InputText);
-                        ngModelCtrl.$render();
-                    });
-                    return InputText;
-                }
-            };
-        });
-
         tailerApp.controller("AddCustomerController", function ($scope, $window, $http, $rootScope, $sce) {
             $scope.Customer = {};
             $scope.CustomerAccount = {};
@@ -242,7 +216,7 @@
                             <tr>
                                 <td style="text-align:right" class="back_shade"><span class="profileLabel"><span style="color:red">*</span>DOB:</span></td>
                                 <td colspan="5">
-                                    <datepicker date-format="dd/MM/yyyy">
+                                    <datepicker date-format="MM/dd/yyyy">
                                     <input type="text" data-ng-model="Customer.BirthDate"  class="form-control" style="width: 250px; margin-left: 5px;" maxlength="15" required />
                                     </datepicker>
                                  </td>

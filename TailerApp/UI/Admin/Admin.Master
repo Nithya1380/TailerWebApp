@@ -5,41 +5,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title></title>
-    <link href="../../Content/Site.css" rel="stylesheet" /> 
     <asp:ContentPlaceHolder ID="head" runat="server">
 
     </asp:ContentPlaceHolder>
-    
-    <script type="text/javascript" lang="javascript">
-
-        function onMenuClick(url, isPopup, popupFeatures) {
-
-            if (isPopup == true) {
-
-            }
-            else {
-                window.location.href = "<%=ApplicationVirtualPath%>" + url;
-                return false;
-            }
-        }
-   </script>
 </head>
 <body>
     <form id="form1" runat="server">
-    <div>
+    <div style="padding-bottom:15px;">
         <img src="../Img/12345.jpeg" style="width: 100%; height: 50px;" />
-    </div>
-    <div align="right" class="sub_header" style="float:right; padding-right:10px">
-        <div align="right" class="sub_menu_sec">
-            <table>
-                <tbody>
-                    <tr onclick="javascript:onMenuClick('/UI/Common/Login.aspx',0,'')">
-                        <td style="width: 25px; text-align: center;"><i class="fa fa-camera"></i></td>
-                        <td><span class="submenu_txt">Loge Out</span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
     </div>
     <div>
         <asp:ContentPlaceHolder ID="ContentPlaceHolder" runat="server">

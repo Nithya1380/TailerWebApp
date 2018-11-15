@@ -12,7 +12,7 @@
 
     <link href="../../Scripts/angular-datepicker.css" rel="stylesheet" />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="../../Scripts/angular-datepicker.js"></script>
     <script src="../../Scripts/AngularJS/BranchController.js"></script>
 <style type="text/css">
@@ -49,7 +49,7 @@
                             <td style="text-align:right;">Short Name: </td><td style="text-align:left;"><input type="text" class="web_txtbox" ng-model="BD.ShortName" /></td>
                             <td style="text-align:right;">Created Date: </td><td style="text-align:left;">
                                 <div class="input-group date">
-				                    <datepicker  date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; margin-right: 110px;">
+				                    <datepicker  date-format="MM/dd/yyyy" style="width: 0px; margin-left: 0px; margin-right: 110px;">
 					                    <input type="text" tabindex="2000" valid-calendar-date id="txt_BranchCreatedDate" ng-model="BD.BranchCreatedDate" 
 						                    class="form-control" style="width:110px;"/> 
 				                    </datepicker>
@@ -117,7 +117,7 @@
                         <td style="text-align:right;">ST Date: </td>
                         <td style="text-align:left;">
                             <div class="input-group date">
-				                    <datepicker  date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; margin-right: 110px;">
+				                    <datepicker  date-format="MM/dd/yyyy" style="width: 0px; margin-left: 0px; margin-right: 110px;">
 					                    <input type="text" tabindex="2000" valid-calendar-date id="txt_BranchSTDate" ng-model="BD.BranchSTDate" 
 						                    class="form-control" style="width:110px;"/> 
 				                    </datepicker>
@@ -163,7 +163,7 @@
                         <td style="text-align:right;">Current Period: Form Date: </td>
                         <td style="text-align:left;">
                             <div class="input-group date">
-				                <datepicker  date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; margin-right: 110px;">
+				                <datepicker  date-format="MM/dd/yyyy" style="width: 0px; margin-left: 0px; margin-right: 110px;">
 					                <input type="text" tabindex="2000" valid-calendar-date id="txt_PeriodFormDate" ng-model="BD.PeriodFormDate" 
 						                class="form-control" style="width:110px;"/> 
 				                </datepicker>
@@ -177,7 +177,7 @@
                         <td style="text-align:right;">To Date: </td>
                             <td style="text-align:left;">
                                 <div class="input-group date">
-				                    <datepicker  date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; margin-right: 110px;">
+				                    <datepicker  date-format="MM/dd/yyyy" style="width: 0px; margin-left: 0px; margin-right: 110px;">
 					                    <input type="text" tabindex="2000" valid-calendar-date id="txt_PeriodToDate" ng-model="BD.PeriodToDate" 
 						                    class="form-control" style="width:110px;"/> 
 				                    </datepicker>

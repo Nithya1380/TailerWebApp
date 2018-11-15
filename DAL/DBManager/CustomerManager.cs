@@ -519,6 +519,116 @@ namespace DAL.DBManager
             return ret;
         }
 
+
+        public bool GetInvoicePickLists(int companyID, int customerID, int userID, out InvoicePickLists invoicePickLists)
+        {
+            invoicePickLists = new InvoicePickLists();
+            bool ret = false;
+            string dropdowns = string.Empty;
+            try
+            {
+                this.Connect(this.GetConnString());
+                string spName = "GetInvoicePickLists";
+                this.ClearSPParams();
+                this.AddSPIntParam("@companyID", companyID);
+                this.AddSPIntParam("@CustomerID", customerID);
+                this.AddSPIntParam("@UserID", userID);
+                this.AddSPReturnIntParam("@return");
+                using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+                {
+                    dropdowns = string.Empty;
+                    while (reader.Read())
+                    {
+                        dropdowns += reader.GetString(0);
+                    }
+
+                    invoicePickLists.AccountSeries = Newtonsoft.Json.JsonConvert.DeserializeObject<List<PickList>>(dropdowns);
+
+                    reader.NextResult();
+
+                    dropdowns = string.Empty;
+                    while (reader.Read())
+                    {
+                        dropdowns += reader.GetString(0);
+                    }
+
+                    invoicePickLists.InvoiceLessCategory = Newtonsoft.Json.JsonConvert.DeserializeObject<List<PickList>>(dropdowns);
+
+                    reader.NextResult();
+
+                    dropdowns = string.Empty;
+                    while (reader.Read())
+                    {
+                        dropdowns += reader.GetString(0);
+                    }
+
+                    invoicePickLists.InvoiceTaxCategory = Newtonsoft.Json.JsonConvert.DeserializeObject<List<PickList>>(dropdowns);
+
+                    reader.NextResult();
+
+                    dropdowns = string.Empty;
+                    while (reader.Read())
+                    {
+                        dropdowns += reader.GetString(0);
+                    }
+
+                    invoicePickLists.InvoicePaymentMethod = Newtonsoft.Json.JsonConvert.DeserializeObject<List<PickList>>(dropdowns);
+
+                    reader.NextResult();
+                    dropdowns = string.Empty;
+                    while (reader.Read())
+                    {
+                        dropdowns += reader.GetString(0);
+                    }
+
+                    invoicePickLists.Masters = Newtonsoft.Json.JsonConvert.DeserializeObject<List<EmployeePositions>>(dropdowns);
+
+                    reader.NextResult();
+                    dropdowns = string.Empty;
+                    while (reader.Read())
+                    {
+                        dropdowns += reader.GetString(0);
+                    }
+
+                    invoicePickLists.Designers = Newtonsoft.Json.JsonConvert.DeserializeObject<List<EmployeePositions>>(dropdowns);
+
+                    reader.NextResult();
+
+                    dropdowns = string.Empty;
+                    while (reader.Read())
+                    {
+                        dropdowns += reader.GetString(0);
+                    }
+
+                    invoicePickLists.SalesReps = Newtonsoft.Json.JsonConvert.DeserializeObject<List<EmployeePositions>>(dropdowns);
+
+                    
+                    reader.Close();
+                }
+
+                int retcode = this.GetOutValueInt("@return");
+
+                switch (retcode)
+                {
+                    case 1: ret = true;
+                        break;
+                    default: SetError(-1, "Failed to get Invoice dropdowns. Please try again later");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = false;
+                Utils.Write(ex);
+            }
+            finally
+            {
+                this.ClearSPParams();
+                this.Disconnect();
+            }
+            return ret;
+         }
+
         public bool GetMeasurementMaster(int companyID, int userID, int MeasurementMasterID, out JsonResults Measu)
         {
             Measu = new JsonResults();
@@ -772,6 +882,52 @@ namespace DAL.DBManager
             return ret;
         }
 
+
+        public bool CreateNewInvoice(int companyID, int userID, int customerBranch, ref CustomerInvoice customerInvoice, ref List<CustomerInvoiceList> customerInvoiceList, out string billNumber)
+        {
+            bool ret = false;
+            billNumber = string.Empty;
+            try
+            {
+                this.Connect(this.GetConnString());
+                string spName = "CreateNewInvoice";
+                this.ClearSPParams();
+                this.AddSPIntParam("@companyID", companyID);
+                this.AddSPIntParam("@CustomerBranchID", customerBranch);
+                this.AddSPIntParam("@UserID", userID);
+                this.AddSPStringParam("@customerInvoiceObj", Newtonsoft.Json.JsonConvert.SerializeObject(customerInvoice));
+                this.AddSPStringParam("@customerInvoiceList", Newtonsoft.Json.JsonConvert.SerializeObject(customerInvoiceList));
+                this.AddSPReturnIntParam("@return");
+                this.AddSPStringParamOut("@BillNumber",100);
+                this.ExecuteNonSP(spName);
+                int retcode = this.GetOutValueInt("@return");
+
+                switch (retcode)
+                {
+                    case 1: ret = true;
+                        billNumber = this.GetOutValueString("@BillNumber");
+                        break;
+                    case -2: SetError(-2, "Mandatory fileds are not entered. Failed to create Invoice.");
+                        break;
+                    case -3: SetError(-3, "Invoice Item lists are empty. Failed to create Invoice.");
+                        break;
+                    default: SetError(-1, "Failed to create Invoice..Please try again later");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = false;
+                SetError(-1, "Failed to create Invoice.Please try again later");
+                Utils.Write(ex);
+            }
+            finally
+            {
+                this.ClearSPParams();
+                this.Disconnect();
+            }
+            return ret;
+        }
         public bool SaveMeasurementField(int CompanyID, int User, string MeasurField)
         {
             bool ret = false;
@@ -814,78 +970,26 @@ namespace DAL.DBManager
             return ret;
         }
 
-        public bool GetInvoicePickLists(int companyID, int customerID, int userID, out InvoicePickLists invoicePickLists)
+        public bool GetInvoiceList(int companyID, int userID,int branchID,out JsonResults customerList)
         {
-            invoicePickLists = new InvoicePickLists();
+            customerList = new JsonResults();
             bool ret = false;
-            string dropdowns = string.Empty;
+
             try
             {
                 this.Connect(this.GetConnString());
-                string spName = "GetInvoicePickLists";
+                string spName = "GetInvoiceList";
                 this.ClearSPParams();
                 this.AddSPIntParam("@companyID", companyID);
-                this.AddSPIntParam("@CustomerID", customerID);
+                this.AddSPIntParam("@BranchID", branchID);
                 this.AddSPIntParam("@UserID", userID);
                 this.AddSPReturnIntParam("@return");
                 using (SqlDataReader reader = this.ExecuteSelectSP(spName))
                 {
-                    dropdowns = string.Empty;
                     while (reader.Read())
                     {
-                        dropdowns += reader.GetString(0);
+                        customerList.JSonstring += reader.GetString(0);
                     }
-
-                    invoicePickLists.AccountSeries = Newtonsoft.Json.JsonConvert.DeserializeObject<List<PickList>>(dropdowns);
-
-                    reader.NextResult();
-
-                    dropdowns = string.Empty;
-                    while (reader.Read())
-                    {
-                        dropdowns += reader.GetString(0);
-                    }
-
-                    invoicePickLists.InvoiceLessCategory = Newtonsoft.Json.JsonConvert.DeserializeObject<List<PickList>>(dropdowns);
-
-                    reader.NextResult();
-
-                    dropdowns = string.Empty;
-                    while (reader.Read())
-                    {
-                        dropdowns += reader.GetString(0);
-                    }
-
-                    invoicePickLists.InvoiceTaxCategory = Newtonsoft.Json.JsonConvert.DeserializeObject<List<PickList>>(dropdowns);
-
-                    reader.NextResult();
-                    dropdowns = string.Empty;
-                    while (reader.Read())
-                    {
-                        dropdowns += reader.GetString(0);
-                    }
-
-                    invoicePickLists.Masters = Newtonsoft.Json.JsonConvert.DeserializeObject<List<EmployeePositions>>(dropdowns);
-
-                    reader.NextResult();
-                    dropdowns = string.Empty;
-                    while (reader.Read())
-                    {
-                        dropdowns += reader.GetString(0);
-                    }
-
-                    invoicePickLists.Designers = Newtonsoft.Json.JsonConvert.DeserializeObject<List<EmployeePositions>>(dropdowns);
-
-                    reader.NextResult();
-
-                    dropdowns = string.Empty;
-                    while (reader.Read())
-                    {
-                        dropdowns += reader.GetString(0);
-                    }
-
-                    invoicePickLists.SalesReps = Newtonsoft.Json.JsonConvert.DeserializeObject<List<EmployeePositions>>(dropdowns);
-
 
                     reader.Close();
                 }
@@ -894,17 +998,16 @@ namespace DAL.DBManager
 
                 switch (retcode)
                 {
-                    case 1:
-                        ret = true;
+                    case 1: ret = true;
                         break;
-                    default:
-                        SetError(-1, "Failed to get Invoice dropdowns. Please try again later");
+                    default: SetError(-1, "Failed to get Invoice List. Please try again later");
                         break;
                 }
             }
             catch (Exception ex)
             {
                 ret = false;
+                SetError(-1, "Failed to get Invoice List. Please try again later");
                 Utils.Write(ex);
             }
             finally
@@ -914,56 +1017,6 @@ namespace DAL.DBManager
             }
             return ret;
         }
-        public bool CreateNewInvoice(int companyID, int userID, int customerBranch, ref CustomerInvoice customerInvoice, ref List<CustomerInvoiceList> customerInvoiceList, out string billNumber)
-        {
-            bool ret = false;
-            billNumber = string.Empty;
-            try
-            {
-                this.Connect(this.GetConnString());
-                string spName = "CreateNewInvoice";
-                this.ClearSPParams();
-                this.AddSPIntParam("@companyID", companyID);
-                this.AddSPIntParam("@CustomerBranchID", customerBranch);
-                this.AddSPIntParam("@UserID", userID);
-                this.AddSPStringParam("@customerInvoiceObj", Newtonsoft.Json.JsonConvert.SerializeObject(customerInvoice));
-                this.AddSPStringParam("@customerInvoiceList", Newtonsoft.Json.JsonConvert.SerializeObject(customerInvoiceList));
-                this.AddSPReturnIntParam("@return");
-                this.AddSPStringParamOut("@BillNumber", 100);
-                this.ExecuteNonSP(spName);
-                int retcode = this.GetOutValueInt("@return");
-
-                switch (retcode)
-                {
-                    case 1:
-                        ret = true;
-                        billNumber = this.GetOutValueString("@BillNumber");
-                        break;
-                    case -2:
-                        SetError(-2, "Mandatory fileds are not entered. Failed to create Invoice.");
-                        break;
-                    case -3:
-                        SetError(-3, "Invoice Item lists are empty. Failed to create Invoice.");
-                        break;
-                    default:
-                        SetError(-1, "Failed to create Invoice..Please try again later");
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                ret = false;
-                SetError(-1, "Failed to create Invoice.Please try again later");
-                Utils.Write(ex);
-            }
-            finally
-            {
-                this.ClearSPParams();
-                this.Disconnect();
-            }
-            return ret;
-        }
-
 
     }
 }

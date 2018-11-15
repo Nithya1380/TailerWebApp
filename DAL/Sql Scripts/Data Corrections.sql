@@ -84,25 +84,27 @@ BEGIN TRAN
 
 ROLLBACK TRAN
 
-Go
 BEGIN TRAN
-	INSERT INTO PermissionListMaster(PermissionIndexID, ParentPermissionIndexID, PermissionDesc, IsMenu)
-	VALUES
-		(1,	NULL,'Account',	1),
-		(2,	NULL,'Customer List',1),
-		(3,	NULL,'Users & Role',1),
-		(4,	NULL,'Setup',1),
-		(14,4,'Company & Branch',1),
-		(15,4,'Item Master',1),
-		(5,	NULL,'Company & Branch Setup',0),
-		(6,	NULL,'Account',0),
-		(7,	NULL,'Billing',0),
-		(8,	5,'Modify Company Info',0),
-		(9,	5,'Modify Branch Info',0),
-		(10,6,'Create customer',0),
-		(11,6,'Modify Customer',0),
-		(12,7,'Create Invoice',0),
-		(13,7,'Modfiy Invoice',0),
-		(16, NULL, 'Employee', 1),
-		(17, NULL, 'Measurements', 1)
-ROLLBACK
+   DECLARE @PickListID INT
+   INSERT INTO PickListMaster(PickListName) VALUES('InvoicePaymentMethod')
+
+   SELECT @PickListID=SCOPE_IDENTITY()
+   INSERT INTO PickListValues(PickListMasterID,PickListLabel,PickListValue)
+   VALUES(@PickListID,'Cash','Cash'),(@PickListID,'Credit Card','Credit Card'),(@PickListID,'Debit Card','Debit Card')
+
+ROLLBACK TRAN
+
+BEGIN TRAN
+   DECLARE @PickListID INT
+   INSERT INTO PickListMaster(PickListName) VALUES('InvoiceLessCategory')
+
+   SELECT @PickListID=SCOPE_IDENTITY()
+   INSERT INTO PickListValues(PickListMasterID,PickListLabel,PickListValue)
+   VALUES(@PickListID,'On A/C. Cash','On A/C. Cash'),(@PickListID,'Goods Return','Goods Return')
+   ,(@PickListID,'Complain','Complain'),(@PickListID,'On A/C. Cr.Card','On A/C. Cr.Card'),(@PickListID,'Other','Other')
+
+ROLLBACK TRAN
+
+
+
+

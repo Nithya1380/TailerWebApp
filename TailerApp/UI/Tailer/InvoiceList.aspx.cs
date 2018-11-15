@@ -11,7 +11,7 @@ using TailerApp.Common;
 
 namespace TailerApp.UI.Tailer
 {
-    public partial class MeasurementList : PageBase
+    public partial class InvoiceList : PageBase
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -19,29 +19,28 @@ namespace TailerApp.UI.Tailer
         }
 
         [WebMethod]
-        public static JsonResults GetMeasurementList()
+        public static JsonResults GetInvoiceList()
         {
-            JsonResults MeasurList = new JsonResults();
+            JsonResults invoiceList = new JsonResults();
             LoginUser currentUser;
             try
             {
                 if (!GetUserSession(out currentUser))
                 {
-                    MeasurList.ErrorCode = 1001;
-                    MeasurList.ErrorMessage = "";
-                    return MeasurList;
+                    invoiceList.ErrorCode = -1001;
+                    invoiceList.ErrorMessage = "";
                 }
 
                 CustomerManager customerObj = new CustomerManager();
-                if (customerObj.GetMeasurementList(currentUser.CompanyID, currentUser.UserId, out MeasurList))
+                if (customerObj.GetInvoiceList(currentUser.CompanyID, currentUser.UserId, out invoiceList))
                 {
-                    MeasurList.ErrorCode = 0;
-                    MeasurList.ErrorMessage = "";
+                    invoiceList.ErrorCode = 0;
+                    invoiceList.ErrorMessage = "";
                 }
                 else
                 {
-                    MeasurList.ErrorCode = -1;
-                    MeasurList.ErrorMessage = "Failed to get Employee List. please try again later";
+                    invoiceList.ErrorCode = -1;
+                    invoiceList.ErrorMessage = "Failed to get Invoice List. please try again later";
                 }
             }
             catch (Exception ex)
@@ -49,7 +48,7 @@ namespace TailerApp.UI.Tailer
                 Utils.Write(ex);
             }
 
-            return MeasurList;
+            return invoiceList;
         }
     }
 }

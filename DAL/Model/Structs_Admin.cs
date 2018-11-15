@@ -46,7 +46,6 @@ namespace DAL.Model
         public string Users { get; set; }
         public string RoleName { get; set; }
         public string EmployeeList { get; set; }
-        public int HomePage { get; set; } 
     }
 
     public class Struct_Employee : JSONReturnData

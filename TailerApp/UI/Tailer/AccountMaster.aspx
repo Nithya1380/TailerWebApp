@@ -281,7 +281,7 @@
                                             <div class="col-sm-4">
                                                 <select class="form-control" id="drpCategory" data-ng-model="customerMaster.CustomerAccount.AccountCategory"
                                                     data-ng-options="custCat.PickListValue as custCat.PickListLabel for custCat in CustomerPickLists.AccountCategory track by custCat.PickListValue">
-                                                    <option value="">Select Category</option>
+                                                    <option value="null">Select Category</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -336,13 +336,13 @@
                                                         <div class="form-group row">
                                                             <label for="txtBirthDate" class="col-sm-2 lbl-text-right">Birth Date</label>
                                                             <div class="col-sm-4">
-                                                                <datepicker date-format="dd/MM/yyyy">
+                                                                <datepicker date-format="MM/dd/yyyy">
                                                                 <input type="text" class="form-control" name="txtBirthDate" id="txtBirthDate" placeholder="Birth Date" title="enter Birth Date." data-ng-model="customerMaster.Customer.BirthDate"/>
                                                                 </datepicker>
                                                              </div>
                                                             <label for="txtOpenDate" class="col-sm-2 lbl-text-right">Open Date</label>
                                                             <div class="col-sm-4">
-                                                                <datepicker date-format="dd/MM/yyyy">
+                                                                <datepicker date-format="MM/dd/yyyy">
                                                                 <input type="text" class="form-control" name="txtOpenDate" id="txtOpenDate" placeholder="Open Date" title="enter Open Date." data-ng-model="customerMaster.Customer.OpenDate"/>
                                                                 <datepicker>
                                                             </div>
@@ -413,7 +413,7 @@
                                                             </div>
                                                             <label for="txtAnnDate" class="col-sm-2 lbl-text-right">Ann Date</label>
                                                             <div class="col-sm-4">
-                                                                <datepicker date-format="dd/MM/yyyy">
+                                                                <datepicker date-format="MM/dd/yyyy">
                                                                 <input type="text" class="form-control" name="txtAnnDate" id="txtAnnDate" placeholder="Ann Date" title="Enter Ann Date." data-ng-model="customerMaster.Customer.AnnDate" />
                                                                 </datepicker>
                                                             </div>
@@ -500,7 +500,7 @@
                                                         <div class="form-group row">
                                                             <label for="txtCreatedDate" class="col-sm-2 lbl-text-right">Created Date</label>
                                                             <div class="col-sm-4">
-                                                                <datepicker date-format="dd/MM/yyyy">
+                                                                <datepicker date-format="MM/dd/yyyy">
                                                                 <input type="text" class="form-control" name="txtCreatedDate" id="txtCreatedDate" placeholder="Created Date"  data-ng-model="customerMaster.CustomerAccount.AccountCreatedDate" />
                                                                 <datepicker>
                                                              </div>
@@ -592,7 +592,7 @@
                                                             </div>
                                                             <label for="txtSupplierCSTDate" class="col-sm-2 lbl-text-right">CST Date</label>
                                                             <div class="col-sm-4">
-                                                                <datepicker date-format="dd/MM/yyyy">
+                                                                <datepicker date-format="MM/dd/yyyy">
                                                                 <input type="text" class="form-control" name="txtSupplierCSTDate" id="txtSupplierCSTDate" placeholder="CST Date" data-ng-model="customerMaster.CustomerSupply.CSTDate" />
                                                                 <datepicker >
                                                             </div>
@@ -604,7 +604,7 @@
                                                             </div>
                                                             <label for="txtSupplierSTDate" class="col-sm-2 lbl-text-right">ST Date</label>
                                                             <div class="col-sm-4">
-                                                                <datepicker date-format="dd/MM/yyyy">
+                                                                <datepicker date-format="MM/dd/yyyy">
                                                                 <input type="text" class="form-control" name="txtSupplierSTDate" id="txtSupplierSTDate" placeholder="ST Date" data-ng-model="customerMaster.CustomerSupply.STDate" />
                                                                 <datepicker>
                                                             </div>
