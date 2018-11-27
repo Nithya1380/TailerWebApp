@@ -55,14 +55,80 @@
 
     <script type="text/javascript" language="javascript">
 
-        var test = angular.module("Test", []);
+        var MeasurementID = "<%=MeasurementID%>";
 
-        test.controller('testcontroller', ['$scope', '$window', '$http', '$rootScope', '$filter', function ($scope, $window, $http, $rootScope, $filter) {
-            debugger
-            $scope.PayerDropDownSetting = {
-                AllIDsReq: true,
-                IsDisabled: false
+        var tailerApp = angular.module("TailerApp", []);
+
+        tailerApp.controller('PrintMeasurementController', ['$scope', '$window', '$http', '$rootScope', '$filter', function ($scope, $window, $http, $rootScope, $filter) {
+            $scope.MeasurementID = $window.MeasurementID;
+            $scope.MeasurementDetails = {};
+            $scope.MeasurementField = [];
+            $scope.CompanyInfo = {};
+
+            $scope.GetMeasurementMaster = function () {
+                $scope.MeasurementDetails = {};
+
+                $http({
+                    method: "POST",
+                    url: "Measurement.aspx/GetMeasurementMaster",
+                    data: { MeasurMasterID: $scope.MeasurementID },
+                    dataType: "json",
+                    headers: { "Content-Type": "application/json" }
+                }).then(function onSuccess(response) {
+                    if (response.data.d.ErrorCode == 1001) {
+                        $window.SessionOut();
+                        return false;
+                    }
+                    if (response.data.d.ErrorCode != 0) {
+                        alert(response.data.d.ErrorMessage);
+                        return false;
+                    }
+
+                    if (response.data.d.JSonstring2 != null && response.data.d.JSonstring2 != "")
+                        $scope.MeasurementField = JSON.parse(response.data.d.JSonstring2);
+
+                    if (response.data.d.JSonstring != null && response.data.d.JSonstring != "") {
+                        $scope.MeasurementDetails = JSON.parse(response.data.d.JSonstring)[0];
+                    }
+
+
+                }, function onFailure(error) {
+
+                });
             };
+
+
+            $scope.GetCompanyInfo = function () {
+                $scope.CompanyInfo = {};
+
+                $http({
+                    method: "POST",
+                    url: "Measurement.aspx/GetCompanyInfo",
+                    data: {},
+                    dataType: "json",
+                    headers: { "Content-Type": "application/json" }
+                }).then(function onSuccess(response) {
+                    if (response.data.d.ErrorCode == 1001) {
+                        //$window.SessionOut();
+                        return false;
+                    }
+                    if (response.data.d.ErrorCode != 0) {
+                        alert(response.data.d.ErrorMessage);
+                        return false;
+                    }
+
+                    if (response.data.d.JSonstring != null && response.data.d.JSonstring != "") {
+                        $scope.CompanyInfo = JSON.parse(response.data.d.JSonstring)[0];
+                    }
+
+
+                }, function onFailure(error) {
+
+                });
+            };
+
+            $scope.GetCompanyInfo();
+            $scope.GetMeasurementMaster();
 
             $scope.PerList
                 = [{ name: 'Menu1', id: [{ val: '5.00' }, { val: 6 }, { val: 7 }], isRep: true, orderby: 1 },
@@ -96,73 +162,74 @@
     </script>
 </head>
 <body>
-    <div ng-app="Test">
-        <div ng-controller="testcontroller">
+    <div ng-app="TailerApp">
+        <div ng-controller="PrintMeasurementController">
             <br>
             <div id="exportthis">
                 <div class="row">
                     <div class="col-sm-12">
-                        <h4 class="lableHed">Company Name</h4>
+                        <h4 class="lableHed">{{CompanyInfo.CompanyName}}<span> ({{CompanyInfo.BranchName}}) </span></h4>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        <h6 class="lableAdd">BTM, 2nd Stage, Bangalore, KA</h6>
+                        <h6 class="lableAdd">{{CompanyInfo.Address1}}, {{CompanyInfo.Address2}},</h6>
+                        <h6 class="lableAdd">{{CompanyInfo.City}}, {{CompanyInfo.State}}-{{CompanyInfo.Pincode}}</h6>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        <h6 class="lableAdd">Contect: 456285632</h6>
+                        <h6 class="lableAdd">Ph: {{CompanyInfo.OfficePhoneNo}},{{CompanyInfo.HomePhoneNo}}</h6>
                     </div>
                 </div>
                 <div style="border: 1px black solid; margin: 5px;">
                     <div class="row" style="margin-left: 5px;">
                         <div class="col-sm-4">
-                            <label class="lblInfotit">Account Code:</label><label class="lblInfoval">9142923770</label>
+                            <label class="lblInfotit">Account Code:</label><label class="lblInfoval">{{MeasurementDetails.Account.AccountCode}}</label>
                         </div>
                         <div class="col-sm-4">
-                            <label class="lblInfotit">Measu No:</label><label class="lblInfoval">123</label>
+                            <label class="lblInfotit">Measu No:</label><label class="lblInfoval">{{MeasurementDetails.MeasuNo}}</label>
                         </div>
                         <div class="col-sm-4">
-                            <label class="lblInfotit">Created Date:</label><label class="lblInfoval">10/11/2018</label>
-                        </div>
-                    </div>
-                    <div class="row" style="margin-left: 5px;">
-                        <div class="col-sm-4">
-                            <label class="lblInfotit">Account Name:</label><label class="lblInfoval">Mahesh Patidar</label>
+                            <label class="lblInfotit">Created Date:</label><label class="lblInfoval">{{MeasurementDetails.MeasCreatedOn}}</label>
                         </div>
                     </div>
                     <div class="row" style="margin-left: 5px;">
                         <div class="col-sm-4">
-                            <label class="lblInfotit">Item:</label><label class="lblInfoval">Shirt</label>
+                            <label class="lblInfotit">Account Name:</label><label class="lblInfoval">{{MeasurementDetails.Account.AccountName}}</label>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-left: 5px;">
+                        <div class="col-sm-4">
+                            <label class="lblInfotit">Item:</label><label class="lblInfoval">{{MeasurementDetails.SelectedItem.ItemDescription}}</label>
                         </div>
                     </div>
                     <div class="row" align="center">
                         <div class="col-sm-11 divborder"></div>
                     </div>
                     <div class="row" style="padding: 0px 25px;">
-                        <div class="col-sm-1" ng-repeat="Per in PerList">
-                            <label class="lableMes">{{Per.name}}</label>
-                            <div ng-repeat="id in Per.id" style="padding-left: 20px; padding-bottom: 5px;">
+                        <div class="col-sm-1" ng-repeat="Per in MeasurementField">
+                            <label class="lableMes">{{Per.FieldName}}</label>
+                            <div ng-repeat="id in Per.FieldValue" style="padding-left: 20px; padding-bottom: 5px;">
                                 <label class="lableval">{{id.val}}</label>
                             </div>
                         </div>
                     </div>
                     <div class="row" style="margin-left: 5px;">
                         <div class="col-sm-4">
-                            <label class="lblInfotit">Trial Date:</label><label class="lblInfoval">15/11/2018</label>
+                            <label class="lblInfotit">Trial Date:</label><label class="lblInfoval">{{MeasurementDetails.TrialDate}}</label>
                         </div>
                         <div class="col-sm-4">
-                            <label class="lblInfotit">Deli Date:</label><label class="lblInfoval">18/11/2018</label>
+                            <label class="lblInfotit">Deli Date:</label><label class="lblInfoval">{{MeasurementDetails.DeliDate}}</label>
                         </div>
                         <div class="col-sm-4">
-                            <label class="lblInfotit">Date:</label><label class="lblInfoval">10/11/2018</label>
+                            <label class="lblInfotit">Date:</label><label class="lblInfoval">{{MeasurementDetails.MeasDate}}</label>
                         </div>
                         <div class="col-sm-4">
-                            <label class="lblInfotit">Qty:</label><label class="lblInfoval">1</label>
+                            <label class="lblInfotit">Qty:</label><label class="lblInfoval">{{MeasurementDetails.Qty}}</label>
                         </div>
                         <div class="col-sm-4">
-                            <label class="lblInfotit">Weight:</label><label class="lblInfoval"></label>
+                            <label class="lblInfotit">Weight:</label><label class="lblInfoval">{{MeasurementDetails.MeasWeight}}</label>
                         </div>
                     </div>
                 </div>

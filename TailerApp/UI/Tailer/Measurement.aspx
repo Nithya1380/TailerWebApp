@@ -76,7 +76,7 @@
                         //$scope.AccountCode = $scope.MeasurementDetails.AccountID;
                     }                   
 
-                    $scope.SelectedItem = $scope.MeasurementDetails.SelectedItem;
+                    $scope.SelectedItem = angular.copy($scope.MeasurementDetails.SelectedItem);
 
                 }, function onFailure(error) {
 
@@ -126,10 +126,14 @@
 
                 $scope.MeasurementField.forEach(function (item, index) {
                     var FValue = "";
-                    $scope.MeasurementField[index].FieldValue.forEach(function (_item, _index) {
-                        if (_item.val != '' && _item.val != null && _item.val != undefined)
-                            FValue += _item.val + ",";
-                    });
+                    if ($scope.MeasurementField[index].FieldValue != "" && $scope.MeasurementField[index].FieldValue != null && $scope.MeasurementField[index].FieldValue != undefined) {
+                        if ($scope.MeasurementField[index].FieldValue.length > 0) {
+                            $scope.MeasurementField[index].FieldValue.forEach(function (_item, _index) {
+                                if (_item.val != '' && _item.val != null && _item.val != undefined)
+                                    FValue += _item.val + ",";
+                            });
+                        }
+                    }
                     $scope.MeasurementField[index].FValue = FValue;
                 });
 
@@ -258,6 +262,10 @@
                 Obj.$parent.Per.FieldValue.push({ val: 0 });
             }
 
+            $scope.RemoveItemToList = function (Obj, i) {
+                Obj.$parent.Per.FieldValue.splice(i, 1);
+            }
+
             $scope.onSelect = function ($item, $model, $label, Obj) {
                 return false;
             }
@@ -328,7 +336,7 @@
                                     <button class="client_btn" type="button" ng-click="onClose();" data-toggle="dropdown" style="border-color: #FFA87D !important; background-color: #FFA87D">
                                         <i class="fa fa-close"></i>Close
                                     </button>
-                                    <button class="client_btn" type="button" ng-click="PrintMeasurementMaster();" data-toggle="dropdown" style="border-color: #766DE9 !important; background-color: #766DE9">
+                                    <button class="client_btn" type="button" ng-show="MeasurementID>0" ng-click="PrintMeasurementMaster();" data-toggle="dropdown" style="border-color: #766DE9 !important; background-color: #766DE9">
                                         <i class="fa fa-print"></i>Print
                                     </button>
                                 </div>
@@ -446,8 +454,9 @@
                                                  <div class="col-sm-4" ng-repeat="Per in MeasurementFieldfilter(SelectedItem.ItemGroup);">
                                                      <label for="drpSex" class="lbl-text-right">{{Per.FieldName}}</label>
 			                                        <div ng-repeat="id in Per.FieldValue" style="padding-left: 20px; padding-bottom: 5px;">
-				                                        <input type="number"  class="form-control" ng-model="id.val" style="text-align: right; width:50%;" />
-				                                        <i ng-show="$last && $parent.Per.isRrepeat" class="fa fa-plus-square" ng-click="AddItemToList(this)"></i>
+				                                        <input type="number"  class="form-control" ng-model="id.val" style="text-align: right; width:50%; display:initial;" />
+                                                        <i class="fa fa-remove" ng-click="RemoveItemToList(this, $index)"></i>
+				                                        <i ng-show="$last && $parent.Per.isRrepeat" style="display:block;" class="fa fa-plus-square" ng-click="AddItemToList(this)"></i>
 			                                        </div>
 		                                          </div>
                                              </div>

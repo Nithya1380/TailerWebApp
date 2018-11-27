@@ -16,7 +16,7 @@
 
                 $http({
                     method: "POST",
-                    url: "InvoiceList.aspx/CreateNewInvoice",
+                    url: "InvoiceList.aspx/GetInvoiceList",
                     data: {},
                     dataType: "json",
                     headers: { "Content-Type": "application/json" }
@@ -42,11 +42,11 @@
                 $window.location.href = "CreateInvoice.aspx?CustomerID=" + CustomerMasterID;
             };
 
-           
+
         });
 
         function RefreshinvoiceList() {
-            angular.element(document.getElementById('divMainContent')).scope().GetCustomerList();
+            angular.element(document.getElementById('divMainContent')).scope().GetInvoiceList();
             // displayVendorList(vendorId);
         }
     </script>
@@ -57,8 +57,9 @@
             <div>&nbsp;</div>
         </div>
         <div class="row">
-            <div class="col-lg-2 col-md-2 col-sm-2 pull-right" style="margin-bottom:5px;display:none">
-                <button class="btn btn-lg btn-success" type="button" data-ng-click="OnAddNewCustomerClick();"><i class="fas fa-plus-square"></i>&nbsp;Add New</button>
+            <div class="col-lg-4 col-md-4 col-sm-2 pull-right" style="margin-bottom:5px;">
+                <button class="btn btn-lg btn-success" type="button" data-ng-click="GetInvoiceList();"><i class="fas fa-plus-square"></i>&nbsp;Display</button>
+                <button class="btn btn-lg btn-success" type="button" data-ng-click="onCustomerInvoiceClick(0);"><i class="fas fa-plus-square"></i>&nbsp;Add New</button>
             </div>
         </div>
         <div class="row">

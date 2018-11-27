@@ -568,6 +568,52 @@ namespace DAL.DBManager
             return ret;
         }
 
+
+        public bool GetCompanyHeaderInfo(int companyID, int userID, int Location, out JsonResults Measu)
+        {
+            Measu = new JsonResults();
+            bool ret = false;
+
+            try
+            {
+                this.Connect(this.GetConnString());
+                string spName = "GetCompanyHeaderInfo";
+                this.ClearSPParams();
+                this.AddSPIntParam("@CompanyID", companyID);
+                this.AddSPIntParam("@user", userID);
+                this.AddSPIntParam("@location", Location);
+
+                using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+                {
+                    while (reader.Read())
+                    {
+                        if (!reader.IsDBNull(0))
+                            Measu.JSonstring = reader.GetString(0);
+                    }
+                    reader.Close();
+                }
+                int retcode = this.GetOutValueInt("@return");
+                switch (retcode)
+                {
+                    case 0: ret = true;
+                        break;
+
+                    default: SetError(-1, "Failed to get Company Header Info. Please try again later");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = false;
+                Utils.Write(ex);
+            }
+            finally
+            {
+                this.ClearSPParams();
+                this.Disconnect();
+            }
+            return ret;
+        }
         public bool SaveMeasurementMaster(int CompanyID, int User, int MeasurementMasterID, string Measurement, string MeasurementField, out JsonResults Measu)
         {
             bool ret = false;
@@ -857,6 +903,17 @@ namespace DAL.DBManager
                     }
 
                     invoicePickLists.InvoiceTaxCategory = Newtonsoft.Json.JsonConvert.DeserializeObject<List<PickList>>(dropdowns);
+
+
+                    reader.NextResult();
+
+                    dropdowns = string.Empty;
+                    while (reader.Read())
+                    {
+                        dropdowns += reader.GetString(0);
+                    }
+
+                    invoicePickLists.InvoicePaymentMethod = Newtonsoft.Json.JsonConvert.DeserializeObject<List<PickList>>(dropdowns);
 
                     reader.NextResult();
                     dropdowns = string.Empty;
