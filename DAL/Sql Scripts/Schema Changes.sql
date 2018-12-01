@@ -668,3 +668,26 @@ ROLLBACK TRAN
 ALTER TABLE MeasurementFieldMaster ADD ItemGroup VARCHAR(50)
 
 UPDATE MeasurementFieldMaster SET ItemGroup = 'Top'
+
+--added On 01st Dec 2018
+BEGIN TRAN
+  
+CREATE TABLE ItemRates
+(  
+    ItemRateID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	ItemMasterID INT NOT NULL,
+	CompanyID INT NOT NULL,
+	ItemPrice MONEY,
+	StartDate DATE,
+	EndDate DATE,
+	isDeleted BIT,
+    CreatedOn DATETIME,
+    CreatedBy INT,
+    DeletedOn DATETIME,
+    DeletedBy INT,
+	CONSTRAINT FK_ItemRates_ItemMasterID FOREIGN KEY(ItemMasterID) REFERENCES ItemMaster(ItemmasterID),
+	CONSTRAINT FK_ItemRates_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID),
+	CONSTRAINT FK_ItemRates_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID),
+	CONSTRAINT FK_ItemRates_DeletedBy FOREIGN KEY(DeletedBy) REFERENCES Users(UserID)
+)
+ROLLBACK TRAN

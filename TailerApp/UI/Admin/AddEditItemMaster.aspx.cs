@@ -118,5 +118,71 @@ namespace TailerApp.UI.Admin
 
             return returnObj;
         }
+
+        [WebMethod]
+        public static JsonResults GetItemRatesList(int ItemMasterID, int ItemRateID)
+        {
+            JsonResults invoiceList = new JsonResults();
+            LoginUser currentUser;
+            try
+            {
+                if (!GetUserSession(out currentUser))
+                {
+                    invoiceList.ErrorCode = -1001;
+                    invoiceList.ErrorMessage = "";
+                }
+
+                CustomerManager customerObj = new CustomerManager();
+                if (customerObj.GetItemMasterRates(currentUser.CompanyID, currentUser.UserId, ItemMasterID,ItemRateID, out invoiceList))
+                {
+                    invoiceList.ErrorCode = 0;
+                    invoiceList.ErrorMessage = "";
+                }
+                else
+                {
+                    invoiceList.ErrorCode = -1;
+                    invoiceList.ErrorMessage = "Failed to get Item Rates. please try again later";
+                }
+            }
+            catch (Exception ex)
+            {
+                Utils.Write(ex);
+            }
+
+            return invoiceList;
+        }
+
+        [WebMethod]
+        public static JsonResults AddEditItemRate(string StartDate, string ItemPrice, int ItemRateID, int itemMasterID)
+        {
+            JsonResults invoiceList = new JsonResults();
+            LoginUser currentUser;
+            try
+            {
+                if (!GetUserSession(out currentUser))
+                {
+                    invoiceList.ErrorCode = -1001;
+                    invoiceList.ErrorMessage = "";
+                }
+
+                AdminManagerSP customerObj = new AdminManagerSP();
+                if (customerObj.AddEditItemRate(currentUser.CompanyID, currentUser.UserId, ItemRateID, itemMasterID, ItemPrice, StartDate))
+                {
+                    invoiceList.ErrorCode = 0;
+                    invoiceList.ErrorMessage = "";
+                }
+                else
+                {
+                    invoiceList.ErrorCode = customerObj.GetLastErrorCode();
+                    invoiceList.ErrorMessage = customerObj.GetLastError();
+                }
+            }
+            catch (Exception ex)
+            {
+                Utils.Write(ex);
+            }
+
+            return invoiceList;
+        }
     }
 }

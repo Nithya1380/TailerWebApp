@@ -275,4 +275,5 @@ namespace DAL.Model
         public string AmountPending { get; set; }
 
     }
+
 }

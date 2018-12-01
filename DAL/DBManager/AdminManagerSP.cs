@@ -1001,6 +1001,50 @@ namespace DAL.DBManager
            return ret;
        }
 
+       public bool AddEditItemRate(int companyID, int userID, int ItemRateID, int itemMasterID, string ItemPrice, string StartDate)
+       {
+           bool ret = false;
+
+           try
+           {
+               this.Connect(this.GetConnString());
+               string spName = "AddEditItemRate";
+               this.ClearSPParams();
+               this.AddSPIntParam("@companyID", companyID);
+               this.AddSPIntParam("@UserID", userID);
+               this.AddSPIntParam("@ItemMasterID", itemMasterID);
+               this.AddSPIntParam("@ItemRateID", ItemRateID);
+               this.AddSPStringParam("@StartDate", StartDate);
+               this.AddSPStringParam("@ItemPrice", ItemPrice);
+               this.AddSPReturnIntParam("@return");
+               this.ExecuteNonSP(spName);
+               int retcode = this.GetOutValueInt("@return");
+
+               switch (retcode)
+               {
+                   case 1: ret = true;
+                       break;
+                   case -2: SetError(-2, "Cannot have Overlapping Dates!");
+                       break;
+                   case -3: SetError(-3, "Cannot have Overlapping Dates!");
+                       break;
+                   default: SetError(-1, "Failed to add/Edit Item Rate. Please try again later");
+                       break;
+               }
+           }
+           catch (Exception ex)
+           {
+               ret = false;
+               SetError(-1, "Failed to add/Edit Item Rate. Please try again later");
+               Utils.Write(ex);
+           }
+           finally
+           {
+               this.ClearSPParams();
+               this.Disconnect();
+           }
+           return ret;
+       }
 
     }
 }

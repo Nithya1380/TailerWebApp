@@ -1069,5 +1069,54 @@ namespace DAL.DBManager
             return ret;
         }
 
+        public bool GetItemMasterRates(int companyID, int userID, int ItemMasterID, int ItemRateID, out JsonResults itemRateList)
+        {
+            itemRateList = new JsonResults();
+            bool ret = false;
+
+            try
+            {
+                this.Connect(this.GetConnString());
+                string spName = "GetItemRates";
+                this.ClearSPParams();
+                this.AddSPIntParam("@companyID", companyID);
+                this.AddSPIntParam("@ItemMasterID", ItemMasterID);
+                this.AddSPIntParam("@ItemRateID", ItemRateID);
+                this.AddSPIntParam("@UserID", userID);
+                this.AddSPReturnIntParam("@return");
+                using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+                {
+                    while (reader.Read())
+                    {
+                        itemRateList.JSonstring += reader.GetString(0);
+                    }
+
+                    reader.Close();
+                }
+
+                int retcode = this.GetOutValueInt("@return");
+
+                switch (retcode)
+                {
+                    case 1: ret = true;
+                        break;
+                    default: SetError(-1, "Failed to get Item Rates. Please try again later");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = false;
+                SetError(-1, "Failed to get Item Rates. Please try again later");
+                Utils.Write(ex);
+            }
+            finally
+            {
+                this.ClearSPParams();
+                this.Disconnect();
+            }
+            return ret;
+        }
+
     }
 }

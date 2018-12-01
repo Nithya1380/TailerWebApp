@@ -8,16 +8,17 @@
     <script src="../../Scripts/AngularJS/angular.js"></script>
     <link href="../../Scripts/angular-datepicker.css" rel="stylesheet" />
     <script src="../../Scripts/angular-datepicker.js"></script>
+    
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
         <script src="<%: ResolveUrl("~/Scripts/jquery-1.10.2.js") %>"></script>
         <script src="<%: ResolveUrl("~/Scripts/jquery-1.10.2.min.js") %>"></script>
         <script src="<%: ResolveUrl("~/Scripts/jquery-1.10.2.ui.js") %>"></script>
     </asp:PlaceHolder>
-
+    <script src="../../Scripts/bootstrap.min.js"></script>
     <webopt:bundlereference runat="server" path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"  />
    
     <script type="text/javascript">
         var gb_ItemMasterID='<%=ItemMasterID%>';
@@ -30,11 +31,19 @@
             $scope.CustomerError = "";
             $scope.AlertClass = "alert-danger";
             $scope.EnableSave = true;
+            $scope.ItemRateLists = {};
+            $scope.ItemRates = {};
+            $scope.ShowErrorRate = false;
+            $scope.RateSaveDisabled = false;
 
             $scope.init = function () {
                 $scope.GetItemGroups();
-                if ($scope.ItemMasterID!=0)
+                if ($scope.ItemMasterID != 0)
+                {
                     $scope.GetItemMasterDetails();
+                    $scope.GetItemRateList();
+                }
+                   
             }
 
             $scope.GetItemGroups = function () {
@@ -121,6 +130,7 @@
                         $scope.AlertClass = "alert-success";
                         $scope.EnableSave = false;
                         $scope.RefreshItemMasterList();
+                        $scope.GetItemRateList();
                         return false;
                     }
 
@@ -160,6 +170,118 @@
             $scope.RefreshItemMasterList = function () {
                 if ($window != null && $window.opener != null && (typeof $window.opener.RefreshItemMasterList == 'function'))
                     $window.opener.RefreshItemMasterList();
+            };
+
+            $scope.GetItemRateList = function () {
+                $scope.ItemRateLists = {};
+
+                $http({
+                    method: "POST",
+                    url: "AddEditItemMaster.aspx/GetItemRatesList",
+                    data: {ItemMasterID:$scope.ItemMasterID,ItemRateID:0},
+                    dataType: "json",
+                    headers: { contentType: "application/json" }
+                }).then(function onSuccess(response) {
+                    if (response.data.d.ErrorCode == -1001) {
+                        //Session Expired
+                        return false;
+                    }
+                    if (response.data.d.ErrorCode != 0) {
+                        alert(response.data.d.ErrorMessage);
+                        return false;
+                    }
+
+                    $scope.ItemRateLists = JSON.parse(response.data.d.JSonstring);
+
+                }, function onFailure(error) {
+
+                });
+            };
+
+            $scope.OnAddEditItemRateClick = function () {
+                $scope.ShowErrorRate = false;
+                $scope.CustomerErrorRate = "";
+
+                if (!$scope.ValidateAddRate())
+                    return false;
+
+                $http({
+                    method: "POST",
+                    url: "AddEditItemMaster.aspx/AddEditItemRate",
+                    data: {
+                        StartDate: $scope.ItemRates.StartDate, ItemPrice: $scope.ItemRates.ItemPrice, ItemRateID: $scope.ItemRates.ItemRateID == null ? 0 : $scope.ItemRates.ItemRateID,
+                        itemMasterID: $scope.ItemMasterID
+                    },
+                    dataType: "json",
+                    headers: { "Content-Type": "application/json" }
+                }).then(function onSuccess(response) {
+                    if (response.data.d.ErrorCode == -1001) {
+                        //Session Expired
+                        return false;
+                    }
+                    if (response.data.d.ErrorCode != 0) {
+                        $scope.ShowErrorRate = true;
+                        $scope.CustomerErrorRate = $sce.trustAsHtml(response.data.d.ErrorMessage);
+                        return false;
+                    }
+                    else {
+                        $scope.ShowErrorRate = true;
+                        $scope.CustomerErrorRate = $sce.trustAsHtml("Item Rate Saved Successfully!");
+                        $scope.AlertClass = "alert-success";
+                        $scope.GetItemRateList();
+                        return false;
+                    }
+
+                }, function onFailure(error) {
+                    $scope.ShowErrorRate = true;
+                    $scope.CustomerErrorRate = error;
+                });
+            };
+
+            $scope.ValidateAddRate = function () {
+                var errors = "";
+                if ($scope.ItemMasterID == 0 || $scope.ItemMaster.ItemCode == null) {
+                    errors = '<li>Item Is not yet added</li>';
+                }
+                if ($scope.ItemRates.StartDate == '' || $scope.ItemRates.StartDate == null) {
+                    errors += '<li>Start Date</li>';
+                }
+                
+                if ($scope.ItemRates.ItemPrice == '' || $scope.ItemRates.ItemPrice == null || isNaN($scope.ItemRates.ItemPrice) || parseInt($scope.ItemRates.ItemPrice) <= 0) {
+                    errors += '<li>Price</li>';
+                }
+
+
+                if (errors != "") {
+                    $scope.ShowErrorRate = true;
+                    $scope.CustomerErrorRate = $sce.trustAsHtml('<ul>' + errors + '</ul>');
+                    $scope.AlertClass = "alert-danger";
+                    return false;
+                }
+
+                return true;
+            };
+
+            $scope.OnAddEditItemRatePopUpClick = function (itemRate) {
+                if (itemRate == null || itemRate==undefined)
+                {
+                    $scope.ItemRates = {};
+                }
+                else {
+                    $scope.ItemRates.ItemRateID = itemRate.ItemRateID;
+
+                    if (itemRate.StartDate == 'From Begining')
+                    {
+                        $scope.RateSaveDisabled=true;
+                    }
+                    else {
+                        $scope.ItemRates.StartDate = itemRate.StartDate;
+                        $scope.RateSaveDisabled = false;
+                    }
+                    
+                    
+                    $scope.ItemRates.ItemPrice = itemRate.ItemPrice;
+                }
             };
         });
 
@@ -236,7 +358,94 @@
                            
                         </tbody>
                     </table>
-                    <div>
+                    <div style="padding-bottom:5px">
+                    </div>
+                     <div class="panel panel-info">
+                         <div class="panel-heading">
+                             <h3 class="panel-title">Item Rates</h3>
+                         </div>
+                         <div class="panel-body">
+                             <div class="row">
+                                 <span class="pull-right" style="margin-right:5px">
+                                     <button class="btn btn-lg btn-success" type="button" data-toggle="modal" data-target="#ItemRateModel" data-ng-click="OnAddEditItemRatePopUpClick(null)"><i class="fa fa fa-plus"></i></button>
+                                 </span>
+                                
+                             </div>
+                             <div class="row">
+                                 <div class="col-lg-12 col-md-12 col-sm-12">
+                                     <div class="card">
+                                         <div class="row">
+                                             <table class="table">
+                                                 <thead>
+                                                     <tr>
+                                                         <th>Start Date</th>
+                                                         <th>End Date</th>
+                                                         <th>Item Price</th>
+                                                         <th>Edit</th>
+                                                     </tr>
+                                                 </thead>
+                                                 <tbody data-ng-repeat="ItemRate in ItemRateLists">
+                                                     <tr>
+                                                         <td>{{ItemRate.StartDate}}</td>
+                                                         <td>{{ItemRate.EndDate}}</td>
+                                                         <td>{{ItemRate.ItemPrice}}</td>
+                                                         <td><a href="#" title="Edit Item" data-toggle="modal" data-target="#ItemRateModel" data-ng-click="OnAddEditItemRatePopUpClick(ItemRate)"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
+                                                     </tr>
+                                                 </tbody>
+                                             </table>
+                                         </div>
+                                     </div>
+                                 </div>
+
+                             </div>
+                         </div>
+                     </div>
+                </div>
+            </div>
+
+            <div id="ItemRateModel" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Add / Edit Rate</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card_content">
+                                <table style="width: 100%" class="profile_table">
+                                    <tr>
+                                        <td style="text-align: right" class="back_shade">
+                                            <span class="profileLabel"><span style="color: red">*</span> Start Date:</span>
+                                        </td>
+                                        <td>
+                                            <span class="profileLabel">
+                                                <datepicker date-format="dd/MM/yyyy">
+                                                      <input type="text" class="form-control" name="txtStartDate" id="txtStartDate" placeholder="Start Date" title="enter Start Date." data-ng-model="ItemRates.StartDate"/>
+                                                </datepicker>
+                                            </span>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right" class="back_shade">
+                                            <span class="profileLabel"><span style="color: red">*</span> Item Price:</span>
+                                        </td>
+                                        <td>
+                                            <span class="profileLabel">
+                                                <input type="text" data-ng-model="ItemRates.ItemPrice" class="form-control" style="width: 250px; margin-left: 5px;" required />
+                                                <input type="hidden" id="hdnItemRateID" value="ItemRates.ItemRateID" />
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="alert" data-ng-class="AlertClass" data-ng-show="ShowErrorRate">
+                              <span data-ng-bind-html="CustomerErrorRate" ></span>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-lg btn-success" type="button" data-ng-disabled="RateSaveDisabled" data-ng-click="OnAddEditItemRateClick();"><i class="fas fa-plus-square"></i>&nbsp;Save</button>
+                        </div>
                     </div>
                 </div>
             </div>
