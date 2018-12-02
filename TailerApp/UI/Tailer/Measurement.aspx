@@ -116,7 +116,7 @@
             $scope.GetItemList();
 
             $scope.MeasurementFieldfilter = function (group) {
-                return $scope.MeasurementField.filter(function (x) { return x.ItemGroup == group });
+                return $scope.MeasurementField.filter(function (x) { return x.ItemGroup == group || x.ItemGroup == 'Mix' });
             }
 
             $scope.SaveMeasurementMaster = function () {

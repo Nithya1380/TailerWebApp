@@ -91,6 +91,7 @@
                         $scope.MeasurementDetails = JSON.parse(response.data.d.JSonstring)[0];
                     }
 
+                    $scope.MeasurementField = $scope.MeasurementField.filter(function (x) { return x.ItemGroup == $scope.MeasurementDetails.SelectedItem.ItemGroup || x.ItemGroup == 'Mix' });
 
                 }, function onFailure(error) {
 
@@ -130,16 +131,16 @@
             $scope.GetCompanyInfo();
             $scope.GetMeasurementMaster();
 
-            $scope.PerList
-                = [{ name: 'Menu1', id: [{ val: '5.00' }, { val: 6 }, { val: 7 }], isRep: true, orderby: 1 },
-                     { name: 'Menu2', id: [{ val: 5 }, { val: 6.00 }, { val: 7 }], isRep: true, orderby: 2 },
-                     { name: 'Menu3', id: [{ val: 5 }, { val: 6.86 }, { val: '7.00' }], isRep: true, orderby: 3 },
-                     { name: 'Menu4', id: [{ val: 5.25 }, { val: 6 }, { val: 7 }], isRep: true, orderby: 4 },
-                     { name: 'Menu6', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true, orderby: 5 },
-                     { name: 'Menu7', id: [{ val: 5 }, { val: 6.56 }, { val: 7.52 }], isRep: true, orderby: 6 },
-                     { name: 'Menu8', id: [{ val: 5.56 }, { val: 6 }, { val: 7 }], isRep: true, orderby: 7 },
-                     { name: 'Menu9', id: [{ val: 0 }], isRep: false, orderby: 8 },
-                ];
+            //$scope.PerList
+            //    = [{ name: 'Menu1', id: [{ val: '5.00' }, { val: 6 }, { val: 7 }], isRep: true, orderby: 1 },
+            //         { name: 'Menu2', id: [{ val: 5 }, { val: 6.00 }, { val: 7 }], isRep: true, orderby: 2 },
+            //         { name: 'Menu3', id: [{ val: 5 }, { val: 6.86 }, { val: '7.00' }], isRep: true, orderby: 3 },
+            //         { name: 'Menu4', id: [{ val: 5.25 }, { val: 6 }, { val: 7 }], isRep: true, orderby: 4 },
+            //         { name: 'Menu6', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true, orderby: 5 },
+            //         { name: 'Menu7', id: [{ val: 5 }, { val: 6.56 }, { val: 7.52 }], isRep: true, orderby: 6 },
+            //         { name: 'Menu8', id: [{ val: 5.56 }, { val: 6 }, { val: 7 }], isRep: true, orderby: 7 },
+            //         { name: 'Menu9', id: [{ val: 0 }], isRep: false, orderby: 8 },
+            //    ];
 
             $scope.export = function () {
                 debugger
