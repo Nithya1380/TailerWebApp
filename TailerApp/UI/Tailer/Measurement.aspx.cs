@@ -54,7 +54,7 @@ namespace TailerApp.UI.Tailer
         }
 
         [WebMethod]
-        public static JsonResults GetMeasurementMaster(string MeasurMasterID)
+        public static JsonResults GetMeasurementMaster(string MeasurMasterID, bool isPrint)
         {
             JsonResults Measur = new JsonResults();
             LoginUser currentUser;
@@ -68,7 +68,7 @@ namespace TailerApp.UI.Tailer
                 }
 
                 CustomerManager adminObj = new CustomerManager();
-                if (!adminObj.GetMeasurementMaster(currentUser.CompanyID, currentUser.UserId, string.IsNullOrEmpty(MeasurMasterID) ? 0 : Convert.ToInt32(MeasurMasterID), out Measur))
+                if (!adminObj.GetMeasurementMaster(currentUser.CompanyID, currentUser.UserId, string.IsNullOrEmpty(MeasurMasterID) ? 0 : Convert.ToInt32(MeasurMasterID), out Measur, isPrint))
                 {
                     Measur.ErrorCode = adminObj.GetLastErrorCode();
                     Measur.ErrorMessage = adminObj.GetLastError();

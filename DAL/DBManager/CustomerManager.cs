@@ -519,7 +519,7 @@ namespace DAL.DBManager
             return ret;
         }
 
-        public bool GetMeasurementMaster(int companyID, int userID, int MeasurementMasterID, out JsonResults Measu)
+        public bool GetMeasurementMaster(int companyID, int userID, int MeasurementMasterID, out JsonResults Measu, bool isPrint = false)
         {
             Measu = new JsonResults();
             bool ret = false;
@@ -532,6 +532,7 @@ namespace DAL.DBManager
                 this.AddSPIntParam("@CompanyID", companyID);
                 this.AddSPIntParam("@user", userID);
                 this.AddSPIntParam("@MeasurementMasterID", MeasurementMasterID);
+                this.AddSPBoolParam("@isPrint", isPrint);
 
                 using (SqlDataReader reader = this.ExecuteSelectSP(spName))
                 {
