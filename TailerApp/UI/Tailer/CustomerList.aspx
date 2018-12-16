@@ -77,20 +77,24 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
+                                    <th>Account Code</th>
+                                    <th>DOB</th>
                                     <th>Mobile</th>
-                                    <th>Home Phone</th>
-                                    <th>Email</th>
-                                    <th>Address</th>
+                                    <th ng-if="false">Home Phone</th>
+                                    <th ng-if="false">Email</th>
+                                    <th ng-if="false">Address</th>
                                     
                                 </tr>
                             </thead>
                             <tbody ng-repeat="customer in CustomerList">
                                 <tr>
                                     <td><a href="#" data-ng-click="onCustomerClick(customer.CustomerMasterID)">{{customer.CustomerName}}</a></td>
+                                    <td>{{customer.AccountCode}}</td>
+                                    <td>{{customer.BirthDate}}</td>
                                     <td>{{customer.MobileNo}}</td>
-                                    <td>{{customer.HomePhoneNo}}</td>
-                                    <td>{{customer.EmailID}}</td>
-                                    <td>{{customer.Address1}} {{customer.Address2}}</td>
+                                    <td ng-if="false">{{customer.HomePhoneNo}}</td>
+                                    <td ng-if="false">{{customer.EmailID}}</td>
+                                    <td ng-if="false">{{customer.Address1}} {{customer.Address2}}</td>
                                     <td><a href="#" title="Create Invoice" data-ng-click="onCustomerInvoiceClick(customer.CustomerMasterID)"><i class="fa fa-dollar" style="font-size:24px;"></i></a></td>
                                 </tr>
                             </tbody>

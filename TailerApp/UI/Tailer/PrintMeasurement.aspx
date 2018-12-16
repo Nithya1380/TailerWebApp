@@ -158,7 +158,46 @@
                 });
             }
 
+
+            function gcd(a, b) {
+                return (b) ? gcd(b, a % b) : a;
+            }
+            $scope.decimalToFraction = function (_decimal) {
+                var aa = _decimal.toString().indexOf(".") ? _decimal.toString().split(".")[0] : 0;
+                _decimal = parseFloat(_decimal.toString().indexOf(".") ? _decimal.toString().replace(/\d+[.]/, '.') : 0);
+                if (_decimal == parseInt(_decimal)) {
+                    //return _decimal
+                    
+                    //{
+                    //    top: parseInt(_decimal),
+                    //    bottom: 1,
+                    //    display: parseInt(_decimal) + '/' + 1
+                    //};
+                    return new Array(aa, '');
+                }
+                else {
+                    var top = _decimal.toString().indexOf(".") ? _decimal.toString().replace(/\d+[.]/, '') : 0;
+                    var bottom = Math.pow(10, top.toString().replace('-', '').length);
+                    if (_decimal >= 1) {
+                        top = +top + (Math.floor(_decimal) * bottom);
+                    }
+                    else if (_decimal <= -1) {
+                        top = +top + (Math.ceil(_decimal) * bottom);
+                    }
+
+                    var x = Math.abs(gcd(top, bottom));
+                    //return {
+                    //    top: (top / x),
+                    //    bottom: (bottom / x),
+                    //    display: (top / x) + '/' + (bottom / x)
+                    //};
+                    return new Array(aa, (top / x) + '/' + (bottom / x));
+                }
+            };
+
         }]);
+
+        //<label class="lableval ng-binding"><span>1</span><span style="font-size: 12px; vertical-align: top;">1/4</span></label>
 
     </script>
 </head>
@@ -212,7 +251,7 @@
                         <div class="col-sm-1" ng-repeat="Per in MeasurementField">
                             <label class="lableMes">{{Per.FieldName}}</label>
                             <div ng-repeat="id in Per.FieldValue" style="padding-left: 20px; padding-bottom: 5px;">
-                                <label class="lableval">{{id.val}}</label>
+                                <label class="lableval"><span>{{decimalToFraction(id.val)[0]}}</span><span style="font-size: 12px; vertical-align: top;">{{decimalToFraction(id.val)[1]}}</span></label>
                             </div>
                         </div>
                     </div>

@@ -75,6 +75,28 @@
 
             $scope.GetPositions();
 
+            $scope.ValidateSave = function () {
+                $scope.errors = new Array();
+                if ($scope.EmployeeDetails.FirstName == '' || $scope.EmployeeDetails.FirstName == null) {
+                    $scope.errors.push('First Name');
+                }
+                if ($scope.EmployeeDetails.LastName == '' || $scope.EmployeeDetails.LastName == null) {
+                    $scope.errors.push('Last Name');
+                }
+                if ($scope.EmployeeDetails.Address.Address1 == '' || $scope.EmployeeDetails.Address.Address1 == null) {
+                    $scope.errors.push('Address Line 1');
+                }
+                if ($scope.EmployeeDetails.Address.City == '' || $scope.EmployeeDetails.Address.City == null) {
+                    $scope.errors.push('City');
+                }
+                if ($scope.EmployeeDetails.Address.State == '' || $scope.EmployeeDetails.Address.State == null) {
+                    $scope.errors.push('State');
+                }
+                if ($scope.EmployeeDetails.Address.MobileNo == '' || $scope.EmployeeDetails.Address.MobileNo == null) {
+                    $scope.errors.push('Mobile No');
+                }
+            }
+
             $scope.SaveEmployeeMasterDetails = function () {
                 $scope.EmployeeDetails.Position = $scope.selectedPosition.PickListValue;
 
@@ -212,11 +234,11 @@
             <div class="panel-collapse collapse in">
                 <div class="panel-body">
                     <div class="form-group row">
-                        <label for="txtFullName" class="col-sm-2 lbl-text-right">First Name</label>
+                        <label for="txtFullName" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>First Name</label>
                         <div class="col-sm-2">
                             <input type="text" class="form-control" placeholder="First Name" ng-model="EmployeeDetails.FirstName">
                         </div>
-                        <label for="txtFullName" class="col-sm-2 lbl-text-right">Last Name</label>
+                        <label for="txtFullName" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>Last Name</label>
                         <div class="col-sm-2">
                             <input type="text" class="form-control" placeholder="Last Name" ng-model="EmployeeDetails.LastName">
                         </div>
@@ -246,7 +268,7 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="txtAddress1" class="col-sm-2 lbl-text-right">Address Line 1</label>
+                        <label for="txtAddress1" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>Address Line 1</label>
                         <div class="col-sm-2">
                             <input type="text" class="form-control" placeholder="Address Line 1" ng-model="EmployeeDetails.Address.Address1" />
                         </div>
@@ -256,11 +278,11 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="drpCountry" class="col-sm-2 lbl-text-right">City</label>
+                        <label for="drpCountry" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>City</label>
                         <div class="col-sm-2">
                             <input type="text" class="form-control"  placeholder="City" ng-model="EmployeeDetails.Address.City" />
                         </div>
-                        <label for="drpState" class="col-sm-2 lbl-text-right">State</label>
+                        <label for="drpState" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>State</label>
                         <div class="col-sm-2">
                             <input type="text" class="form-control"  placeholder="State" ng-model="EmployeeDetails.Address.State" />
                         </div>
@@ -270,7 +292,7 @@
                         </div>
                     </div>
                      <div class="form-group row">
-                        <label for="drpCountry" class="col-sm-2 lbl-text-right">Mobile No</label>
+                        <label for="drpCountry" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>Mobile No</label>
                         <div class="col-sm-2">
                             <input type="text" class="form-control"  placeholder="Mobile" ng-model="EmployeeDetails.Address.MobileNo" />
                         </div>

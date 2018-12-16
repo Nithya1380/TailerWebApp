@@ -143,17 +143,26 @@
                  if ($scope.customerMaster.Customer.FirstName == '' || $scope.customerMaster.Customer.FirstName == null) {
                      errors = '<li>First Name</li>';
                  }
+                 if ($scope.customerMaster.Customer.MiddleName == '' || $scope.customerMaster.Customer.MiddleName == null) {
+                     errors = '<li>Last Name</li>';
+                 }
                  if ($scope.customerMaster.Customer.SurName == '' || $scope.customerMaster.Customer.SurName == null) {
                      errors += '<li>Sur Name</li>';
                  }
                  if ($scope.customerMaster.Customer.Gender == '' || $scope.customerMaster.Customer.Gender == null) {
                      errors += '<li>Sex</li>';
                  }
+                 if ($scope.customerMaster.Customer.MobileNo == '' || $scope.customerMaster.Customer.MobileNo == null) {
+                     errors += '<li>Mobile No</li>';
+                 }
                  if ($scope.customerMaster.Customer.BirthDate == '' || $scope.customerMaster.Customer.BirthDate == null) {
                      errors += '<li>DOB</li>';
                  }
                  if ($scope.customerMaster.CustomerAccount.AccountCode == '' || $scope.customerMaster.CustomerAccount.AccountCode == null) {
                      errors += '<li>Account Code</li>';
+                 }
+                 if ($scope.customerMaster.CustomerAccount.AccountName == '' || $scope.customerMaster.CustomerAccount.AccountName == null) {
+                     errors += '<li>Account Name</li>';
                  }
                  if ($scope.customerMaster.CustomerAccount.AccountCategory == '' || $scope.customerMaster.CustomerAccount.AccountCategory == null) {
                      errors += '<li>Account Category</li>';
@@ -316,11 +325,11 @@
                                                         <div class="form-group row">
                                                             <label for="txtFirstName" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>First Name</label>
                                                             <div class="col-sm-4">
-                                                                <input type="text" class="form-control" name="txtFullName" id="txtFirstName" placeholder="First Name" title="enter your First Name." data-ng-model="customerMaster.Customer.FirstName">
+                                                                <input type="text" class="form-control" name="txtFullName" id="txtFirstName" placeholder="First Name" title="enter your First Name." ng-change="customerMaster.CustomerAccount.AccountName=customerMaster.Customer.FullName=(customerMaster.Customer.FirstName+' '+customerMaster.Customer.MiddleName)" data-ng-model="customerMaster.Customer.FirstName">
                                                             </div>
                                                             <label for="txtLastName" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>Last Name</label>
                                                             <div class="col-sm-4">
-                                                                <input type="text" class="form-control" name="txtLastName" id="txtLastName" placeholder="Last Name" title="enter your Last Name." data-ng-model="customerMaster.Customer.MiddleName"/>
+                                                                <input type="text" class="form-control" name="txtLastName" id="txtLastName" placeholder="Last Name" title="enter your Last Name." ng-change="customerMaster.CustomerAccount.AccountName=customerMaster.Customer.FullName=(customerMaster.Customer.FirstName+' '+customerMaster.Customer.MiddleName)" data-ng-model="customerMaster.Customer.MiddleName"/>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
@@ -459,7 +468,7 @@
                                                         </div>
 
                                                         <div class="form-group row">
-                                                           <label for="txtAccountName" class="col-sm-2 lbl-text-right">Account Name</label>
+                                                           <label for="txtAccountName" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>Account Name</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control" name="first_name" id="txtAccountName" placeholder="Account Name" title="enter your Account Code." data-ng-model="customerMaster.CustomerAccount.AccountName">
                                                             </div>
