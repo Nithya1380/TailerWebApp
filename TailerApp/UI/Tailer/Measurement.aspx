@@ -14,6 +14,29 @@
 
         var tailerApp = angular.module("TailerApp", ['720kb.datepicker', 'ui.bootstrap']);
 
+        tailerApp.directive('ngkeypressCtrl', function () {
+            return function (scope, element, attrs) {
+                var shiftDown = false;
+                element.bind("keydown", function (event) {
+                    // shift key code 16
+                    if (event.which === 16) {
+                        shiftDown = true;
+                    }
+                    // if enter pressed and shift is pressed then we send message
+                    if (event.which === 13 && shiftDown) {
+                        event.preventDefault();
+                        scope.send();
+                        scope.$apply();
+                    }
+                });
+                //element.bind("keyup", function (event) {
+                //    if (event.which === 16) {
+                //        shiftDown = false;
+                //    }
+                //});
+            };
+        });
+
         tailerApp.directive('validCalendarDate', function () {
             return {
                 require: 'ngModel',
@@ -285,8 +308,38 @@
                 winobj.focus();
             }
 
-        });
+            $scope.ctrlDown = false;
+            $scope.ctrlKey = 17;
 
+            $scope.keyDownFunc = function ($event) {
+
+                if ($event.keyCode == $scope.ctrlKey)
+                    $scope.ctrlDown = true;
+
+                if ($scope.ctrlDown && $event.keyCode == 83) {
+                    $scope.ctrlDown = false;
+                    $scope.SaveMeasurementMaster();
+                } else if ($scope.ctrlDown && $event.keyCode == 67) {
+                    $scope.ctrlDown = false;
+                    $scope.onClose();
+                } else if ($scope.ctrlDown && $event.keyCode == 80) {
+                    $scope.ctrlDown = false;
+                    $scope.PrintMeasurementMaster();
+                }
+
+                    
+
+            };
+
+            $scope.keyUpFunc = function ($event) {
+                if ($event.keyCode == $scope.ctrlKey)
+                    $scope.ctrlDown = false;
+            };
+
+            
+
+        });
+       
 
     </script>
 
@@ -316,11 +369,11 @@
     
 </asp:Content>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="container bootstrap snippet" data-ng-app="TailerApp" data-ng-controller="MeasurementController">
+    <div class="container bootstrap snippet" data-ng-app="TailerApp" data-ng-controller="MeasurementController" >
         <div class="row">
             <div>&nbsp;</div>
         </div>
-        <div class="row">
+        <div class="row" ng-keydown="keyDownFunc($event)" ng-keyup="keyUpFunc($event)">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="card">
                     <div class="row">

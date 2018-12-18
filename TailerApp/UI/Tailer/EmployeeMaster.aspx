@@ -95,9 +95,18 @@
                 if ($scope.EmployeeDetails.Address.MobileNo == '' || $scope.EmployeeDetails.Address.MobileNo == null) {
                     $scope.errors.push('Mobile No');
                 }
+
+                if ($scope.errors.length > 0)
+                    return true;
+
+                return false;
             }
 
             $scope.SaveEmployeeMasterDetails = function () {
+
+                if ($scope.ValidateSave)
+                    return false;
+
                 $scope.EmployeeDetails.Position = $scope.selectedPosition.PickListValue;
 
                 var EmployeeDetails = JSON.stringify($scope.EmployeeDetails);
@@ -148,7 +157,13 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container bootstrap snippet" data-ng-app="TailerApp" data-ng-controller="EmplController" data-ng-init="init()">
         <div class="row">
-            <div>&nbsp;</div>
+            <div>&nbsp;
+                <ul ng-show="errors.length > 0" style="color:red;">
+                    <li ng-repeat="err in errors">
+                        {{err}}
+                    </li>
+                </ul>
+            </div>
         </div>
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
