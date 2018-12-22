@@ -42,6 +42,13 @@
                 $window.location.href = "CreateInvoice.aspx?CustomerID=" + CustomerMasterID;
             };
 
+            $scope.onCustomerInvoiceDetailsClick = function (invoiceID) {
+                var left = (screen.width / 2) - (1100 / 2);
+                var top = (screen.height / 2) - (600 / 2);
+                $window.open("InvoiceDetails.aspx?InvoiceID=" + invoiceID, "InvoiceDetails", 'resizable=yes,location=1,status=1,scrollbars=1,width=1100,height=600,top=' + top + ', left=' + left);
+                return false;
+            };
+
 
         });
 
@@ -57,7 +64,14 @@
             <div>&nbsp;</div>
         </div>
         <div class="row">
-            <div class="col-lg-4 col-md-4 col-sm-2 pull-right" style="margin-bottom:5px;">
+            <div class="col-lg-8 col-md-8 col-sm-6">
+                
+                <span class="profileLabel">
+                      Search:<input type="text" class="form-control" style="width: 250px; margin-left: 5px;display:inline !important" maxlength="50" data-ng-model="search.$" 
+                               placeholder="Search By Invoice# or Mobile or Name or Amount" />
+                 </span>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-6 pull-right" style="margin-bottom:5px;">
                 <button class="btn btn-lg btn-success" type="button" data-ng-click="GetInvoiceList();"><i class="fas fa-plus-square"></i>&nbsp;Display</button>
                 <button class="btn btn-lg btn-success" type="button" data-ng-click="onCustomerInvoiceClick(0);"><i class="fas fa-plus-square"></i>&nbsp;Add New</button>
             </div>
@@ -71,6 +85,7 @@
                                 <tr>
                                     <th>Invoice#</th>
                                     <th>Name</th>
+                                    <th>Mobile</th>
                                     <th>Date</th>
                                     <th>Master</th>
                                     <th>Designer</th>
@@ -78,15 +93,16 @@
                                     
                                 </tr>
                             </thead>
-                            <tbody data-ng-repeat="Invoice in InvoiceList">
+                            <tbody data-ng-repeat="Invoice in InvoiceList | filter:search:strict">
                                 <tr>
                                     <td>{{Invoice.BillNumber}}</td>
                                     <td>{{Invoice.CustomerName}}</td>
+                                    <td>{{Invoice.MobileNumber}}</td>
                                     <td>{{Invoice.InvoiceDate}}</td>
                                     <td>{{Invoice.MasterName}}</td>
                                     <td>{{Invoice.DesignerName}}</td>
                                     <td>{{Invoice.NetAmount}}</td>
-                                    <td></td>
+                                    <td><a href="#" title="Invoice Details" data-ng-click="onCustomerInvoiceDetailsClick(Invoice.InvoiceID)"><i class="fa fa-info-circle" style="font-size:24px;"></i></a></td>
                                 </tr>
                             </tbody>
                         </table>

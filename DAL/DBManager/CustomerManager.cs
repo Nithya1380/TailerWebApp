@@ -1119,5 +1119,60 @@ namespace DAL.DBManager
             return ret;
         }
 
+        public bool GetInvoiceDetails(int companyID, int userID, int branchID,int invoiceID,out JsonResults invoiceDetails)
+        {
+            invoiceDetails = new JsonResults();
+            bool ret = false;
+
+            try
+            {
+                this.Connect(this.GetConnString());
+                string spName = "GetInvoiceDetails";
+                this.ClearSPParams();
+                this.AddSPIntParam("@companyID", companyID);
+                this.AddSPIntParam("@BranchID", branchID);
+                this.AddSPIntParam("@UserID", userID);
+                this.AddSPIntParam("@InvoiceID", invoiceID);
+                this.AddSPReturnIntParam("@return");
+                using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+                {
+                    while (reader.Read())
+                    {
+                        invoiceDetails.JSonstring += reader.GetString(0);
+                    }
+
+                    reader.NextResult();
+                    while (reader.Read())
+                    {
+                        invoiceDetails.JSonstring2 += reader.GetString(0);
+                    }
+
+                    reader.Close();
+                }
+
+                int retcode = this.GetOutValueInt("@return");
+
+                switch (retcode)
+                {
+                    case 1: ret = true;
+                        break;
+                    default: SetError(-1, "Failed to get Invoice Details. Please try again later");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = false;
+                SetError(-1, "Failed to get Invoice Details. Please try again later");
+                Utils.Write(ex);
+            }
+            finally
+            {
+                this.ClearSPParams();
+                this.Disconnect();
+            }
+            return ret;
+        }
+
     }
 }
