@@ -101,7 +101,28 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\accounts.png" />
+    <Content Include="Content\Images\birthday.png" />
+    <Content Include="Content\Images\circle-outline.png" />
+    <Content Include="Content\Images\customer.png" />
+    <Content Include="Content\Images\delivery-truck.png" />
+    <Content Include="Content\Images\document.png" />
+    <Content Include="Content\Images\down-chevron.png" />
+    <Content Include="Content\Images\dropbox.png" />
+    <Content Include="Content\Images\employee.png" />
+    <Content Include="Content\Images\google-drive.png" />
+    <Content Include="Content\Images\home.png" />
+    <Content Include="Content\Images\invoice.png" />
+    <Content Include="Content\Images\login_back.jpg" />
+    <Content Include="Content\Images\logout.png" />
+    <Content Include="Content\Images\man-shape.png" />
+    <Content Include="Content\Images\menu.png" />
+    <Content Include="Content\Images\reports.png" />
+    <Content Include="Content\Images\s2k.png" />
+    <Content Include="Content\Images\settings.png" />
+    <Content Include="Content\Images\user.png" />
     <Content Include="Content\Jquery-ui.css" />
+    <Content Include="Content\menu.css" />
     <Content Include="Content\Site.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\Images\logo.png" />
@@ -125,6 +146,8 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\CalendarControl.css" />
+    <Content Include="Scripts\classie.js" />
+    <Content Include="Scripts\custom.js" />
     <Content Include="Scripts\font-awesome.min.css" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -175,13 +198,13 @@
     <Content Include="UI\Style\autocomplete.css" />
     <Content Include="UI\Style\bootstrap.min.css" />
     <Content Include="UI\Style\TailerStyle.css" />
-    <Content Include="UI\Common\Login.aspx" />
     <Content Include="UI\Tailer\AccountMaster.aspx" />
     <Content Include="UI\Tailer\AddNewCustomer.aspx" />
     <Content Include="UI\Tailer\CreateInvoice.aspx" />
     <Content Include="UI\Tailer\CustomerList.aspx" />
     <Content Include="UI\Tailer\EmployeeList.aspx" />
     <Content Include="UI\Tailer\EmployeeMaster.aspx" />
+    <Content Include="UI\Tailer\InvoiceDetails.aspx" />
     <Content Include="UI\Tailer\InvoiceList.aspx" />
     <Content Include="UI\Tailer\Measurement.aspx" />
     <Content Include="UI\Tailer\MeasurementField.aspx" />
@@ -361,6 +384,13 @@
     </Compile>
     <Compile Include="UI\Tailer\EmployeeMaster.aspx.designer.cs">
       <DependentUpon>EmployeeMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tailer\InvoiceDetails.aspx.cs">
+      <DependentUpon>InvoiceDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Tailer\InvoiceDetails.aspx.designer.cs">
+      <DependentUpon>InvoiceDetails.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Tailer\InvoiceList.aspx.cs">
       <DependentUpon>InvoiceList.aspx</DependentUpon>

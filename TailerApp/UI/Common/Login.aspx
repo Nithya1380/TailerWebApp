@@ -8,24 +8,117 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous" />
     <webopt:bundlereference runat="server" path="~/Content/css" />
 
-    <style type="text/css">  
-        body {  
-            background: url(../images/06.jpg) no-repeat;  
-            background-size: cover;  
-            min-height: 100%;  
-        }  
-  
-        html {  
-            min-height: 100%;  
-        }  
-  
-        .Error-control {  
-            background: #ffdedd !important;  
-            border-color: #ff5b57 !important;  
-        }  
-    </style>  
+   <style type="text/css">
+    body {
+        background: rgba(73,155,234,1);
+        background: -moz-linear-gradient(left, #3956c9 0%, #000058 100%);
+        background: -webkit-gradient(left top, right top, color-stop(0%, rgba(73,155,234,1)), color-stop(100%, #000058 ));
+        background: -webkit-linear-gradient(left, #3956c9 0%, #000058 100%);
+        background: -o-linear-gradient(left, #3956c9 0%, #000058 100%);
+        background: -ms-linear-gradient(left, #3956c9 0%, #000058 100%);
+        background: linear-gradient(to right, #3956c9 0%, #000058 100%);
+        background-image: url(../../Content/Images/login_back.jpg);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        height: 100vh;
+    }
+
+    .login_box {
+        background-color: #fff;
+        margin-top: 100px;
+        margin: 0 auto;
+        max-width: 400px;
+        padding: 20px;
+        border-radius: 25px;
+        padding-bottom: 30px;
+        -webkit-box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.1);
+        -moz-box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.1);
+        box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.1);
+    }
+    .login_top_icon{
+        text-align:center;
+        margin-bottom:15px;
+    }
+
+    .form_sec{
+        margin-top:10px;
+    }
+
+    .form_table {
+        font-family: 'Roboto Condensed', sans-serif;
+        font-weight: 500;
+        width: 90%;
+        color: #545454;
+        margin: 0 auto;
+    }
+    .login_txt {
+        width: 100%;
+        border: 2px solid #cccccc;
+        border-radius: 18px;
+        height: 44px;
+        font-size: 16px;
+        padding: 8px 15px;
+        margin-bottom: 15px;
+        color: #656565;
+        margin-top: 3px;
+    }
+
+    input {
+        outline: none;
+    }
+    .login_button {
+        width: 100%;
+        background-color: #3a59ca;
+        border: 1px solid #3a59ca;
+        font-weight: 500;
+        color: #fff;
+        padding: 10px;
+        margin-top: 22px;
+        border-radius: 18px;
+        font-size: 15px;
+        outline: none;
+        transition-delay: .01s;
+    }
+
+        .login_button:hover {
+            background-color: #1e40b9;
+            border: 1px solid #1e40b9;
+        } 
+        .login_forget {
+            font-size: 13px;
+            cursor: pointer;
+            color: #5f5f5f;
+        }
+        .login_forget:hover{
+            color:#0094ff;
+        }
+
+    .login_name {
+        font-weight: 500;
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 18px;
+        color: #545454;
+        font-family: 'Roboto Condensed', sans-serif;
+    }
+</style>
 
     <script type="text/javascript">
+        $(window).load(function () {
+            centerContent();
+        });
+
+        $(window).resize(function () {
+            centerContent();
+        });
+
+        function centerContent() {
+            var container = $('body');
+            var content = $('.login_box');
+            content.css("left", (container.width() - content.width()) / 2);
+            content.css("margin-top", ((container.height() - content.height()) / 2) - 50);
+        }
+
         function FunForLoginValidation() {
             var objValid = true;
             var objUserName = $("[id$=txtUserName]").val();
@@ -91,76 +184,53 @@
             </Scripts>
         </asp:ScriptManager>
     
+        <div class="login_box">
+        <div class="page_logo">
+            <img src="../../Content/Images/s2k.png" width="50" />
+        </div>
+        <div class="login_top_icon">
+            <img src="../../Content/Images/user.png" />
+        </div>
+        <div class="login_name">Stitch Software</div>
+        <div class="form_sec">
+            <table class="form_table">
+                <tr>
+                    <td>User Name</td>
+                </tr>
+                <tr>
+                    <td>
+                         <asp:TextBox ID="txtUserName" CssClass="login_txt" placeholder="Enter User ID" runat="server"></asp:TextBox> 
+                        <asp:Label ID="lblErrUserName" CssClass="help-block" runat="server" Text="" ForeColor="White"></asp:Label>  
+                    </td>
+                </tr>
+                <tr>
+                    <td>Password</td>
+                </tr>
+                <tr>
+                    <td><asp:TextBox ID="txtPassword" CssClass="login_txt" placeholder="Enter Your Password" runat="server" TextMode="Password"></asp:TextBox>  
+                        <asp:Label ID="lblErrPassword" CssClass="help-block" runat="server" Text="" ForeColor="White"></asp:Label> 
+                    </td>
+                </tr>
+                <tr style="display:none">
+                    <td align="right">
+                        <span class="login_forget">Forgot Password?</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                       
+                        <asp:Button ID="btnLogin" CssClass="login_button" Text="Login"  OnClick="btnLogin_Click"
+                               OnClientClick="return FunForLoginValidation()" runat="server"   /> 
+                    </td>
+                </tr>
+                <tr>
+                    <asp:Label ID="lblErrorMessage" CssClass="help-block" runat="server" Text="" ForeColor="Red"></asp:Label>
+                </tr>
+            </table>
+        </div>
+    </div>
 
-        <div class="container">  
-           <div class="row">  
-               <div class="col-lg-5 col-md-6 col-sm-8 col-xl-12 " style="margin: auto; float: initial; padding-top: 12%">  
-                   <div class="row userInfo">  
   
-                       <div class="panel panel-default ">  
-                           <div class="panel-heading">  
-                               <h3 class="panel-title" style="text-align: center; font-weight: bold">  
-                                   <a class="collapseWill">Login to your Account</a>  
-                               </h3>  
-                           </div>  
-                           <div id="collapse1" class="panel-collapse collapse in">  
-                               <div class="panel-body">  
-                                   <fieldset>  
-                                       <div class="form-group">  
-                                           <div class="col-md-"></div>  
-                                           <label class="col-md-12 control-label" for="prependedcheckbox">  
-                                               User ID  
-                                           </label>  
-                                           <div class="col-md-12">  
-                                               <div class="input-group">  
-                                                   <span class="input-group-addon">  
-                                                       <i class="fa fa-user"></i>  
-                                                   </span>  
-                                                   <asp:TextBox ID="txtUserName" CssClass="form-control" placeholder="Enter User ID" runat="server"></asp:TextBox>  
-                                               </div>  
-                                               <asp:Label ID="lblErrUserName" CssClass="help-block" runat="server" Text="" ForeColor="White"></asp:Label>  
-                                           </div>  
-  
-                                           <label class="col-md-12 control-label" for="prependedcheckbox">  
-                                               Password  
-                                           </label>  
-                                           <div class="col-md-12">  
-                                               <div class="input-group">  
-                                                   <span class="input-group-addon">  
-                                                       <i class="fa fa-lock"></i>  
-                                                   </span>  
-                                                   <asp:TextBox ID="txtPassword" CssClass="form-control" placeholder="Enter Your Password" runat="server" TextMode="Password"></asp:TextBox>  
-                                               </div>  
-                                               <asp:Label ID="lblErrPassword" CssClass="help-block" runat="server" Text="" ForeColor="White"></asp:Label>  
-                                           </div>  
-  
-                                           <div class="col-md-12">  
-                                                 
-                                               <div class="col-lg-6">  
-                                                   <div class="input-group" style="width: 100%">  
-                                                       <asp:Button ID="btnLogin" CssClass="btn btn-success" Text="Login"  OnClick="btnLogin_Click"
-                                                           OnClientClick="return FunForLoginValidation()" runat="server" Style="width: 100%"  />  
-                                                   </div>  
-                                               </div>  
-                                                <asp:Label ID="lblErrorMessage" CssClass="help-block" runat="server" Text="" ForeColor="Red"></asp:Label>
-                                           </div>  
-                                       </div>  
-                                   </fieldset>  
-  
-                               </div>  
-                           </div>  
-  
-                           <div class="panel-heading">  
-                               <div class="panel-title" style="text-align: right">  
-                                   <a class="collapseWill" href="SellerForgetPassword.aspx" style="font-size: x-small">Forgot Username or Password?  
-                                   </a>  
-                               </div>  
-                           </div>  
-                       </div>  
-                   </div>  
-               </div>  
-           </div>  
-       </div>  
     </form>
 </body>
 </html>

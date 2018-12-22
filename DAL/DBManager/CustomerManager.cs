@@ -1174,5 +1174,58 @@ namespace DAL.DBManager
             return ret;
         }
 
+        public bool GetDashboard(int companyID, int userID, int branchID,out JsonResults dashboardDetails)
+        {
+            dashboardDetails = new JsonResults();
+            bool ret = false;
+
+            try
+            {
+                this.Connect(this.GetConnString());
+                string spName = "GetDashboard";
+                this.ClearSPParams();
+                this.AddSPIntParam("@Company", companyID);
+                this.AddSPIntParam("@BranchID", branchID);
+                this.AddSPIntParam("@user", userID);
+                this.AddSPReturnIntParam("@return");
+                using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+                {
+                    while (reader.Read())
+                    {
+                        dashboardDetails.JSonstring += reader.GetString(0);
+                    }
+
+                    reader.NextResult();
+                    while (reader.Read())
+                    {
+                        dashboardDetails.JSonstring2 += reader.GetString(0);
+                    }
+
+                    reader.Close();
+                }
+
+                int retcode = this.GetOutValueInt("@return");
+
+                switch (retcode)
+                {
+                    case 1: ret = true;
+                        break;
+                    default: SetError(-1, "Failed to get Dashboard Details. Please try again later");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = false;
+                SetError(-1, "Failed to get Dashboard Details. Please try again later");
+                Utils.Write(ex);
+            }
+            finally
+            {
+                this.ClearSPParams();
+                this.Disconnect();
+            }
+            return ret;
+        }
     }
 }

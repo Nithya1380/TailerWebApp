@@ -29,6 +29,7 @@ namespace TailerApp
         protected void Page_Load(object sender, EventArgs e)
         {
             ApplicationVirtualPath = Utils.ApplicationVirtualPath;
+            
         }
     }
 }
