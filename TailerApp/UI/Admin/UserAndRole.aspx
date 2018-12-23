@@ -25,11 +25,13 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container bootstrap snippet" ng-app="TailerApp" ng-controller="UserAndRoleController">
         <div class="row">
-            <div>&nbsp;</div>
+            <div class="page-header-new col-lg-12">
+                User and Role
+            </div>
         </div>
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="card">
-                <div class="row">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card_bg">
                     <div class="col-lg-12 col-md-12 col-sm-12">
                         <ul class="nav nav-tabs">
                             <li class="active"><a data-toggle="tab" href="#userTab">Users</a></li>
@@ -39,75 +41,57 @@
                         <%--User List--%>
                         <div class="tab-content">
                             <div class="tab-pane active" id="userTab">
-                                <div class="row">
-                                    <div class="col-lg-2 col-md-2 col-sm-2 pull-right" style="margin-bottom: 5px">
-                                        <button class="btn btn-lg btn-success" type="button" ng-click="OnUserClick(0);"><i class="fas fa-plus-square"></i>&nbsp;Add New User</button>
-                                    </div>
+                                <div class="button_div" style="float: right; max-width: 200px;">
+                                    <button class="btn_ss bg-blue" type="button" ng-click="OnUserClick(0);">Add New User</button>
                                 </div>
-                                <div class="row">
-                                    <div class="col-lg-12 col-md-12 col-sm-12">
-                                        <div class="card">
-                                            <div class="row">
-                                                <table class="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Name</th>
-                                                            <th>Login ID</th>
-                                                            <th>Role</th>
-                                                            <th></th>
-                                                            <th></th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody ng-repeat="user in UserList">
-                                                        <tr>
-                                                            <td><a href="#" ng-click="OnUserClick(user.UserID)">{{user.EmployeeName}}</a></td>
-                                                            <td>{{user.LoginID}}</td>
-                                                            <td>{{user.RoleName}}</td>
-                                                            <td></td>
-                                                            <td></td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+
+                                <table class="table card_table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Login ID</th>
+                                            <th>Role</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody ng-repeat="user in UserList">
+                                        <tr>
+                                            <td><a href="#" ng-click="OnUserClick(user.UserID)">{{user.EmployeeName}}</a></td>
+                                            <td>{{user.LoginID}}</td>
+                                            <td>{{user.RoleName}}</td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
                             </div>
                             <%--Role List--%>
                             <div class="tab-pane" id="roleTab">
-                                <div class="row">
-                                    <div class="col-lg-2 col-md-2 col-sm-2 pull-right" style="margin-bottom: 5px">
-                                        <button class="btn btn-lg btn-success" type="button" ng-click="OnAddModifyRoleClick(0);"><i class="fas fa-plus-square"></i>&nbsp;Add New Role</button>
-                                    </div>
+                                <div class="button_div" style="float: right; max-width: 200px;">
+                                    <button class="btn_ss bg-blue" type="button" ng-click="OnAddModifyRoleClick(0);">Add New Role</button>
                                 </div>
-                                <div class="row">
-                                    <div class="col-lg-12 col-md-12 col-sm-12">
-                                        <div class="card">
-                                            <div class="row">
-                                                <table class="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Role</th>
-                                                            <th></th>
-                                                            <th></th>
-                                                            <th></th>
-                                                            <th></th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody ng-repeat="role in RoleList">
-                                                        <tr>
-                                                            <td><a href="#" ng-click="OnAddModifyRoleClick(role.RoleID)">{{role.RoleName}}</a></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <table class="table card_table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Role</th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody ng-repeat="role in RoleList">
+                                        <tr>
+                                            <td><a href="#" ng-click="OnAddModifyRoleClick(role.RoleID)">{{role.RoleName}}</a></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

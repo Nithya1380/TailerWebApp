@@ -221,7 +221,7 @@ tailerApp.controller("UserAndRoleController", function ($scope, $window, $http, 
                 return false;
             }
             else if ($scope.Userpassword != $scope.UserCnfpassword) {
-                $window.alert("Please is not same");
+                $window.alert("password is not same");
                 return false;
             }
         }

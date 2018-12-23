@@ -12,6 +12,14 @@
             $scope.MeasurList = {};
             //$scope.AccountCode = "";
 
+            var d = new Date();
+
+            $scope.DeliveryFrom = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear();
+
+            d.setDate(d.getDate() + 15)
+
+            $scope.DeliveryTo = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear();
+
             $scope.init = function () {
                 $scope.MeasurList = {};
                 $scope.GetMeasurementList();
@@ -98,81 +106,82 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container bootstrap snippet" data-ng-app="TailerApp" id="divMainContent" data-ng-controller="MeasurListController" data-ng-init="init()">
         <div class="row">
-            <div>&nbsp;</div>
+            <div class="page-header-new col-lg-12">
+                Measurement List
+            </div>
         </div>
         <div class="row">
-            <div class="col-lg-9 col-md-2 col-sm-2 pull-left">
-                <table class="profile_table" style="width: 100%;">
-                    <tbody>
-                        <tr>
-                            <td class="back_shade" style="text-align: right;"><span class="profileLabel">Account code:</span></td>
-                            <td>
-                                <input type="text" placeholder="Account code" class="form-control"
-                                    style="max-width: 220px;" ng-model="AccountCode"
-                                    typeahead-on-select="onSelect($item, $model, $label, this);"
-                                    uib-typeahead="Account as Account.AccountCode for Account in AccountList |  filter:{name:$viewValue} | limitTo:10"
-                                    typeahead-show-hint="true" typeahead-min-length="0" class="web_txtbox" />
-                            </td>
-                            <td class="back_shade" style="text-align: right;"><span class="profileLabel">Account Name:</span></td>
-                            <td>
-                                <input type="text" placeholder="Account name" class="form-control" ng-model="AccountName"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="back_shade" style="text-align: right;"><span class="profileLabel">Delivery from:</span></td>
-                            <td colspan="3">
-                                <table>
-                                    <tr>
-                                        <td style="border:none"><datepicker  date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; float: none;">
-					                <input type="text" class="form-control" tabindex="2000" valid-calendar-date ng-model="DeliveryFrom" 
-						                style="width:110px;"/> 
-				                </datepicker></td>
-                                        <td style="border:none">To</td>
-                                        <td style="border:none"><datepicker  date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; float: none;">
-					                <input type="text" class="form-control" tabindex="2000" valid-calendar-date ng-model="DeliveryTo" 
-						                style="width:110px;"/> 
-				                </datepicker></td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
+            <div class="col-lg-12">
+                <div class="card_bg">
+                    <div class="col-lg-9 pull-left">
+                        <table style="width: 100%; max-width: 600px; margin-bottom:20px;">
+                            <tbody>
+                                <tr>
+                                    <td style="text-align: right;">Account code:</td>
+                                    <td>
+                                        <input type="text" placeholder="Account code" class="form-control"
+                                            style="max-width: 220px;" ng-model="AccountCode"
+                                            typeahead-on-select="onSelect($item, $model, $label, this);"
+                                            uib-typeahead="Account as Account.AccountCode for Account in AccountList |  filter:{name:$viewValue} | limitTo:10"
+                                            typeahead-show-hint="true" typeahead-min-length="0" class="web_txtbox" />
+                                    </td>
+                                    <td style="text-align: right;">Account Name:</td>
+                                    <td>
+                                        <input type="text" placeholder="Account name" class="form-control" ng-model="AccountName" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: right;">Delivery from:</td>
+                                    <td colspan="3">
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <datepicker date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; float: none;">
+					                                    <input type="text" class="form-control" tabindex="2000" valid-calendar-date ng-model="DeliveryFrom" 
+						                                    style="width:110px;"/> 
+				                                    </datepicker>
+                                                </td>
+                                                <td>To</td>
+                                                <td>
+                                                    <datepicker date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; float: none;">
+					                                    <input type="text" class="form-control" tabindex="2000" valid-calendar-date ng-model="DeliveryTo" 
+						                                    style="width:110px;"/> 
+				                                    </datepicker>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
 
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-lg-3 col-md-2 col-sm-2 pull-right" style="margin-bottom: 5px">
-                <button class="btn btn-lg btn-success" type="button" data-ng-click="GetMeasurementList();"><i class="fas fa-plus-square"></i>&nbsp;Display</button>
-                <button class="btn btn-lg btn-success" type="button" data-ng-click="AddModifyMeasureClick(0);"><i class="fas fa-plus-square"></i>&nbsp;Add New</button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="card">
-                    <div class="row">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Account Name</th>
-                                    <th>Item Desc</th>
-                                    <th>Created Date</th>
-                                    <th>Trial Date</th>
-                                    <th>Delivery Date</th>
-                                </tr>
-                            </thead>
-                            <tbody ng-repeat="Measur in MeasurList">
-                                <tr>
-                                    <td><a href="#" data-ng-click="AddModifyMeasureClick(Measur.MeasurementMasterID)">{{Measur.AccountName}}</a></td>
-                                    <td>{{Measur.ItemDesc}}</td>
-                                    <td>{{Measur.MeasCreatedOn}}</td>
-                                    <td>{{Measur.TrialDate}}</td>
-                                    <td>{{Measur.DeliDate}}</td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
+                    <div class="button_div" style="float: right; max-width: 200px;">
+                        <button class="btn_ss bg-blue" type="button" data-ng-click="GetMeasurementList();">Display</button>
+                        <button class="btn_ss bg-blue" type="button" data-ng-click="AddModifyMeasureClick(0);">Add New</button>
+                    </div>
+                    <table class="table card_table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Account Name</th>
+                                <th>Item Desc</th>
+                                <th>Created Date</th>
+                                <th>Trial Date</th>
+                                <th>Delivery Date</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="Measur in MeasurList">
+                            <tr>
+                                <td><a href="#" data-ng-click="AddModifyMeasureClick(Measur.MeasurementMasterID)">{{Measur.AccountName}}</a></td>
+                                <td>{{Measur.ItemDesc}}</td>
+                                <td>{{Measur.MeasCreatedOn}}</td>
+                                <td>{{Measur.TrialDate}}</td>
+                                <td>{{Measur.DeliDate}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-
         </div>
     </div>
 </asp:Content>

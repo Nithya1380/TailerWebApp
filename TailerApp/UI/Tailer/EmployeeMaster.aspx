@@ -13,6 +13,11 @@
             $scope.isDeleted = false;
             $scope.PositionList = {};
             $scope.selectedPosition = { PickListValue: '', PickListLabel: '' };
+            $scope.EmployeeDetails = {
+                FirstName: '',
+                LastName: '',
+                Address: { Address1: '', City: '', State: '', MobileNo: '' }
+            }
 
             $scope.GetEmployeeMasterDetails = function () {
                 $scope.EmployeeDetails = {};
@@ -104,7 +109,7 @@
 
             $scope.SaveEmployeeMasterDetails = function () {
 
-                if ($scope.ValidateSave)
+                if ($scope.ValidateSave() && !$scope.isDeleted)
                     return false;
 
                 $scope.EmployeeDetails.Position = $scope.selectedPosition.PickListValue;
@@ -145,6 +150,7 @@
 
             $scope.DeleteEmployeeMasterDetails = function () {
                 $scope.isDeleted = true;
+                $scope.SaveEmployeeMasterDetails();
             }
 
             $scope.onClose = function () {
@@ -157,12 +163,8 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container bootstrap snippet" data-ng-app="TailerApp" data-ng-controller="EmplController" data-ng-init="init()">
         <div class="row">
-            <div>&nbsp;
-                <ul ng-show="errors.length > 0" style="color:red;">
-                    <li ng-repeat="err in errors">
-                        {{err}}
-                    </li>
-                </ul>
+            <div class="page-header-new col-lg-12">
+                Employee
             </div>
         </div>
         <div class="row">
@@ -228,6 +230,14 @@
                 </div>
                 <!--end of card-->
             </div>
+
+            <div class="row" ng-show="errors.length > 0" style="margin:-9px 0px -15px 30px;">
+                <ul style="color:red;">
+                    <li ng-repeat="err in errors">
+                        {{err}}
+                    </li>
+                </ul>
+            </div>
             <br />
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="card">
@@ -238,7 +248,7 @@
                     <button class="client_btn" type="button" ng-click="SaveEmployeeMasterDetails()" data-toggle="dropdown" style="border-color: #00A5A8 !important; background-color: #00B5B8">
                         <i class="fa fa-save"></i>Save
                     </button>
-                    <button class="client_btn" type="button" ng-hide="UserID == 0" ng-click="DeleteEmployeeMasterDetails();" data-toggle="dropdown" style="border-color: rgba(212, 63, 58, 1) !important; background-color: rgba(212, 63, 58, 1)">
+                    <button class="client_btn" type="button" ng-hide="EmployeeID == 0" ng-click="DeleteEmployeeMasterDetails();" data-toggle="dropdown" style="border-color: rgba(212, 63, 58, 1) !important; background-color: rgba(212, 63, 58, 1)">
                         <i class="fa fa-close"></i>Delete
                     </button>
                     <button class="client_btn" type="button" ng-click="onClose();" data-toggle="dropdown" style="border-color: #FFA87D !important; background-color: #FFA87D">

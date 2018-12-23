@@ -1046,5 +1046,97 @@ namespace DAL.DBManager
            return ret;
        }
 
+       public bool SaveChangePassword(int CompanyID, int User, byte[] Password)
+       {
+           bool ret = false;
+           try
+           {
+
+               this.Connect(this.GetConnString());
+               string spName = "SaveChangePassword";
+               this.ClearSPParams();
+               this.AddSPIntParam("@Company", CompanyID);
+               this.AddSPIntParam("@user", User);
+               this.AddSPVarBinaryParam("@Password", Password);
+
+               this.AddSPReturnIntParam("@return");
+
+               if (this.ExecuteNonSP(spName) == 1)
+               {
+                   int retcode = this.GetOutValueInt("@return");
+                   switch (retcode)
+                   {
+                       case 0:
+                           ret = true;
+                           break;
+                       case 2:
+                           SetError(2, "Login ID already exist in system.");
+                           break;
+                       default:
+                           SetError(1, "Failed to save user. Please try again later");
+                           break;
+                   }
+               }
+           }
+           catch (Exception e)
+           {
+               SetError(-100, "Failed to save user. Please try again later");
+               Utils.Write(0, 0, "AdminManagerSP", "_U_AddModifyUser", "", "", e);
+           }
+           finally
+           {
+               this.ClearSPParams();
+               this.Disconnect();
+           }
+           return ret;
+       }
+
+       public bool GetUserDetails(int companyID, int userID,  out byte[] password)
+       {
+           password = null;
+           bool ret = false;
+
+           try
+           {
+               this.Connect(this.GetConnString());
+               string spName = "GetUserDetails";
+               this.ClearSPParams();
+               this.AddSPIntParam("@Company", companyID);
+               this.AddSPIntParam("@User", userID);
+               this.AddSPReturnIntParam("@return");
+               using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+               {
+                   while (reader.Read())
+                   {
+                       if (!reader.IsDBNull(0))
+                           password = (byte[])reader.GetValue(0);
+                   }
+
+                   reader.Close();
+               }
+
+               int retcode = this.GetOutValueInt("@return");
+
+               switch (retcode)
+               {
+                   case 0: ret = true;
+                       break;
+                   default: SetError(-1, "Failed to get user detail. Please try again later");
+                       break;
+               }
+           }
+           catch (Exception ex)
+           {
+               ret = false;
+               Utils.Write(ex);
+           }
+           finally
+           {
+               this.ClearSPParams();
+               this.Disconnect();
+           }
+           return ret;
+       }
+
     }
 }

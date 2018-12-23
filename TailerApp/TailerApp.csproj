@@ -200,6 +200,7 @@
     <Content Include="UI\Style\TailerStyle.css" />
     <Content Include="UI\Tailer\AccountMaster.aspx" />
     <Content Include="UI\Tailer\AddNewCustomer.aspx" />
+    <Content Include="UI\Tailer\ChangePassword.aspx" />
     <Content Include="UI\Tailer\CreateInvoice.aspx" />
     <Content Include="UI\Tailer\CustomerList.aspx" />
     <Content Include="UI\Tailer\EmployeeList.aspx" />
@@ -356,6 +357,13 @@
     </Compile>
     <Compile Include="UI\Tailer\AddNewCustomer.aspx.designer.cs">
       <DependentUpon>AddNewCustomer.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tailer\ChangePassword.aspx.cs">
+      <DependentUpon>ChangePassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Tailer\ChangePassword.aspx.designer.cs">
+      <DependentUpon>ChangePassword.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Tailer\CreateInvoice.aspx.cs">
       <DependentUpon>CreateInvoice.aspx</DependentUpon>
