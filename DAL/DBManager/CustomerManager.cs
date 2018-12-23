@@ -671,7 +671,7 @@ namespace DAL.DBManager
             return ret;
         }
 
-        public bool GetMeasurementList(int CompanyID, int User, out JsonResults Measu)
+        public bool GetMeasurementList(int CompanyID, int User, int BranchID, string AccountCode, string AccountName, string DeliveryFrom, string DeliveryTo, out JsonResults Measu)
         {
             bool ret = false;
             Measu = new JsonResults();
@@ -682,6 +682,11 @@ namespace DAL.DBManager
                 this.ClearSPParams();
                 this.AddSPIntParam("@Company", CompanyID);
                 this.AddSPIntParam("@User", User);
+                this.AddSPIntParam("@BranchId", BranchID);
+                this.AddSPStringParam("@AccountCode", AccountCode);
+                this.AddSPStringParam("@AccountName", AccountName);
+                this.AddSPStringParam("@DeliveryFrom", DeliveryFrom);
+                this.AddSPStringParam("@DeliveryTo", DeliveryTo);
                 this.AddSPReturnIntParam("@return");
 
                 using (SqlDataReader reader = this.ExecuteSelectSP(spName))

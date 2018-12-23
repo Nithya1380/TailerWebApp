@@ -19,7 +19,7 @@ namespace TailerApp.UI.Tailer
         }
 
         [WebMethod]
-        public static JsonResults GetMeasurementList()
+        public static JsonResults GetMeasurementList(string AccountCode, string AccountName, string DeliveryFrom, string DeliveryTo)
         {
             JsonResults MeasurList = new JsonResults();
             LoginUser currentUser;
@@ -33,7 +33,7 @@ namespace TailerApp.UI.Tailer
                 }
 
                 CustomerManager customerObj = new CustomerManager();
-                if (customerObj.GetMeasurementList(currentUser.CompanyID, currentUser.UserId, out MeasurList))
+                if (customerObj.GetMeasurementList(currentUser.CompanyID, currentUser.UserId, currentUser.UserBranchID, AccountCode, AccountName, DeliveryFrom, DeliveryTo, out MeasurList))
                 {
                     MeasurList.ErrorCode = 0;
                     MeasurList.ErrorMessage = "";
@@ -48,8 +48,41 @@ namespace TailerApp.UI.Tailer
             {
                 Utils.Write(ex);
             }
-
             return MeasurList;
+        }
+
+        [WebMethod]
+        public static JsonResults GetAccountList()
+        {
+            JsonResults returnObj = new JsonResults();
+            LoginUser currentUser;
+            try
+            {
+                if (!GetUserSession(out currentUser))
+                {
+                    returnObj.ErrorCode = 1001;
+                    returnObj.ErrorMessage = "";
+                    return returnObj;
+                }
+
+                CustomerManager customerObj = new CustomerManager();
+                if (customerObj.GetAccountList(currentUser.CompanyID, currentUser.UserId, out returnObj))
+                {
+                    returnObj.ErrorCode = 0;
+                    returnObj.ErrorMessage = "";
+                }
+                else
+                {
+                    returnObj.ErrorCode = -1;
+                    returnObj.ErrorMessage = "Failed to get Account List. please try again later";
+                }
+            }
+            catch (Exception ex)
+            {
+                Utils.Write(ex);
+            }
+
+            return returnObj;
         }
     }
 }

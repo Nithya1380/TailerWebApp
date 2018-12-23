@@ -196,11 +196,9 @@
 
             //**********//
             $scope.AccountList = {};
-            $scope.AccountArry = [];
 
             $scope.GetAccountList = function () {
                 $scope.AccountList = {};
-                $scope.AccountArry = [];
 
                 $http({
                     method: "POST",
@@ -220,16 +218,6 @@
 
                     $scope.AccountList = JSON.parse(response.data.d.JSonstring);
 
-                    //angular.forEach($scope.AccountList, function (value, key) {
-                    //    $scope.AccountArry.push(value.AccountCode);
-                    //});
-
-                    //debugger
-                    //$scope.AccountArry.then(function (data) {
-
-                    //    $scope.AccountArry = data;
-
-                    //});
 
                 }, function onFailure(error) {
 
@@ -238,47 +226,6 @@
 
             $scope.GetAccountList();
            
-
-            ////$scope.getmovies = function () {
-
-            ////    return $scope.AccountArry;
-
-            ////}
-
-            //$scope.doSomething = function (typedthings) {
-            //    debugger
-            //    //console.log("Do something like reload data with this: " + typedthings);
-
-            //    //$scope.newmovies = MovieRetriever.getmovies(typedthings);
-
-            //    //$scope.newmovies.then(function (data) {
-
-            //    //    $scope.movies = data;
-
-            //    //});
-
-            //}
-
-            //$scope.doSomethingElse = function (suggestion) {
-            //    debugger
-            //    //console.log("Suggestion selected: " + suggestion);
-
-            //};
-
-            //$scope.PerList
-		    //    = [{ name: 'Menu1', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
-			//         { name: 'Menu2', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
-			//         { name: 'Menu3', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
-			//         { name: 'Menu4', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
-			//         { name: 'Menu6', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
-			//         { name: 'Menu7', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
-			//         { name: 'Menu8', id: [{ val: 5 }, { val: 6 }, { val: 7 }], isRep: true },
-			//         { name: 'Menu9', id: [{ val: 0 }], isRep: false },
-		    //    ];
-
-            //$scope.PayerSourceIDs = '';
-
-            ////$scope.PerList.SetSeletedOptions($scope.PayerSourceIDs);
 
             $scope.AddItemToList = function (Obj) {
                 debugger;
@@ -403,9 +350,6 @@
                                                     <tr>
                                                         <td class="back_shade" style="text-align: right;"><span class="profileLabel">Account code:</span></td>
                                                         <td>
-                                                            <%--<span class="profileValue">--%>
-                                                                <%--<input type="text" data-ng-model="MeasurementDetails.AccountCode" />--%>
-                                                                <%--<autocomplete ng-model="AccountCode" attr-placeholder="number" click-activation="true" data="AccountArry" on-Select="doSomethingElse"></autocomplete>--%>
                                                             <input type="text"  placeholder="Enter number" class="form-control"
 			                                                  style="max-width:220px;" ng-model="MeasurementDetails.Account"  
 			                                                        typeahead-on-select="onSelect($item, $model, $label, this);"
