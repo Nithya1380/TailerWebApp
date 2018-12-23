@@ -13,6 +13,8 @@
         <script src="<%: ResolveUrl("~/Scripts/jquery-1.10.2.js") %>"></script>
         <script src="<%: ResolveUrl("~/Scripts/jquery-1.10.2.min.js") %>"></script>
         <script src="<%: ResolveUrl("~/Scripts/jquery-1.10.2.ui.js") %>"></script>
+        <script src="<%: ResolveUrl("~/Scripts/classie.js") %>"></script>
+        <script src="<%: ResolveUrl("~/Scripts/custom.js") %>"></script>
     </asp:PlaceHolder>
 
     <webopt:bundlereference runat="server" path="~/Content/css" />
@@ -96,15 +98,54 @@
             else
                 $("#MeasurementField").hide();
                
+            var menuLeft = document.getElementById('side_menu-s1'),
+				showLeftPush = document.getElementById('showLeftPush'),
+				body = document.body;
+            
+            showLeftPush.onclick = function () {
+                classie.toggle(this, 'active');
+                classie.toggle(body, 'side_menu-push-toright');
+                classie.toggle(menuLeft, 'side_menu-open');
+                disableOther('showLeftPush');
+            };
 
+            $(".nav li").click(function () {
+                //$('.nav_sub').slideUp();
+                $(this).next('.nav_sub').slideToggle();
+            });
         });
 
+        
+
+
+        function disableOther(button) {
+            if (button !== 'showLeftPush') {
+                classie.toggle(showLeftPush, 'disabled');
+            }
+        }
+
+       
+
+
+        function openCity(evt, cityName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("menu_table");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
     </script>
     
     <asp:ContentPlaceHolder ID="HeaderContent" runat="server">
     </asp:ContentPlaceHolder>
 </head>
-<body>
+<body class="side_menu-push">
     <form runat="server">
         <asp:ScriptManager runat="server">
             <Scripts>
@@ -126,12 +167,215 @@
                 <%--Site Scripts--%>
             </Scripts>
         </asp:ScriptManager>
-        <div id="SessionOut" style="display:none; position:fixed;background-color: white;min-height:100%; width:100%; opacity:1.0;height:auto !important;z-index:999990 !important">
-            <div align="center" style="margin-top: 150px;">
-                Session expired. please <a href="#" onclick="javascript:onMenuClick('/UI/Common/Login.aspx',0,'')">click here</a>  to relogin
+        <div >
+        
+
+        <div class=" sidebar" role="navigation">
+                <div class="navbar-collapse">
+                    <nav class="side_menu side_menu-vertical side_menu-left" id="side_menu-s1">
+                        <ul class="nav" id="side-menu">
+                            <li>
+                                <table class="menu_table" onclick="javascript:onMenuClick('/UI/Tailer/TailerHome.aspx',0,'')">
+                                    <tr>
+                                        <td class="menu_icon">
+                                            <img src="<%=ApplicationVirtualPath %>/Content/Images/home.png" /></td>
+                                        <td class="menu_txt">Home</td>
+                                    </tr>
+                                </table>
+                            </li>
+                            <%--<li>
+                                <table class="menu_table" onclick="openCity(event, 'account')">
+                                    <tr>
+                                        <td class="menu_icon">
+                                            <img src="<%=ApplicationVirtualPath %>/Content/Images/accounts.png" /></td>
+                                        <td class="menu_txt">Account</td>
+                                    </tr>
+                                </table>
+                            </li>--%>
+                            <li id="Employee">
+                                <table class="menu_table">
+                                    <tr onclick="javascript:onMenuClick('/UI/Tailer/EmployeeList.aspx',0,'')">
+                                        <td class="menu_icon">
+                                            <img src="<%=ApplicationVirtualPath %>/Content/Images/employee.png" /></td>
+                                        <td class="menu_txt">Employee</td>
+                                    </tr>
+                                </table>
+                            </li>
+                            <li id="CustomerList">
+                                <table class="menu_table">
+                                    <tr onclick="javascript:onMenuClick('/UI/Tailer/CustomerList.aspx',0,'')">
+                                        <td class="menu_icon">
+                                            <img src="<%=ApplicationVirtualPath %>/Content/Images/customer.png" /></td>
+                                        <td class="menu_txt">Customer</td>
+                                        <td class="menu_arrow" align="right" style="display: none">
+                                            <img src="<%=ApplicationVirtualPath %>/Content/Images/down-chevron.png" class="menu_arrow_img" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </li>
+                            <li id="Measurements">
+                                <table class="menu_table">
+                                    <tr onclick="javascript:onMenuClick('/UI/Tailer/MeasurementList.aspx',0,'')">
+                                        <td class="menu_icon"><i class="fa fa-calendar"></i></td>
+                                        <td class="menu_txt">Measurements</td>
+                                    </tr>
+                                </table>
+                            </li>
+
+                            <%--  <ul class="nav_sub">
+                                    <li>
+                                        <table onclick="openCity(event, 'addNewCustomer')">
+                                            <tr>
+                                                <td class="menu_icon">
+                                                    <img src="<%=ApplicationVirtualPath %>/Content/Images/circle-outline.png" class="menu_circle" /></td>
+                                                <td class="menu_txt">Add Employee</td>
+                                            </tr>
+                                        </table>
+                                    </li>
+                                    <li>
+                                        <table onclick="openCity(event, 'customer_list')">
+                                            <tr>
+                                                <td class="menu_icon">
+                                                    <img src="<%=ApplicationVirtualPath %>/Content/Images/circle-outline.png" class="menu_circle" /></td>
+                                                <td class="menu_txt">Employee List</td>
+                                            </tr>
+                                        </table>
+                                    </li>
+                                </ul>--%>
+                            <li>
+                                <table class="menu_table">
+                                    <tr>
+                                        <td class="menu_icon">
+                                            <img src="<%=ApplicationVirtualPath %>/Content/Images/reports.png" /></td>
+                                        <td class="menu_txt">Reports</td>
+                                        <td class="menu_arrow" align="right">
+                                            <img src="<%=ApplicationVirtualPath %>/Content/Images/down-chevron.png" class="menu_arrow_img" />
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </li>
+                            <ul class="nav_sub">
+                                <li>
+                                    <table>
+                                        <tr onclick="javascript:onMenuClick('/UI/Tailer/InvoiceList.aspx',0,'')">
+                                            <td class="menu_icon">
+                                                <img src="<%=ApplicationVirtualPath %>/Content/Images/circle-outline.png" class="menu_circle" /></td>
+                                            <td class="menu_txt">Invoice List</td>
+                                        </tr>
+                                    </table>
+                                </li>
+                                <li>
+                                    <table>
+                                        <tr>
+                                            <td class="menu_icon">
+                                                <img src="<%=ApplicationVirtualPath %>/Content/Images/circle-outline.png" class="menu_circle" /></td>
+                                            <td class="menu_txt">Birth Day List</td>
+                                        </tr>
+                                    </table>
+                                </li>
+                            </ul>
+                            <li>
+                                <table class="menu_table">
+                                    <tr>
+                                        <td class="menu_icon">
+                                            <img src="<%=ApplicationVirtualPath %>/Content/Images/settings.png" /></td>
+                                        <td class="menu_txt">Settings</td>
+                                        <td class="menu_arrow" align="right">
+                                            <img src="<%=ApplicationVirtualPath %>/Content/Images/down-chevron.png" class="menu_arrow_img" />
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </li>
+                            <ul class="nav_sub" id="div_SetUp">
+                                <li id="UserRole">
+                                    <table>
+                                        <tr onclick="javascript:onMenuClick('/UI/Admin/UserAndRole.aspx',0,'')">
+                                            <td class="menu_icon">
+                                                <img src="<%=ApplicationVirtualPath %>/Content/Images/circle-outline.png" class="menu_circle" /></td>
+                                            <td class="menu_txt">User & Roles</td>
+                                        </tr>
+                                    </table>
+                                </li>
+                                <li id="CompanyBranch">
+                                    <table>
+                                        <tr onclick="javascript:onMenuClick('/UI/Admin/CompanyBranchList.aspx',0,'')">
+                                            <td class="menu_icon">
+                                                <img src="<%=ApplicationVirtualPath %>/Content/Images/circle-outline.png" class="menu_circle" /></td>
+                                            <td class="menu_txt">Company & Branch</td>
+                                        </tr>
+                                    </table>
+                                </li>
+                                <li id="ItemMaster">
+                                    <table>
+                                        <tr onclick="javascript:onMenuClick('/UI/Admin/ItemsMaster.aspx',0,'')">
+                                            <td class="menu_icon">
+                                                <img src="<%=ApplicationVirtualPath %>/Content/Images/circle-outline.png" class="menu_circle" /></td>
+                                            <td class="menu_txt">Item Master</td>
+                                        </tr>
+                                    </table>
+                                </li>
+                                <li id="MeasurementField">
+                                    <table>
+                                        <tr onclick="javascript:onMenuClick('/UI/Tailer/MeasurementField.aspx',0,'')">
+                                            <td class="menu_icon">
+                                                <img src="<%=ApplicationVirtualPath %>/Content/Images/circle-outline.png" class="menu_circle" /></td>
+                                            <td class="menu_txt">Measurement Field</td>
+                                        </tr>
+                                    </table>
+                                </li>
+                            </ul>
+                        </ul>
+                    </nav>
+                </div>
             </div>
+
+        <div class="sticky-header header-section ">
+            <table style="width:100%" >
+                <tr>
+                    <td style="width:30%">
+                        <table class="logo_back">
+                            <tr>
+                                <td>&nbsp;&nbsp;<img id="showLeftPush" src="<%=ApplicationVirtualPath %>/Content/Images/menu.png" />&emsp;</td>
+                                <td>
+                                    <div class="logo">
+                                        <a href="#" onclick="javascript:onMenuClick('/UI/Tailer/TailerHome.aspx',0,'')">
+                                            <img src="<%=ApplicationVirtualPath %>/Content/Images/s2k.png" width="68" />
+                                        </a>
+                                    </div>
+                                    <!--//logo-->
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width:40%">
+                        <div class="header-center">
+                            Stitch Software
+                        </div>
+                        <!--End of header-center-->
+                   </td>
+                    <td style="width:30%;text-align:right">
+                        <table>
+                            <tr>
+                                <td>
+                                    <div class="login_user"><%=CURRENT_USER.userName.Substring(0,2).ToUpper() %></div>
+                                </td>
+                                <td class="login_uname"><%=CURRENT_USER.userName %>
+                                </td>
+                                <td>
+                                    <div class="logout" onclick="javascript:onMenuClick('/UI/Common/Login.aspx',0,'')">
+                                        <img src="<%=ApplicationVirtualPath %>/Content/Images/logout.png" />
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
         </div>
-        <div class="navbar navbar-light bg-primary navbar-fixed-top header" >
+
+        <%-- <div class="navbar navbar-light bg-primary navbar-fixed-top header" >
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -147,14 +391,16 @@
                     </div> 
                 </div>
             </div>
-        </div>
+        </div>--%>
+
+            
         
-        <div class="sub_header">
+        <%--<div class="sub_header">
             <table>
                 <tbody>
                     <tr>
                         <td style="width:90%">
-                            <div class="sub_menu_sec" id="Account">
+                             <div class="sub_menu_sec" id="Account">
                                 <table>
                                     <tbody>
                                         <tr onclick="javascript:onMenuClick('/UI/Tailer/AccountMaster.aspx',0,'')">
@@ -177,7 +423,7 @@
                                 </table>
                             </div>
                             <!--end of submenu-->
-                            <div class="sub_menu_sec" id="CustomerList">
+                           <div class="sub_menu_sec" id="CustomerList">
                                 <table>
                                     <tbody>
                                         <tr onclick="javascript:onMenuClick('/UI/Tailer/CustomerList.aspx',0,'')">
@@ -323,17 +569,27 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
+        </div>--%>
 
-        <div class="container body-content">
+        <div  id="page-wrapper">
+            <div class="tabcontent" id="home" style="display:block">
+            <div class="container-fluid">
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
             </asp:ContentPlaceHolder>
        
             <footer>
                 <%--<p>&copy; <%: DateTime.Now.Year %> - Stitch</p>--%>
             </footer>
+            </div>
+            </div>
         </div>
-
+    
+        <div id="SessionOut" style="display:none; position:fixed;background-color: white;min-height:100%; width:100%; opacity:1.0;height:auto !important;z-index:999990 !important">
+            <div align="center" style="margin-top: 150px;">
+                Session expired. please <a href="#" onclick="javascript:onMenuClick('/UI/Common/Login.aspx',0,'')">click here</a>  to relogin
+            </div>
+        </div>
+     </div>
     </form>
 </body>
 </html>

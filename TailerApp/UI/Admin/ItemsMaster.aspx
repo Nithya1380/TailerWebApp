@@ -56,42 +56,42 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container bootstrap snippet" data-ng-app="TailerApp" id="divMainContent" data-ng-controller="ItemsListController" data-ng-init="init()">
         <div class="row">
-            <div>&nbsp;</div>
-        </div>
-        <div class="row">
-            <div class="col-lg-2 col-md-2 col-sm-2 pull-right" style="margin-bottom:5px">
-                <button class="btn btn-lg btn-success" type="button" data-ng-click="OnAddEditItemClick(0);"><i class="fas fa-plus-square"></i>&nbsp;Add New</button>
+            <div class="page-header-new col-lg-12">
+                Item Master
             </div>
         </div>
+        
         <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="card">
-                    <div class="row">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Code</th>
-                                    <th>Description</th>
-                                    <th>Group</th>
-                                    <th>Price</th>
-                                    <th></th>
-                                    
-                                </tr>
-                            </thead>
-                            <tbody ng-repeat="Item in ItemsList">
-                                <tr>
-                                    <td>{{Item.ItemCode}}</td>
-                                    <td>{{Item.ItemDescription}}</td>
-                                    <td>{{Item.ItemGroup}}</td>
-                                    <td>{{Item.ItemPrice}}</td>
-                                    <td><a href="#" title="Edit Item" data-ng-click="OnAddEditItemClick(Item.ItemmasterID)"><i class="fa fa-pencil" style="font-size:24px;"></i></a></td>
-                                </tr>
-                            </tbody>
-                        </table>
+            <div class="col-lg-12">
+                <div class="card_bg">
+                    <div class="button_div" style="float: right; max-width: 200px;">
+                        <button class="btn_ss bg-blue" type="button" data-ng-click="OnAddEditItemClick(0);">Add New</button>
                     </div>
-                </div>
-            </div>
+                    <table class="table card_table">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Description</th>
+                                <th>Group</th>
+                                <th>Price</th>
+                                <th></th>
 
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="Item in ItemsList">
+                            <tr>
+                                <td>{{Item.ItemCode}}</td>
+                                <td>{{Item.ItemDescription}}</td>
+                                <td>{{Item.ItemGroup}}</td>
+                                <td>{{Item.ItemPrice}}</td>
+                                <td><a href="#" title="Edit Item" data-ng-click="OnAddEditItemClick(Item.ItemmasterID)"><i class="fa fa-pencil" style="font-size: 24px;"></i></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
         </div>
+               
     </div>
 </asp:Content>

@@ -1,4 +1,5 @@
-﻿using DAL.Model;
+﻿using DAL.DBManager;
+using DAL.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,12 @@ namespace TailerApp.UI.Tailer
 {
     public partial class TailerHome : PageBase
     {
+        public string ApplicationVirtualPath = string.Empty;
         protected void Page_Load(object sender, EventArgs e)
         {
             try
             {
+                ApplicationVirtualPath = Utils.ApplicationVirtualPath;
                 if (!IsPostBack)
                 {
                     this.SelectUserBranch();
@@ -39,7 +42,7 @@ namespace TailerApp.UI.Tailer
                 if(this.CURRENT_USER.UserBranchID==0 && userBranchList!=null && userBranchList.Count>1)
                 {
                     sbHtml.Append("<div class=\"row BranchDiv\">");
-                    sbHtml.Append("<div class=\"col-lg-12 col-md-12 col-sm-12\">");
+                    sbHtml.Append("<div class=\"col-lg-6 col-md-6 col-sm-6\">");
                     sbHtml.Append("<div class=\"card\">");
                     sbHtml.Append("<div class=\"row\">");
                     sbHtml.Append("<table class=\"table\">");
@@ -107,6 +110,39 @@ namespace TailerApp.UI.Tailer
             }
 
             return custList;
+        }
+
+        [WebMethod]
+        public static JsonResults GetDashboardDetails()
+        {
+            JsonResults dashboardDetails = new JsonResults();
+            LoginUser currentUser;
+            try
+            {
+                if (!GetUserSession(out currentUser))
+                {
+                    dashboardDetails.ErrorCode = -1001;
+                    dashboardDetails.ErrorMessage = "";
+                }
+
+                CustomerManager customerObj = new CustomerManager();
+                if (customerObj.GetDashboard(currentUser.CompanyID, currentUser.UserId, currentUser.UserBranchID, out dashboardDetails))
+                {
+                    dashboardDetails.ErrorCode = 0;
+                    dashboardDetails.ErrorMessage = "";
+                }
+                else
+                {
+                    dashboardDetails.ErrorCode = -1;
+                    dashboardDetails.ErrorMessage = "Failed to get Dashboard details. please try again later";
+                }
+            }
+            catch (Exception ex)
+            {
+                Utils.Write(ex);
+            }
+
+            return dashboardDetails;
         }
     }
 }

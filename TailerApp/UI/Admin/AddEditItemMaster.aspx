@@ -130,6 +130,7 @@
                         $scope.AlertClass = "alert-success";
                         $scope.EnableSave = false;
                         $scope.RefreshItemMasterList();
+                        if ($scope.ItemMasterID != undefined && $scope.ItemMasterID != null && $scope.ItemMasterID!=0)
                         $scope.GetItemRateList();
                         return false;
                     }
