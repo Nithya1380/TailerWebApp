@@ -275,5 +275,18 @@ namespace DAL.Model
         public string AmountPending { get; set; }
 
     }
+    public class ST_MeasurementField 
+    {
+       public int MeasurementFieldID {get;set;}
+	   public string FieldName {get;set;}
+	   public bool isRrepeat {get;set;}
+	   public int OrderBy	{get;set;}
+	   public string ValItemGroup {get;set;}
+	   public string Lang {get;set;}
+    }
 
+    public class ST_Measurement : JsonResults
+    {
+        public List<ST_MeasurementField> MeasurementList { get; set; }
+    }
 }

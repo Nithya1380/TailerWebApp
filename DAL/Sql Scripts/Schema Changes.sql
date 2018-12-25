@@ -691,3 +691,21 @@ CREATE TABLE ItemRates
 	CONSTRAINT FK_ItemRates_DeletedBy FOREIGN KEY(DeletedBy) REFERENCES Users(UserID)
 )
 ROLLBACK TRAN
+
+--25th Dec 2018
+BEGIN TRAN
+	
+	ALTER TABLE MeasurementFieldMaster ADD Lang1 NVARCHAR(50)
+
+	GO
+	CREATE TYPE [dbo].[tempMeasurField] AS TABLE 
+	(
+		MeasurementFieldID	int,
+		FieldName	varchar(50),
+		isRrepeat	bit,
+		OrderBy	    int,
+		ItemGroup	varchar(50),
+		Lang	nvarchar(50)
+	)
+	GO
+ROLLBACK

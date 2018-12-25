@@ -519,9 +519,10 @@ namespace DAL.DBManager
             return ret;
         }
 
-        public bool GetMeasurementMaster(int companyID, int userID, int MeasurementMasterID, out JsonResults Measu, bool isPrint = false)
+        public bool GetMeasurementMaster(int companyID, int userID, int MeasurementMasterID, out ST_Measurement Measu, bool isPrint = false)
         {
-            Measu = new JsonResults();
+            Measu = new ST_Measurement();
+            Measu.MeasurementList = new List<ST_MeasurementField>();
             bool ret = false;
 
             try
@@ -533,6 +534,7 @@ namespace DAL.DBManager
                 this.AddSPIntParam("@user", userID);
                 this.AddSPIntParam("@MeasurementMasterID", MeasurementMasterID);
                 this.AddSPBoolParam("@isPrint", isPrint);
+                this.AddSPReturnIntParam("@return");
 
                 using (SqlDataReader reader = this.ExecuteSelectSP(spName))
                 {
@@ -544,6 +546,23 @@ namespace DAL.DBManager
                         if (!reader.IsDBNull(1))
                             Measu.JSonstring2 = reader.GetString(1);
                     }
+                    reader.NextResult();
+                    while (reader.Read())
+                    {
+                        ST_MeasurementField obj = new ST_MeasurementField();
+
+                        if (!reader.IsDBNull(0))
+                            obj.MeasurementFieldID = Convert.ToInt32(reader.GetValue(0));
+
+                        if (!reader.IsDBNull(1))
+                            obj.FieldName = reader.GetString(1);
+
+                        if (!reader.IsDBNull(2))
+                            obj.Lang = reader.GetString(2);
+
+                        Measu.MeasurementList.Add(obj);
+                    }
+
                     reader.Close();
                 }
                 int retcode = this.GetOutValueInt("@return");
@@ -779,9 +798,10 @@ namespace DAL.DBManager
             return ret;
         }
 
-        public bool GetMeasurementField(int companyID, int userID, out JsonResults Measu)
+        public bool GetMeasurementField(int companyID, int userID, out ST_Measurement Measu)
         {
-            Measu = new JsonResults();
+            Measu = new ST_Measurement();
+            Measu.MeasurementList = new List<ST_MeasurementField>();
             bool ret = false;
 
             try
@@ -796,8 +816,27 @@ namespace DAL.DBManager
                 {
                     while (reader.Read())
                     {
+                        ST_MeasurementField Obj = new ST_MeasurementField();
+
                         if (!reader.IsDBNull(0))
-                            Measu.JSonstring = reader.GetString(0);
+                            Obj.MeasurementFieldID = Convert.ToInt32(reader.GetValue(0));
+
+                        if (!reader.IsDBNull(1))
+                            Obj.FieldName = reader.GetString(1);
+
+                        if (!reader.IsDBNull(2))
+                            Obj.isRrepeat = Convert.ToBoolean(reader.GetValue(2));
+
+                        if (!reader.IsDBNull(3))
+                            Obj.OrderBy = Convert.ToInt32(reader.GetValue(3));
+
+                        if (!reader.IsDBNull(4))
+                            Obj.ValItemGroup = reader.GetString(4);
+
+                        if (!reader.IsDBNull(5))
+                            Obj.Lang = reader.GetString(5);
+
+                        Measu.MeasurementList.Add(Obj); 
                     }
                     reader.Close();
                 }
@@ -824,7 +863,7 @@ namespace DAL.DBManager
             return ret;
         }
 
-        public bool SaveMeasurementField(int CompanyID, int User, string MeasurField)
+        public bool SaveMeasurementField(int CompanyID, int User, List<ST_MeasurementField> MeasurementField)
         {
             bool ret = false;
 
@@ -833,9 +872,30 @@ namespace DAL.DBManager
                 this.Connect(this.GetConnString());
                 string spName = "SaveMeasurementField";
                 this.ClearSPParams();
+
+                System.Data.DataTable dt = new System.Data.DataTable();
+                dt.Columns.Add(new System.Data.DataColumn("MeasurementFieldID", typeof(int)));
+                dt.Columns.Add(new System.Data.DataColumn("FieldName", typeof(string)));
+                dt.Columns.Add(new System.Data.DataColumn("isRrepeat", typeof(bool)));
+                dt.Columns.Add(new System.Data.DataColumn("OrderBy", typeof(int)));
+                dt.Columns.Add(new System.Data.DataColumn("ValItemGroup", typeof(string)));
+                dt.Columns.Add(new System.Data.DataColumn("Lang", typeof(string)));
+
+                foreach (ST_MeasurementField row in MeasurementField)
+                {
+                    System.Data.DataRow dr = dt.NewRow();
+
+                    dr["MeasurementFieldID"] = row.MeasurementFieldID;
+                    dr["FieldName"] = row.FieldName;
+                    dr["isRrepeat"] = row.isRrepeat;
+                    dr["OrderBy"] = row.OrderBy;
+                    dr["ValItemGroup"] = row.ValItemGroup;
+                    dr["Lang"] = row.Lang;
+                    dt.Rows.Add(dr);
+                }
                 this.AddSPIntParam("@CompanyID", CompanyID);
                 this.AddSPIntParam("@user", User);
-                this.AddSPStringParam("@MeasurementField", MeasurField);
+                this.AddSPStructParam("@MeasurementField", dt);
                 this.AddSPReturnIntParam("@return");
 
                 this.ExecuteNonSP(spName);

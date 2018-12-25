@@ -33,7 +33,12 @@
                         return false;
                     }
 
-                    $scope.MeasurField = JSON.parse(response.data.d.JSonstring);
+                    $scope.MeasurField = response.data.d.MeasurementList;
+
+                    $scope.MeasurField.forEach(function (item, index) {
+                        $scope.MeasurField[index].ItemGroup = { PickListLabel: item.ValItemGroup, PickListValue: item.ValItemGroup };
+                    });
+                    debugger
 
                 }, function onFailure(error) {
                     debugger
@@ -72,12 +77,15 @@
             $scope.GetMeasurementField();
 
             $scope.SaveMeasurementField = function () {
-                var MeasurField = JSON.stringify($scope.MeasurField);
-
+                //var MeasurField = JSON.stringify($scope.MeasurField);
+                $scope.MeasurField.forEach(function (item, index) {
+                    $scope.MeasurField[index].ValItemGroup = item.ItemGroup.PickListValue;
+                });
+                debugger
                 $http({
                     method: "POST",
                     url: "MeasurementField.aspx/SaveMeasurementField",
-                    data: { MeasurField: MeasurField },
+                    data: { MeasurementField: $scope.MeasurField },
                     dataType: "json",
                     headers: { "Content-Type": "application/json" }
                 }).then(function onSuccess(response) {
@@ -93,7 +101,7 @@
                     $scope.GetMeasurementField();
 
                 }, function onFailure(error) {
-
+                    debugger
                 });
             };
 
@@ -109,7 +117,7 @@
             }
 
             $scope.moveup = function (order) {
-                $scope.MeasurField.foreach(function (item, index) {
+                $scope.MeasurField.forEach(function (item, index) {
                     if (item.OrderBy == order)
                         $scope.MeasurField[index].OrderBy = order - 1;
                     else if (item.OrderBy == order - 1)
@@ -144,9 +152,10 @@
                     <table class="table table-hover card_table">
                         <thead>
                             <tr>
-                                <th style="width: 40%">Field Name</th>
-                                <th style="width: 40%">Item Group</th>
-                                <th style="width: 40%">Rrepeat</th>
+                                <th style="width: 30%">Field Name</th>
+                                <th style="width: 30%">Gujrati</th>
+                                <th style="width: 25%">Item Group</th>
+                                <th style="width: 15%">Rrepeat</th>
                                 <th style="width: 5%"></th>
                                 <th style="width: 5%"></th>
                             </tr>
@@ -154,7 +163,11 @@
                         <tbody ng-repeat="Measur in MeasurField | orderBy : 'OrderBy'">
                             <tr>
                                 <td>
-                                    <input type="text" maxlength="50" class="form-control" ng-model="Measur.FieldName" style="width: 70%" /></td>
+                                    <input type="text" maxlength="50" class="form-control" ng-model="Measur.FieldName" style="width: 70%" />
+                                </td>
+                                <td>
+                                    <input type="text" maxlength="50" class="form-control" ng-model="Measur.Lang" style="width: 70%" />
+                                </td>
                                 <td>
                                     <select class="form-control" style="width: 40%" data-ng-model="Measur.ItemGroup"
                                         data-ng-options="option.PickListLabel for option in ItemGroupPickLists track by option.PickListValue">

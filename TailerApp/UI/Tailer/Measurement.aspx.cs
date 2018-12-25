@@ -54,9 +54,9 @@ namespace TailerApp.UI.Tailer
         }
 
         [WebMethod]
-        public static JsonResults GetMeasurementMaster(string MeasurMasterID, bool isPrint)
+        public static ST_Measurement GetMeasurementMaster(string MeasurMasterID, bool isPrint)
         {
-            JsonResults Measur = new JsonResults();
+            ST_Measurement Measur = new ST_Measurement();
             LoginUser currentUser;
             try
             {
