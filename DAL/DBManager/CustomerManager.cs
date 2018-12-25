@@ -331,7 +331,7 @@ namespace DAL.DBManager
             return ret;
         }
 
-        public bool GetCustomerList(int companyID, int userID, out JsonResults customerList)
+        public bool GetCustomerList(int companyID, int userID, string BirthDate, out JsonResults customerList)
         {
             customerList = new JsonResults();
             bool ret = false;
@@ -343,6 +343,7 @@ namespace DAL.DBManager
                 this.ClearSPParams();
                 this.AddSPIntParam("@companyID", companyID);
                 this.AddSPIntParam("@UserID", userID);
+                this.AddSPStringParam("@BirthDate", BirthDate);
                 this.AddSPReturnIntParam("@return");
                 using (SqlDataReader reader = this.ExecuteSelectSP(spName))
                 {
@@ -1027,7 +1028,7 @@ namespace DAL.DBManager
             return ret;
         }
 
-        public bool GetInvoiceList(int companyID, int userID, int branchID, out JsonResults customerList)
+        public bool GetInvoiceList(int companyID, int userID, int branchID,string invoiceDateFrom,string invoiceDateTo,string deleveryDate,out JsonResults customerList)
         {
             customerList = new JsonResults();
             bool ret = false;
@@ -1040,6 +1041,9 @@ namespace DAL.DBManager
                 this.AddSPIntParam("@companyID", companyID);
                 this.AddSPIntParam("@BranchID", branchID);
                 this.AddSPIntParam("@UserID", userID);
+                this.AddSPStringParam("@InvoiceDateFrom", invoiceDateFrom);
+                this.AddSPStringParam("@InvoiceDateTo", invoiceDateTo);
+                this.AddSPStringParam("@DeleveryDate", deleveryDate);
                 this.AddSPReturnIntParam("@return");
                 using (SqlDataReader reader = this.ExecuteSelectSP(spName))
                 {
@@ -1223,6 +1227,50 @@ namespace DAL.DBManager
             {
                 ret = false;
                 SetError(-1, "Failed to get Dashboard Details. Please try again later");
+                Utils.Write(ex);
+            }
+            finally
+            {
+                this.ClearSPParams();
+                this.Disconnect();
+            }
+            return ret;
+        }
+
+        public bool DeleteInvoices(int companyID, int userID, int branchID, string invoiceIds)
+        {
+            bool ret = false;
+
+            try
+            {
+                this.Connect(this.GetConnString());
+                string spName = "DeleteInvoices";
+                this.ClearSPParams();
+                this.AddSPIntParam("@companyID", companyID);
+                this.AddSPIntParam("@BranchID", branchID);
+                this.AddSPIntParam("@UserID", userID);
+                this.AddSPStringParam("@InvoiceIds", invoiceIds);
+                this.AddSPReturnIntParam("@return");
+
+                if (this.ExecuteNonSP(spName) > 0)
+                {
+                    int retcode = this.GetOutValueInt("@return");
+
+                    switch (retcode)
+                    {
+                        case 1: ret = true;
+                            break;
+                        default: SetError(-1, "Failed to delete Invoice(s). Please try again later");
+                            break;
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                ret = false;
+                SetError(-1, "Failed to delete Invoice(s). Please try again later");
                 Utils.Write(ex);
             }
             finally

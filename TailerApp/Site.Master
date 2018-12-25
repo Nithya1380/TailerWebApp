@@ -97,6 +97,13 @@
                 $("#MeasurementField").show();
             else
                 $("#MeasurementField").hide();
+
+            if (roleScop.indexOf('12,') >= 0)
+                $("#CreateNewInvoice").show();
+            else
+                $("#CreateNewInvoice").hide();
+
+            
                
             var menuLeft = document.getElementById('side_menu-s1'),
 				showLeftPush = document.getElementById('showLeftPush'),
@@ -183,15 +190,15 @@
                                     </tr>
                                 </table>
                             </li>
-                            <%--<li>
-                                <table class="menu_table" onclick="openCity(event, 'account')">
+                            <li id="CreateNewInvoice">
+                                <table class="menu_table"  onclick="javascript:onMenuClick('/UI/Tailer/CreateInvoice.aspx?CustomerID=0',0,'')">
                                     <tr>
                                         <td class="menu_icon">
                                             <img src="<%=ApplicationVirtualPath %>/Content/Images/accounts.png" /></td>
-                                        <td class="menu_txt">Account</td>
+                                        <td class="menu_txt">Create New Invoice</td>
                                     </tr>
                                 </table>
-                            </li>--%>
+                            </li>
                             <li id="Employee">
                                 <table class="menu_table">
                                     <tr onclick="javascript:onMenuClick('/UI/Tailer/EmployeeList.aspx',0,'')">

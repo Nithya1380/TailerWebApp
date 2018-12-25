@@ -229,7 +229,7 @@
              });
          }
 
-         var tailerApp = angular.module("TailerApp", ['ui.bootstrap']);//'autoCompleteModule'
+         var tailerApp = angular.module("TailerApp", ['ui.bootstrap', '720kb.datepicker']);//'autoCompleteModule'
          tailerApp.controller("CreateInvoiceController", function ($scope, $window, $http, $rootScope, $filter, $sce) {
              $scope.InvoiceList = [];
              $scope.TotalAmount = 0.00;
@@ -492,8 +492,10 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container bootstrap snippet" data-ng-app="TailerApp" id="divMainContent" data-ng-controller="CreateInvoiceController" data-ng-init="init()">
-        <div class="row">
-            <div>&nbsp;</div>
+         <div class="row">
+            <div class="page-header-new col-lg-12">
+                Create New Invoice
+            </div>
         </div>
         <div class="row">
              <div class="col-lg-12 col-md-12 col-sm-12">
@@ -529,7 +531,10 @@
                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Date:</span></td>
                                     <td >
                                         <span class="profileValue">
-                                            <input type="text" data-ng-model="CustInvoice.InvoiceDate" name="InvoiceDate" class="form-control-Multiple" style="width: 100px; margin-left: 5px;" maxlength="10" />
+                                             <datepicker date-format="dd/MM/yyyy" >
+                                                      <input type="text" data-ng-model="CustInvoice.InvoiceDate" name="InvoiceDate" class="form-control-Multiple" style="width: 100px; margin-left: 5px;" maxlength="10" />
+                                              </datepicker>
+                                           
                                         </span>
                                     </td>
                                 </tr>
@@ -551,13 +556,25 @@
                                     </td>
                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Trail Date:</span></td>
                                     <td >
-                                        <span class="profileValue">
-                                            <input type="text" data-ng-model="CustInvoice.TrailDate" name="TrailDate" class="form-control-Multiple" style="width: 100px; margin-left: 5px;" maxlength="10" />
-                                            <input type="text" data-ng-model="CustInvoice.TrailTime" name="TrailTime" class="form-control-Multiple" style="width: 60px; margin-left: 5px;" maxlength="10" />
-                                            <button class="btn btn-sm btn-success" type="button" title="Book">
-                                                <i class="fa fa-book" aria-hidden="true"></i>
-                                            </button>
-                                        </span>
+                                       
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <datepicker date-format="dd/MM/yyyy" >
+                                                             <input type="text" data-ng-model="CustInvoice.TrailDate" name="TrailDate" class="form-control-Multiple" style="width: 100px; margin-left: 5px;" maxlength="10" />
+                                                        </datepicker>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" data-ng-model="CustInvoice.TrailTime" name="TrailTime" class="form-control-Multiple" style="width: 60px; margin-left: 5px;" maxlength="10" />
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-success" type="button" title="Book">
+                                                          <i class="fa fa-book" aria-hidden="true"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                       
                                     </td>
                                     <td colspan="4" rowspan="2">
                                         <span style="text-align:right;font-weight:bold;font-size:20px;float:right" data-ng-bind="TotalAmount">
@@ -579,13 +596,27 @@
                                     </td>
                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Delivery Date:</span></td>
                                     <td >
-                                        <span class="profileValue">
-                                            <input type="text" data-ng-model="CustInvoice.DeliveryDate" name="DeliveryDate" class="form-control-Multiple" style="width: 100px; margin-left: 5px;" maxlength="10" />
-                                            <input type="text" data-ng-model="CustInvoice.DeliveryTime" name="DeliveryTime" class="form-control-Multiple" style="width: 60px; margin-left: 5px;" maxlength="10" />
-                                           <button class="btn btn-sm btn-success" type="button" title="Refresh">
-                                                <i class="fa fa-refresh" aria-hidden="true"></i>
-                                            </button>
-                                        </span>
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <datepicker date-format="dd/MM/yyyy" >
+                                                              <input type="text" data-ng-model="CustInvoice.DeliveryDate" name="DeliveryDate" class="form-control-Multiple" style="width: 100px; margin-left: 5px;" maxlength="10" />
+                                                        </datepicker>
+                                                </td>
+                                                <td>
+                                                    <input type="text" data-ng-model="CustInvoice.DeliveryTime" name="DeliveryTime" class="form-control-Multiple" style="width: 60px; margin-left: 5px;" maxlength="10" />
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-success" type="button" title="Refresh">
+                                                      <i class="fa fa-refresh" aria-hidden="true"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                           
+                                            
+                                           
+                                        
                                     </td>
                                 </tr>
                                 <tr>

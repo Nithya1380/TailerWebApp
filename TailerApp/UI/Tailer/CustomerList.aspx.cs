@@ -13,13 +13,21 @@ namespace TailerApp.UI.Tailer
 {
     public partial class CustomerList : PageBase
     {
+        public int FromPage = 0;
+        public string BirthDate = string.Empty;
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!string.IsNullOrEmpty(Request.QueryString.Get("FromPage")))
+                FromPage = Convert.ToInt32(Request.QueryString.Get("FromPage"));
 
+            if (FromPage == 2)
+            {
+                BirthDate = DateTime.Now.ToString("dd/MM/yyyy").Replace('-', '/');
+            }
         }
 
         [WebMethod]
-        public static JsonResults GetCustomerList()
+        public static JsonResults GetCustomerList(string BirthDate)
         {
             JsonResults custList = new JsonResults();
             LoginUser currentUser;
@@ -32,7 +40,7 @@ namespace TailerApp.UI.Tailer
                 }
 
                 CustomerManager customerObj = new CustomerManager();
-                if (customerObj.GetCustomerList(currentUser.CompanyID, currentUser.UserId, out custList))
+                if (customerObj.GetCustomerList(currentUser.CompanyID, currentUser.UserId, BirthDate, out custList))
                 {
                     custList.ErrorCode = 0;
                     custList.ErrorMessage = "";

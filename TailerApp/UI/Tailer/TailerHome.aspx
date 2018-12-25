@@ -4,7 +4,7 @@
     <style type="text/css">
         .BranchDiv
         {
-            z-index:1001;
+            z-index:1002;
             position:relative;
             margin-left:5%;
             margin-top:-10%;
@@ -21,6 +21,7 @@
     overflow-y: hidden;
     transition: 1s;
     opacity:0.5;
+    z-index:1001;
    
 }
     </style>
@@ -88,6 +89,14 @@
 
                 });
             };
+
+            $scope.onDashboardCounterClick = function (url, count) {
+                if (count <= 0)
+                    return false;
+
+                window.location.href = "<%=ApplicationVirtualPath%>" + url;
+                return false;
+             }
         });
     </script>
 </asp:Content>
@@ -105,7 +114,7 @@
             <div class="col-lg-3">
                 <div class="card">
                     <table style="width: 100%">
-                        <tr>
+                        <tr data-ng-click="onDashboardCounterClick('/UI/Tailer/InvoiceList.aspx?FromPage=3',DashboardDetails.DelivaryOfTheDay)">
                             <td rowspan="2">
                                 <div class="delivery_outer">
                                     <img src="<%=ApplicationVirtualPath %>/Content/Images/delivery-truck.png" />
@@ -130,7 +139,7 @@
             <div class="col-lg-3">
                 <div class="card">
                     <table style="width: 100%">
-                        <tr>
+                        <tr data-ng-click="onDashboardCounterClick('/UI/Tailer/CustomerList.aspx?FromPage=2',DashboardDetails.BirthDay)">
                             <td rowspan="2">
 
                                 <div class="birthday_outer">
@@ -156,7 +165,7 @@
             <div class="col-lg-3">
                 <div class="card">
                     <table style="width: 100%">
-                        <tr>
+                        <tr data-ng-click="onDashboardCounterClick('/UI/Tailer/InvoiceList.aspx?FromPage=2',DashboardDetails.RecentInvoices)">
                             <td rowspan="2">
                                 <div class="invoice_outer">
                                     <img src="<%=ApplicationVirtualPath %>/Content/Images/invoice.png" style="width: 26px; margin-top: 2px;" />

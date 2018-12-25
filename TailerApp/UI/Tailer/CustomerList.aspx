@@ -1,23 +1,43 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="CustomerList.aspx.cs" Inherits="TailerApp.UI.Tailer.CustomerList" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeaderContent" runat="server">
     <script src="../../Scripts/AngularJS/angular.js"></script>
+    <link href="../../Scripts/angular-datepicker.css" rel="stylesheet" />
+    <script src="../../Scripts/angular-datepicker.js"></script>
     <script type="text/javascript">
-        var tailerApp = angular.module("TailerApp", []);
+        var g_BirthDate = '<%=BirthDate%>';
+        var roleScop = "<%=CURRENT_USER.rolescope%>"; 
+        var g_createInvoicePermission = false;
+        $(document).ready(function () {
+              if (roleScop.indexOf('12,') >= 0)
+                g_createInvoicePermission = true;
+            else
+               g_createInvoicePermission = false;
+
+              
+        });
+        var tailerApp = angular.module("TailerApp", ['720kb.datepicker']);
         tailerApp.controller("CustomerListController", function ($scope, $window, $http, $rootScope) {
             $scope.CustomerList = {};
+            $scope.CreateInvoicePerm = false;
+            $scope.BirthDate = '';
 
             $scope.init = function () {
+                $scope.CreateInvoicePerm = g_createInvoicePermission;
+                $scope.BirthDate = g_BirthDate;
                 $scope.CustomerList = {};
                 $scope.GetCustomerList();
             };
 
             $scope.GetCustomerList = function () {
-                 $scope.CustomerList = {};
+                $scope.CustomerList = {};
+
+                if ($scope.BirthDate == undefined || $scope.BirthDate == null)
+                    $scope.BirthDate = '';
             
                 $http({
                     method: "POST",
                     url: "CustomerList.aspx/GetCustomerList",
-                    data:{},
+                    data: { BirthDate: $scope.BirthDate },
                     dataType: "json",
                     headers: { "Content-Type": "application/json" }
                 }).then(function onSuccess(response) {
@@ -42,6 +62,9 @@
             };
 
             $scope.onCustomerInvoiceClick = function (CustomerMasterID) {
+                if (!g_createInvoicePermission)
+                    return false;
+
                 $window.location.href = "CreateInvoice.aspx?CustomerID=" + CustomerMasterID;
             };
 
@@ -69,8 +92,23 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card_bg">
-                    <div class="button_div" style="float:right;max-width:200px;">
-                            <button class="btn_ss bg-blue" type="button" data-ng-click="OnAddNewCustomerClick();">Add Customer</button>
+                    <div style="float: left;">
+                        <table style="width: 100%; max-width: 600px;">
+                            <tr>
+                                <td>
+                                    <span>&nbsp;Birth Date:</span>
+                                </td>
+                                <td>
+                                    <datepicker date-format="dd/MM/yyyy">
+                                        <input type="text" data-ng-model="BirthDate" id="txtBirthDate"  class="form-control" style="width: 100px; margin-left: 5px;" maxlength="15"  />
+                                    </datepicker>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="button_div" style="float:right;max-width:300px;">
+                        <button class="btn_ss bg-blue" type="button" data-ng-click="GetCustomerList();">Display</button>
+                        <button class="btn_ss bg-blue" type="button" data-ng-click="OnAddNewCustomerClick();">Add Customer</button>
                     </div>
                     <table class="table card_table">
                         <thead>

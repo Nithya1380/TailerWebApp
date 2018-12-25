@@ -8,6 +8,8 @@
     <script src="../../Scripts/AngularJS/angular.js"></script>
     <link href="../../Scripts/angular-datepicker.css" rel="stylesheet" />
     <script src="../../Scripts/angular-datepicker.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
         <script src="<%: ResolveUrl("~/Scripts/jquery-1.10.2.js") %>"></script>
@@ -59,6 +61,20 @@
                 });
             };
 
+            $scope.export = function () {
+                html2canvas(document.getElementById('divMainContentInner'), {
+                    onrendered: function (canvas) {
+                        var data = canvas.toDataURL();
+                        var docDefinition = {
+                            content: [{
+                                image: data,
+                                width: 500,
+                            }]
+                        };
+                        pdfMake.createPdf(docDefinition).download('InvoiceDetails_' + $scope.InvoiceID + '.pdf');
+                    }
+                });
+            }
 
 
         });
@@ -67,8 +83,12 @@
 <body>
     <form id="form1" runat="server">
      <div class="container bootstrap snippet" data-ng-app="TailerApp" id="divMainContent" data-ng-controller="InvoiceDetailsController" data-ng-init="init()">
-       
-        <div class="row">
+        <div style="text-align:right">
+            
+            <button class="btn_ss bg-blue" type="button" data-ng-click="export();">Print</button>
+        </div>
+        <div id="divMainContentInner">
+        <div class="row" >
              <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="card">
                     <div class="card_header" style="border-bottom: 1px solid #00A5A8; padding-bottom: 8px; color: #00a5a8;">
@@ -273,6 +293,7 @@
                 </div>
             </div>
 
+        </div>
         </div>
     </div>
     </form>
