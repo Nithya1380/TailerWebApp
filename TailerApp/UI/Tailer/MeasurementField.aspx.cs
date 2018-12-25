@@ -19,9 +19,10 @@ namespace TailerApp.UI.Tailer
         }
 
         [WebMethod]
-        public static JsonResults SaveMeasurementField(string MeasurField)
+        public static JsonResults SaveMeasurementField(List<ST_MeasurementField> MeasurementField)
         {
             JsonResults Measur = new JsonResults();
+
             LoginUser currentUser;
             try
             {
@@ -33,7 +34,7 @@ namespace TailerApp.UI.Tailer
                 }
 
                 CustomerManager adminObj = new CustomerManager();
-                if (!adminObj.SaveMeasurementField(currentUser.CompanyID, currentUser.UserId, MeasurField))
+                if (!adminObj.SaveMeasurementField(currentUser.CompanyID, currentUser.UserId, MeasurementField))
                 {
                     Measur.ErrorCode = adminObj.GetLastErrorCode();
                     Measur.ErrorMessage = adminObj.GetLastError();
@@ -51,9 +52,9 @@ namespace TailerApp.UI.Tailer
         }
 
         [WebMethod]
-        public static JsonResults GetMeasurementField()
+        public static ST_Measurement GetMeasurementField()
         {
-            JsonResults Measur = new JsonResults();
+            ST_Measurement Measur = new ST_Measurement();
             LoginUser currentUser;
             try
             {

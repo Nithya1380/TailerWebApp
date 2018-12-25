@@ -18,6 +18,7 @@
             text-align: right;
             width: 100%;
             font-weight: bold;
+            margin: 0px;
         }
 
         .lableval {
@@ -92,6 +93,13 @@
                     }
 
                     $scope.MeasurementField = $scope.MeasurementField.filter(function (x) { return x.ItemGroup == $scope.MeasurementDetails.SelectedItem.ItemGroup || x.ItemGroup == 'Mix' });
+
+                    if (response.data.d.MeasurementList.length > 0) {
+
+                        response.data.d.MeasurementList.forEach(function (item, index) {
+                            $scope.MeasurementField.filter(function (x) { return x.id == item.MeasurementFieldID })[0].Lang = item.Lang;
+                        });
+                    }
 
                 }, function onFailure(error) {
 
@@ -249,7 +257,7 @@
                     </div>
                     <div class="row" style="padding: 0px 25px;">
                         <div class="col-sm-1" ng-repeat="Per in MeasurementField">
-                            <label class="lableMes">{{Per.FieldName}}</label>
+                            <label class="lableMes">{{Per.FieldName}}</label><label class="lableMes" ng-show="Per.Lang">({{Per.Lang}})</label>
                             <div ng-repeat="id in Per.FieldValue" style="padding-left: 20px; padding-bottom: 5px;">
                                 <label class="lableval"><span>{{decimalToFraction(id.val)[0]}}</span><span style="font-size: 12px; vertical-align: top;">{{decimalToFraction(id.val)[1]}}</span></label>
                             </div>

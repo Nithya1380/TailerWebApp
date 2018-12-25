@@ -8,6 +8,7 @@
     <link href="../../Scripts/CalendarControl.css" rel="stylesheet" />
     <link href="../../Scripts/angular-datepicker.css" rel="stylesheet" />
     <script src="../../Scripts/ui-bootstrap-tpls-1.3.2.js"></script>
+    <link href="../Style/font-awesome.min.css" rel="stylesheet" />
     <script type="text/javascript" lang="javascript">
 
         var MeasurementID = "<%=MeasurementID%>";
@@ -318,7 +319,9 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container bootstrap snippet" data-ng-app="TailerApp" data-ng-controller="MeasurementController" >
         <div class="row">
-            <div>&nbsp;</div>
+            <div class="page-header-new col-lg-12">
+                Measurement
+            </div>
         </div>
         <div class="row" ng-keydown="keyDownFunc($event)" ng-keyup="keyUpFunc($event)">
             <div class="col-lg-12 col-md-12 col-sm-12">
@@ -327,18 +330,9 @@
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="row">
                                 <div class="col-lg-3 col-md-2 col-sm-3 pull-right">
-                                    <button class="client_btn" type="button" ng-click="SaveMeasurementMaster()" data-toggle="dropdown" style="border-color: #00A5A8 !important; background-color: #00B5B8">
-                                        <i class="fa fa-save"></i>Save
-                                    </button>
-                                    <%--<button class="client_btn" type="button" ng-hide="UserID == 0" ng-click="DeleteEmployeeMasterDetails();" data-toggle="dropdown" style="border-color: rgba(212, 63, 58, 1) !important; background-color: rgba(212, 63, 58, 1)">
-                                        <i class="fa fa-close"></i>Delete
-                                    </button>--%>
-                                    <button class="client_btn" type="button" ng-click="onClose();" data-toggle="dropdown" style="border-color: #FFA87D !important; background-color: #FFA87D">
-                                        <i class="fa fa-close"></i>Close
-                                    </button>
-                                    <button class="client_btn" type="button" ng-show="MeasurementID>0" ng-click="PrintMeasurementMaster();" data-toggle="dropdown" style="border-color: #766DE9 !important; background-color: #766DE9">
-                                        <i class="fa fa-print"></i>Print
-                                    </button>
+                                    <button class="btn_ss bg-blue" type="button" ng-click="SaveMeasurementMaster()" data-toggle="dropdown">Save</button>
+                                    <button class="btn_ss bg-blue" type="button" ng-show="MeasurementID>0" ng-click="PrintMeasurementMaster();" data-toggle="dropdown">Print</button>
+                                    <button class="btn_ss bg-blue" type="button" ng-click="onClose();" data-toggle="dropdown">Close</button>
                                 </div>
                             </div>
                             <div class="row">
@@ -452,7 +446,7 @@
                                                      <label for="drpSex" class="lbl-text-right">{{Per.FieldName}}</label>
 			                                        <div ng-repeat="id in Per.FieldValue" style="padding-left: 20px; padding-bottom: 5px;">
 				                                        <input type="number"  class="form-control" ng-model="id.val" style="text-align: right; width:50%; display:initial;" />
-                                                        <i class="fa fa-remove" ng-click="RemoveItemToList(this, $index)"></i>
+                                                        <i class="fa fa-remove" ng-show="Per.FieldValue.length > 1" ng-click="RemoveItemToList(this, $index)"></i>
 				                                        <i ng-show="$last && $parent.Per.isRrepeat" style="display:block;" class="fa fa-plus-square" ng-click="AddItemToList(this)"></i>
 			                                        </div>
 		                                          </div>

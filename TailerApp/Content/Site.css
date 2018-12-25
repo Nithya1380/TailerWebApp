@@ -479,7 +479,7 @@ html, body {
     }
 /* Push classes applied to the body */
 .side_menu-push {
-    overflow-x: hidden;
+    overflow-x: visible;
     position: relative;
 }
 .side_menu-push-toright {

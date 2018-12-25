@@ -40,6 +40,7 @@ datepicker, .datepicker, [datepicker],
   position: absolute;
   z-index: 999;
   min-width: 220px;
+  max-width: 220px;
   margin: 0 auto;
   width: , %;
   -webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1) inset;
@@ -49,7 +50,7 @@ datepicker, .datepicker, [datepicker],
   display:none;
   overflow:hidden;
   margin-left:-0.5%;
-  padding: 0 0 2% 0;
+  padding: 0 0 0 0;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
