@@ -23,6 +23,30 @@
         var g_contextFrom = '<%=contextFrom%>';
         var tailerApp = angular.module("TailerApp", ['720kb.datepicker']);
 
+        tailerApp.directive('capitalize', function () {
+            return {
+                require: 'ngModel',
+                link: function (scope, element, attrs, modelCtrl) {
+                    var capitalize = function (inputValue) {
+                        if (inputValue == undefined) inputValue = '';
+                        var capitalized = inputValue.toUpperCase();
+                        if (capitalized !== inputValue) {
+                            // see where the cursor is before the update so that we can set it back
+                            var selection = element[0].selectionStart;
+                            modelCtrl.$setViewValue(capitalized);
+                            modelCtrl.$render();
+                            // set back the cursor after rendering
+                            element[0].selectionStart = selection;
+                            element[0].selectionEnd = selection;
+                        }
+                        return capitalized;
+                    }
+                    modelCtrl.$parsers.push(capitalize);
+                    capitalize(scope[attrs.ngModel]); // capitalize initial value
+                }
+            };
+        });
+
         tailerApp.directive('validCalendarDate', function () {
             return {
                 require: 'ngModel',
@@ -166,6 +190,49 @@
                 if ($window != null && $window.opener != null && (typeof $window.opener.RefreshCustomerList == 'function'))
                     $window.opener.RefreshCustomerList();
             };
+
+            $scope.GetPincodeDetails = function (pin) {
+
+                $http({
+                    method: "POST",
+                    url: "AddNewCustomer.aspx/GetPincodeDetails",
+                    data: { pincode: pin },
+                    dataType: "json",
+                    headers: { "Content-Type": "application/json" }
+                }).then(function onSuccess(response) {
+                    if (response.data.d.ErrorCode == 1001) {
+                        //Session Expired
+                        return false;
+                    }
+                    if (response.data.d.ErrorCode != 0) {
+                        alert(response.data.d.ErrorMessage);
+                        return false;
+                    }
+
+
+                    if (response.data.d.JSonstring != '' && response.data.d.JSonstring != undefined && response.data.d.JSonstring != null) {
+
+                        $scope.Customer.City = JSON.parse(response.data.d.JSonstring)[0].districtname;
+                        $scope.Customer.State = JSON.parse(response.data.d.JSonstring)[0].statename;
+                    }
+
+                }, function onFailure(error) {
+
+                });
+            };
+
+            $scope.Pincodekeyup = function (val, obj) {
+
+                var patt1 = /^\d+$/;
+                if (!patt1.test(val)) {
+                    if (val != undefined)
+                        obj.Customer.Pincode = val.toString().substring(0, val.toString().length - 1);
+                    else
+                        obj.Customer.Pincode = null;
+                } else if (val.length == 6) {
+                    $scope.GetPincodeDetails(val);
+                }
+            }
         });
 
     </script>
@@ -202,7 +269,7 @@
                                 </td>
                                 <td>
                                     <span class="profileLabel">
-                                        <input type="text" class="form-control" style="width: 250px; margin-left: 5px;" maxlength="50" data-ng-model="CustomerAccount.AccountCode"  required/>
+                                        <input type="text" class="form-control" style="width: 250px; margin-left: 5px;" maxlength="10" data-ng-model="CustomerAccount.AccountCode" ng-change="Customer.MobileNo = CustomerAccount.AccountCode" required/>
                                     </span>
                                 </td>
                                  <td style="text-align:right" class="back_shade">
@@ -221,14 +288,14 @@
                                 <td style="text-align:right" class="back_shade"><span class="profileLabel"><span style="color:red">*</span>First Name:</span></td>
                                 <td colspan="5">
                                    <span class="profileValue">
-                                    <input type="text" data-ng-model="Customer.FirstName" name="FirstName" class="form-control" style="width: 250px; margin-left: 5px;" maxlength="50" required />
+                                    <input type="text" data-ng-model="Customer.FirstName" name="FirstName" class="form-control" ng-change="CustomerAccount.AccountName = Customer.FirstName+' '+Customer.SurName" style="width: 250px; margin-left: 5px;" maxlength="50" required capitalize />
                                    </span>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="text-align:right" class="back_shade"><span class="profileLabel"><span style="color:red">*</span>Sur Name:</span></td>
+                                <td style="text-align:right" class="back_shade"><span class="profileLabel"><span style="color:red">*</span>Last Name:</span></td>
                                 <td colspan="2">
-                                    <input type="text" data-ng-model="Customer.SurName" class="form-control" style="width: 250px; margin-left: 5px;" maxlength="50" required /></td>
+                                    <input type="text" data-ng-model="Customer.SurName" class="form-control" ng-change="CustomerAccount.AccountName = Customer.FirstName+' '+Customer.SurName" style="width: 250px; margin-left: 5px;" maxlength="50" required capitalize /></td>
 
                                 <td style="text-align:right" class="back_shade"><span class="profileLabel"><span style="color:red">*</span>Sex:</span></td>
                                 <td colspan="3">
@@ -250,25 +317,25 @@
                             <tr>
                                 <td style="text-align:right" class="back_shade"><span class="profileLabel">Address 1:</span></td>
                                 <td colspan="6">
-                                    <input type="text" data-ng-model="Customer.Address1" class="form-control" style="width: 300px; margin-left: 5px;" maxlength="50"/>
+                                    <input type="text" data-ng-model="Customer.Address1" class="form-control" style="width: 98%; margin-left: 5px;" maxlength="50" capitalize/>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="text-align:right" class="back_shade"><span class="profileLabel">Address 2:</span></td>
                                 <td colspan="5">
-                                    <input type="text" data-ng-model="Customer.Address2" class="form-control" style="width: 300px; margin-left: 5px;" maxlength="50" />
+                                    <input type="text" data-ng-model="Customer.Address2" class="form-control" style="width: 98%; margin-left: 5px;" maxlength="50" capitalize />
                                 </td>
                             </tr>
                             <tr>
-                                <td style="text-align:right" class="back_shade"><span class="profileLabel">Zip:</span></td>
+                                <td style="text-align:right" class="back_shade"><span class="profileLabel"><span style="color:red">*</span>Pincode:</span></td>
                                 <td>
-                                    <input type="text" data-ng-model="Customer.Pincode" class="form-control" style="width: 100px; margin-left: 5px;" maxlength="20" /></td>
-                                <td style="text-align:right" class="back_shade"><span class="profileLabel">City:</span></td>
+                                    <input type="text" data-ng-model="Customer.Pincode" class="form-control" ng-keyup="Pincodekeyup(Customer.Pincode, this)" style="width: 100px; margin-left: 5px;" maxlength="20" /></td>
+                                <td style="text-align:right" class="back_shade"><span class="profileLabel"><span style="color:red">*</span>City:</span></td>
                                 <td>
-                                    <input type="text" data-ng-model="Customer.City" class="form-control" style="width: 100px; margin-left: 5px;" maxlength="20" /></td>
-                                <td style="text-align:right" class="back_shade"><span class="profileLabel">State:</span></td>
+                                    <input type="text" data-ng-model="Customer.City" class="form-control" style="width: 98%; margin-left: 5px;" maxlength="20" capitalize /></td>
+                                <td style="text-align:right" class="back_shade"><span class="profileLabel"><span style="color:red">*</span>State:</span></td>
                                 <td>
-                                    <input type="text" data-ng-model="Customer.State" class="form-control" style="width: 100px; margin-left: 5px;" maxlength="20" /></td>
+                                    <input type="text" data-ng-model="Customer.State" class="form-control" style="width: 98%; margin-left: 5px;" maxlength="20" capitalize /></td>
                             </tr>
                         </tbody>
                     </table>

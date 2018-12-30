@@ -1138,5 +1138,49 @@ namespace DAL.DBManager
            return ret;
        }
 
+       public bool GetPincodeDetails(int CompanyID, int User, string Pincode, out JsonResults OutVal)
+       {
+           bool ret = false;
+           OutVal = new JsonResults();
+           try
+           {
+
+               this.Connect(this.GetConnString());
+               string spName = "GetPincodeDetails";
+               this.ClearSPParams();
+               this.AddSPIntParam("@CompanyID", CompanyID);
+               this.AddSPIntParam("@User", User);
+               this.AddSPStringParam("@Pincode", Pincode);
+               this.AddSPReturnIntParam("@return");
+
+               using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+               {
+
+                   if (reader.Read())
+                   {
+
+                       if (!reader.IsDBNull(0))
+                           OutVal.JSonstring = reader.GetString(0);
+                   }
+
+                   reader.Close();
+                   int retcode = this.GetOutValueInt("@return");
+
+
+               }
+           }
+           catch (Exception e)
+           {
+               SetError(-100, "Failed to get Pincode Details . Please try again later");
+               Utils.Write(0, 0, "AdminManagerSP", "GetPincodeDetails", "", "", e);
+           }
+           finally
+           {
+               this.ClearSPParams();
+               this.Disconnect();
+           }
+           return ret;
+       }
+
     }
 }

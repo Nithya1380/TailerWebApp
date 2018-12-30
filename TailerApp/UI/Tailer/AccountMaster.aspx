@@ -12,6 +12,31 @@
          var gb_customerID='<%=CustomerID%>';
 
          var tailerApp = angular.module("TailerApp", ['720kb.datepicker']);
+
+         tailerApp.directive('capitalize', function () {
+             return {
+                 require: 'ngModel',
+                 link: function (scope, element, attrs, modelCtrl) {
+                     var capitalize = function (inputValue) {
+                         if (inputValue == undefined) inputValue = '';
+                         var capitalized = inputValue.toUpperCase();
+                         if (capitalized !== inputValue) {
+                             // see where the cursor is before the update so that we can set it back
+                             var selection = element[0].selectionStart;
+                             modelCtrl.$setViewValue(capitalized);
+                             modelCtrl.$render();
+                             // set back the cursor after rendering
+                             element[0].selectionStart = selection;
+                             element[0].selectionEnd = selection;
+                         }
+                         return capitalized;
+                     }
+                     modelCtrl.$parsers.push(capitalize);
+                     capitalize(scope[attrs.ngModel]); // capitalize initial value
+                 }
+             };
+         });
+
          tailerApp.controller("AccountsController", function ($scope, $window, $http, $rootScope, $sce) {
              $scope.CustomerPickLists = {};
              $scope.customerID = gb_customerID;
@@ -94,6 +119,9 @@
                      $scope.CustInfo.DOB = $scope.customerMaster.Customer.BirthDate;
                      $scope.CustInfo.Email = $scope.customerMaster.Customer.EmailID;
 
+                     if ($scope.customerMaster.CustomerAccount.AccountCategory)
+                         $scope.customerMaster.CustomerAccount.AccountCategoryobj = { PickListLabel: $scope.customerMaster.CustomerAccount.AccountCategory, PickListValue: $scope.customerMaster.CustomerAccount.AccountCategory };
+
                  }, function onFailure(error) {
 
                  });
@@ -139,45 +167,56 @@
              };
 
              $scope.ValidateSave = function () {
-                 var errors = "";
+                 var errors = ""; var errorfocus = new Array();
                  if ($scope.customerMaster.Customer.FirstName == '' || $scope.customerMaster.Customer.FirstName == null) {
                      errors = '<li>First Name</li>';
+                     errorfocus.push('txtFirstName');
                  }
-                 if ($scope.customerMaster.Customer.MiddleName == '' || $scope.customerMaster.Customer.MiddleName == null) {
-                     errors = '<li>Last Name</li>';
-                 }
+                 //if ($scope.customerMaster.Customer.MiddleName == '' || $scope.customerMaster.Customer.MiddleName == null) {
+                 //    errors = '<li>Last Name</li>';
+                 //}
                  if ($scope.customerMaster.Customer.SurName == '' || $scope.customerMaster.Customer.SurName == null) {
                      errors += '<li>Sur Name</li>';
+                     errorfocus.push('txtSurName');
                  }
                  if ($scope.customerMaster.Customer.Gender == '' || $scope.customerMaster.Customer.Gender == null) {
                      errors += '<li>Sex</li>';
+                     errorfocus.push('drpSex');
                  }
                  if ($scope.customerMaster.Customer.MobileNo == '' || $scope.customerMaster.Customer.MobileNo == null) {
                      errors += '<li>Mobile No</li>';
+                     errorfocus.push('txtMobile');
                  }
                  if ($scope.customerMaster.Customer.BirthDate == '' || $scope.customerMaster.Customer.BirthDate == null) {
                      errors += '<li>DOB</li>';
+                     errorfocus.push('txtBirthDate');
                  }
                  if ($scope.customerMaster.CustomerAccount.AccountCode == '' || $scope.customerMaster.CustomerAccount.AccountCode == null) {
                      errors += '<li>Account Code</li>';
+                     errorfocus.push('txtAccountCode');
                  }
                  if ($scope.customerMaster.CustomerAccount.AccountName == '' || $scope.customerMaster.CustomerAccount.AccountName == null) {
                      errors += '<li>Account Name</li>';
+                     errorfocus.push('txtAccountName');
                  }
                  if ($scope.customerMaster.CustomerAccount.AccountCategory == '' || $scope.customerMaster.CustomerAccount.AccountCategory == null) {
                      errors += '<li>Account Category</li>';
+                     errorfocus.push('drpAccountCategory');
                  }
                  else if ($scope.customerMaster.CustomerAccount.AccountCategory == 'Supplier')
                  {
                      
                      if ($scope.customerMaster.CustomerSupply.SupplierCode == '' || $scope.customerMaster.CustomerSupply.SupplierCode == null) {
                          errors += '<li>Supplier Code</li>';
+                         errorfocus.push('txtSupplierCode');
                      }
                      if ($scope.customerMaster.CustomerSupply.SupplierName == '' || $scope.customerMaster.CustomerSupply.SupplierName == null) {
                          errors += '<li>Supplier Name</li>';
+                         errorfocus.push('txtSupplierName');
                      }
                      if ($scope.customerMaster.CustomerSupply.SupplierType == '' || $scope.customerMaster.CustomerSupply.SupplierType == null) {
                          errors += '<li>Supplier Type</li>';
+                         errorfocus.push('drpSupplierType');
                      }
                  }
                  
@@ -185,21 +224,73 @@
                      $scope.ShowError = true;
                      $scope.CustomerError = $sce.trustAsHtml('<ul>' + errors + '</ul>');
                      $scope.AlertClass = "alert-danger";
+                     document.getElementById(errorfocus[0]).focus();
+
                      return false;
                  }
 
                  return true;
              };
+
+             $scope.GetPincodeDetails = function (pin) {
+
+                 $http({
+                     method: "POST",
+                     url: "AccountMaster.aspx/GetPincodeDetails",
+                     data: { pincode: pin },
+                     dataType: "json",
+                     headers: { "Content-Type": "application/json" }
+                 }).then(function onSuccess(response) {
+                     if (response.data.d.ErrorCode == 1001) {
+                         //Session Expired
+                         return false;
+                     }
+                     if (response.data.d.ErrorCode != 0) {
+                         alert(response.data.d.ErrorMessage);
+                         return false;
+                     }
+
+
+                     if (response.data.d.JSonstring != '' && response.data.d.JSonstring != undefined && response.data.d.JSonstring != null) {
+
+                         $scope.customerMaster.Customer.City = JSON.parse(response.data.d.JSonstring)[0].districtname;
+                         $scope.customerMaster.Customer.State = JSON.parse(response.data.d.JSonstring)[0].statename;
+                     }
+
+                 }, function onFailure(error) {
+
+                 });
+             };
+
+             $scope.Pincodekeyup = function (val, obj) {
+
+                 var patt1 = /^\d+$/;
+                 if (!patt1.test(val)) {
+                     if (val != undefined)
+                         obj.customerMaster.Customer.Pincode = val.toString().substring(0, val.toString().length - 1);
+                     else
+                         obj.customerMaster.Customer.Pincode = null;
+                 } else if (val.length == 6) {
+                     $scope.GetPincodeDetails(val);
+                 }
+             }
+
          });
     </script>
+    <style>
+        .panel-group .panel {
+            margin-bottom: 0;
+            overflow: visible;
+            border-radius: 4px;
+        }
+    </style>
 </asp:Content>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container bootstrap snippet" data-ng-app="TailerApp" data-ng-controller="AccountsController" data-ng-init="init()" >
     <div class="row">
-        <div>&nbsp;</div>
-        <div class="alert" data-ng-class="AlertClass" data-ng-show="ShowError">
-                <span data-ng-bind-html="CustomerError" ></span>
-            </div>
+       <div class="page-header-new col-lg-12">
+            Customer Profile
+        </div>
     </div>
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
@@ -264,7 +355,9 @@
                 </div>
                 <!--end of card-->
             </div>
-
+            <div class="alert" data-ng-class="AlertClass" data-ng-show="ShowError">
+                <span data-ng-bind-html="CustomerError" ></span>
+            </div>
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="card">
                     <div class="row">
@@ -283,16 +376,16 @@
                                         <div class="col-lg-10 col-md-10 col-sm-10">
                                             <label for="txtAccountCode" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>Account Code</label>
                                             <div class="col-sm-4">
-                                                <input type="text" class="form-control" name="first_name" id="txtAccountCode" placeholder="Account Code" title="enter your Account Code." data-ng-model="customerMaster.CustomerAccount.AccountCode">
+                                                <input type="text" class="form-control" name="txtAccountCode" id="txtAccountCode" placeholder="Account Code" title="enter your Account Code." data-ng-model="customerMaster.CustomerAccount.AccountCode">
                                             </div>
                                        
                                             <label for="drpCategory" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>Category</label>
                                             <div class="col-sm-4">
-                                                <select class="form-control" id="drpCategory" data-ng-model="customerMaster.CustomerAccount.AccountCategory"
-                                                    data-ng-options="custCat.PickListValue as custCat.PickListLabel for custCat in CustomerPickLists.AccountCategory track by custCat.PickListValue">
+                                                <select class="form-control" id="drpAccountCategory" ng-change="customerMaster.CustomerAccount.AccountCategory = customerMaster.CustomerAccount.AccountCategoryobj.PickListValue" id="drpCategory" data-ng-model="customerMaster.CustomerAccount.AccountCategoryobj"
+                                                    data-ng-options="custCat.PickListValue for custCat in CustomerPickLists.AccountCategory track by custCat.PickListValue">
                                                     <option value="">Select Category</option>
                                                 </select>
-                                            </div>
+                                            </div>  
                                         </div>
                                          <div class="col-lg-2 col-md-2 col-sm-2 pull-right">
                                             <button class="btn btn-lg btn-success" type="button" data-ng-click="SaveDetails()"><i class="glyphicon glyphicon-ok-sign"></i>&nbsp;Save</button>
@@ -310,43 +403,44 @@
                                                 <div id="collapsePersonalInfo" class="panel-collapse collapse in">
                                                     <div class="panel-body">
                                                         <div class="form-group row">
+                                                            <label for="txtFirstName" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>First Name</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtFirstName" id="txtFirstName" placeholder="First Name" title="enter your First Name." ng-change="customerMaster.CustomerAccount.AccountName=customerMaster.Customer.FullName=(customerMaster.Customer.FirstName+' '+customerMaster.Customer.SurName)" data-ng-model="customerMaster.Customer.FirstName" capitalize />
+                                                            </div>
+                                                            <label ng-if="false" for="txtLastName" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>Last Name</label>
+                                                            <div ng-if="false" class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtLastName" id="txtLastName" placeholder="Last Name" title="enter your Last Name." ng-change="customerMaster.CustomerAccount.AccountName=customerMaster.Customer.FullName=(customerMaster.Customer.FirstName+' '+customerMaster.Customer.SurName)" data-ng-model="customerMaster.Customer.MiddleName" capitalize />
+                                                            </div>
+                                                            <label for="txtSurName" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>Last Name</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtSurName" id="txtSurName" placeholder="Sur Name" title="enter your Last Name." ng-change="customerMaster.CustomerAccount.AccountName=customerMaster.Customer.FullName=(customerMaster.Customer.FirstName+' '+customerMaster.Customer.SurName)" data-ng-model="customerMaster.Customer.SurName" capitalize/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
                                                             <label for="txtFullName" class="col-sm-2 lbl-text-right">Full Name</label>
                                                             <div class="col-sm-4">
-                                                                <input type="text" class="form-control" name="txtFullName" id="txtFullName" placeholder="Full Name" title="enter your Full Name." data-ng-model="customerMaster.Customer.FullName">
+                                                                <input type="text" class="form-control" name="txtFullName" id="txtFullName" placeholder="Full Name" title="enter your Full Name." data-ng-model="customerMaster.Customer.FullName" capitalize>
                                                             </div>
                                                             <label for="drpSex" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>Sex</label>
                                                             <div class="col-sm-4">
-                                                                <select class="form-control" id="drpSex" data-ng-model="customerMaster.Customer.Gender">
+                                                                <select class="form-control" name="drpSex" id="drpSex" data-ng-model="customerMaster.Customer.Gender">
                                                                     <option>Male</option>
                                                                     <option>Female</option>
                                                                 </select>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="txtFirstName" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>First Name</label>
-                                                            <div class="col-sm-4">
-                                                                <input type="text" class="form-control" name="txtFullName" id="txtFirstName" placeholder="First Name" title="enter your First Name." ng-change="customerMaster.CustomerAccount.AccountName=customerMaster.Customer.FullName=(customerMaster.Customer.FirstName+' '+customerMaster.Customer.MiddleName)" data-ng-model="customerMaster.Customer.FirstName">
-                                                            </div>
-                                                            <label for="txtLastName" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>Last Name</label>
-                                                            <div class="col-sm-4">
-                                                                <input type="text" class="form-control" name="txtLastName" id="txtLastName" placeholder="Last Name" title="enter your Last Name." ng-change="customerMaster.CustomerAccount.AccountName=customerMaster.Customer.FullName=(customerMaster.Customer.FirstName+' '+customerMaster.Customer.MiddleName)" data-ng-model="customerMaster.Customer.MiddleName"/>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group row">
-                                                            <label for="txtSurName" class="col-sm-2 lbl-text-right">Sur Name</label>
-                                                            <div class="col-sm-4">
-                                                                <input type="text" class="form-control" name="txtSurName" id="txtSurName" placeholder="Sur Name" title="enter your Sur Name." data-ng-model="customerMaster.Customer.SurName"/>
-                                                            </div>
+                                                            
                                                             <label for="txtContactPerson" class="col-sm-2 lbl-text-right">Contact Person</label>
                                                             <div class="col-sm-4">
-                                                                <input type="text" class="form-control" name="txtContactPerson" id="txtContactPerson" placeholder="Contact Person" title="enter Contact Person Name." data-ng-model="customerMaster.Customer.ContactPerson"/>
+                                                                <input type="text" class="form-control" name="txtContactPerson" id="txtContactPerson" placeholder="Contact Person" title="enter Contact Person Name." data-ng-model="customerMaster.Customer.ContactPerson" capitalize/>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="txtBirthDate" class="col-sm-2 lbl-text-right">Birth Date</label>
+                                                            <label for="txtBirthDate" class="col-sm-2 lbl-text-right"><span style="color: red">*</span>Birth Date</label>
                                                             <div class="col-sm-4">
                                                                 <datepicker date-format="dd/MM/yyyy">
-                                                                <input type="text" class="form-control" name="txtBirthDate" id="txtBirthDate" placeholder="Birth Date" title="enter Birth Date." data-ng-model="customerMaster.Customer.BirthDate"/>
+                                                                    <input type="text" class="form-control" name="txtBirthDate" id="txtBirthDate" placeholder="Birth Date" title="enter Birth Date." data-ng-model="customerMaster.Customer.BirthDate"/>
                                                                 </datepicker>
                                                              </div>
                                                             <label for="txtOpenDate" class="col-sm-2 lbl-text-right">Open Date</label>
@@ -359,42 +453,38 @@
                                                         <div class="form-group row">
                                                             <label for="txtAddress1" class="col-sm-2 lbl-text-right">Address 1</label>
                                                             <div class="col-sm-4">
-                                                                <input type="text" class="form-control" name="txtAddress1" id="txtAddress1" placeholder="Address 1" data-ng-model="customerMaster.Customer.Address1"/>
+                                                                <input type="text" class="form-control" name="txtAddress1" id="txtAddress1" placeholder="Address 1" data-ng-model="customerMaster.Customer.Address1" capitalize/>
                                                             </div>
                                                             <label for="txtAddress2" class="col-sm-2 lbl-text-right">Address 2</label>
                                                             <div class="col-sm-4">
-                                                                <input type="text" class="form-control" name="txtAddress2" id="txtAddress2" placeholder="Address 2" data-ng-model="customerMaster.Customer.Address2"/>
+                                                                <input type="text" class="form-control" name="txtAddress2" id="txtAddress2" placeholder="Address 2" data-ng-model="customerMaster.Customer.Address2" capitalize/>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
+                                                            <label for="txtPin" class="col-sm-2 lbl-text-right">Pincode</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" name="txtPin" id="txtPin" ng-keyup="Pincodekeyup(customerMaster.Customer.Pincode, this)" data-ng-model="customerMaster.Customer.Pincode"/>
+                                                            </div>
+                                                            <label for="drpCity" class="col-sm-2 lbl-text-right">City</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" id="drpCity" data-ng-model="customerMaster.Customer.City" capitalize />
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="drpState" class="col-sm-2 lbl-text-right">State</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" id="drpState" data-ng-model="customerMaster.Customer.State" capitalize/>
+                                                            </div>
                                                             <label for="drpCountry" class="col-sm-2 lbl-text-right">Country</label>
                                                             <div class="col-sm-4">
                                                                 <select class="form-control" id="drpCountry">
                                                                     <option value="India">India</option>
                                                                 </select>
                                                             </div>
-                                                            <label for="drpState" class="col-sm-2 lbl-text-right">State</label>
-                                                            <div class="col-sm-4">
-                                                                <select class="form-control" id="drpState" data-ng-model="customerMaster.Customer.State">
-                                                                    <option>Select State</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group row">
-                                                            <label for="drpCity" class="col-sm-2 lbl-text-right">City</label>
-                                                            <div class="col-sm-4">
-                                                                <select class="form-control" id="drpCity" data-ng-model="customerMaster.Customer.City">
-                                                                    <option>Select City</option>
-                                                                </select>
-                                                            </div>
-                                                            <label for="txtPin" class="col-sm-2 lbl-text-right">Pin</label>
-                                                            <div class="col-sm-4">
-                                                                <input type="number" class="form-control" name="txtPin" id="txtPin" data-ng-model="customerMaster.Customer.Pincode"/>
-                                                            </div>
                                                         </div>
 
                                                         <div class="form-group row">
-                                                            <label for="txtMobile" class="col-sm-2 lbl-text-right">Mobile</label>
+                                                            <label for="txtMobile" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>Mobile</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control" name="txtMobile" id="txtMobile" placeholder="Mobile" title="enter your Mobile Number." data-ng-model="customerMaster.Customer.MobileNo">
                                                             </div>
@@ -470,7 +560,7 @@
                                                         <div class="form-group row">
                                                            <label for="txtAccountName" class="col-sm-2 lbl-text-right"><span style="color:red">*</span>Account Name</label>
                                                             <div class="col-sm-4">
-                                                                <input type="text" class="form-control" name="first_name" id="txtAccountName" placeholder="Account Name" title="enter your Account Code." data-ng-model="customerMaster.CustomerAccount.AccountName">
+                                                                <input type="text" class="form-control" name="txtAccountName" id="txtAccountName" placeholder="Account Name" title="enter your Account Code." data-ng-model="customerMaster.CustomerAccount.AccountName">
                                                             </div>
                                                              <label for="txtPartyAlert" class="col-sm-2 lbl-text-right">Party Alert</label>
                                                             <div class="col-sm-4">
@@ -575,11 +665,11 @@
                                                 <div id="collapseSupplierInfo" class="panel-collapse collapse in">
                                                     <div class="panel-body">
                                                         <div class="form-group row">
-                                                            <label for="txtSupplierCode" class="col-sm-2 lbl-text-right">Code<span style="color: red">*</span></label>
+                                                            <label for="txtSupplierCode" class="col-sm-2 lbl-text-right"><span style="color: red">*</span>Code</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control" name="txtSupplierCode" id="txtSupplierCode" placeholder="Code" data-ng-model="customerMaster.CustomerSupply.SupplierCode" />
                                                             </div>
-                                                            <label for="txtSupplierName" class="col-sm-2 lbl-text-right">Name<span style="color: red">*</span></label>
+                                                            <label for="txtSupplierName" class="col-sm-2 lbl-text-right"><span style="color: red">*</span>Name</label>
                                                             <div class="col-sm-4">
                                                                 <input type="text" class="form-control" name="txtSupplierName" id="txtSupplierName" placeholder="Name" data-ng-model="customerMaster.CustomerSupply.SupplierName" />
                                                             </div>
@@ -587,7 +677,7 @@
                                                         <div class="form-group row">
                                                             <label for="drpSupplierType" class="col-sm-2 lbl-text-right">Type<span style="color: red">*</span></label>
                                                             <div class="col-sm-4">
-                                                                <select class="form-control" id="drpSupplierType" data-ng-model="customerMaster.CustomerSupply.SupplierType"></select>
+                                                                <select class="form-control" name="drpSupplierType" id="drpSupplierType" data-ng-model="customerMaster.CustomerSupply.SupplierType"></select>
                                                             </div>
                                                             <label for="drpSupplierCategory" class="col-sm-2 lbl-text-right">Category</label>
                                                             <div class="col-sm-4">

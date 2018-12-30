@@ -709,3 +709,13 @@ BEGIN TRAN
 	)
 	GO
 ROLLBACK
+
+--29th Dec 2018
+BEGIN TRAN
+	CREATE TABLE PincodeDirectory 
+	(
+		Pincode VARCHAR(10),
+		districtname VARCHAR(100),
+		statename VARCHAR(100)	
+	)
+ROLLBACK
