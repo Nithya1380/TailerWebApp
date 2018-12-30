@@ -237,6 +237,7 @@
              $scope.InvoicePickLists = {};
              $scope.ItemCodes = [];
              $scope.customerID = 0;
+             $scope.IsCalculateTax = true;
 
              $scope.init = function () {
                  $scope.ShowError = false;
@@ -278,20 +279,43 @@
 
              $scope.onItemChange = function (InvoiceItem) {
                  if (InvoiceItem != null && InvoiceItem != undefined && !isNaN(InvoiceItem.ItemQuantity) && !isNaN(InvoiceItem.ItemPrice)) {
-                     InvoiceItem.AmountPending = parseInt(InvoiceItem.ItemQuantity) * parseFloat(InvoiceItem.ItemPrice);
+                     InvoiceItem.AmountPending =parseFloat(parseFloat(parseInt(InvoiceItem.ItemQuantity) * parseFloat(InvoiceItem.ItemPrice)).toFixed(2));
 
                      if (parseFloat(InvoiceItem.AmountPending) > 0) {
                          if (!isNaN(InvoiceItem.ItemDiscount) && parseFloat(InvoiceItem.ItemDiscount) > 0)
                              InvoiceItem.AmountPending = InvoiceItem.AmountPending - (parseFloat(InvoiceItem.AmountPending) * (parseFloat(InvoiceItem.ItemDiscount) / 100.00));
+                             
 
-                         InvoiceItem.GST = parseFloat(InvoiceItem.AmountPending) * (18.00 / 100.00);
-                         InvoiceItem.AmountPending = InvoiceItem.AmountPending + InvoiceItem.GST;
+                         if ($scope.IsCalculateTax)
+                         {
+                             InvoiceItem.GST = parseFloat(InvoiceItem.AmountPending) * (09.00 / 100.00);
+                             InvoiceItem.SGST = parseFloat(InvoiceItem.AmountPending) * (09.00 / 100.00);
+                         }
+                         else {
+                             InvoiceItem.GST = 0.00;
+                             InvoiceItem.SGST = 0.00;
+                         }
+
+                         InvoiceItem.GST =parseFloat(parseFloat(InvoiceItem.GST).toFixed(2));
+                         InvoiceItem.SGST = parseFloat(parseFloat(InvoiceItem.SGST).toFixed(2));
+                         InvoiceItem.AmountPending = parseFloat(parseFloat(InvoiceItem.AmountPending + InvoiceItem.GST + InvoiceItem.SGST).toFixed(2));
+                
                      }
 
 
                      $scope.CalculateTotal();
                  }
              }
+
+             $scope.ReCalculateTax = function () {
+                 if ($scope.InvoiceList != null && $scope.InvoiceList != undefined) {
+                     angular.forEach($scope.InvoiceList, function (InvoiceItem) {
+                         if (InvoiceItem != null && InvoiceItem != undefined ) {
+                             $scope.onItemChange(InvoiceItem);
+                         }
+                     });
+                 }
+             };
 
              $scope.CalculateTotal = function () {
                  $scope.TotalAmount = 0.00;
@@ -302,7 +326,10 @@
                          }
                      });
                  }
+         
+                 $scope.TotalAmount = parseFloat(parseFloat($scope.TotalAmount).toFixed(2));
                  $scope.CalculateNetAmount();
+             
              }
 
              $scope.CalculateNetAmount = function () {
@@ -640,6 +667,7 @@
                                         </span>
                                     </td>
                                     <td colspan="4" style="text-align:right">
+                                        <input type="checkbox" data-ng-model="IsCalculateTax" data-ng-change="ReCalculateTax()" /> Include Tax
                                         <button class="btn btn-lg btn-success" type="button" data-ng-click="onCreateInvoiceClick();"><i class="fa fa-dollar"></i>Create</button>
                                     </td>
                                 </tr>
@@ -698,7 +726,7 @@
                                                     <td><input type="number" data-ng-model="Invoice.ItemPrice" class="form-control" style="width: 80px;" data-ng-change="onItemChange(Invoice)" /></td>
                                                     <td><input type="number" data-ng-model="Invoice.ItemDiscount" class="form-control" style="width: 80px;" data-ng-change="onItemChange(Invoice)" /></td>
                                                     <td><input type="number" data-ng-model="Invoice.GST" class="form-control" style="width: 80px;" data-ng-disabled="true" data-ng-change="onItemChange(Invoice)" /></td>
-                                                    <td><input type="number" data-ng-model="Invoice.SGST" class="form-control" style="width: 50px;" data-ng-disabled="true" /></td>
+                                                    <td><input type="number" data-ng-model="Invoice.SGST" class="form-control" style="width: 80px;" data-ng-disabled="true" /></td>
                                                     <td><input type="number" data-ng-model="Invoice.AmountPending" class="form-control" style="width: 100px;" data-ng-disabled="true" /></td>
                                                 </tr>
                                             </tbody>
