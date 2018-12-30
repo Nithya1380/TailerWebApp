@@ -141,6 +141,8 @@
     <Content Include="Scripts\AngularJS\autocomplete.js" />
     <Content Include="Scripts\AngularJS\BranchController.js" />
     <Content Include="Scripts\AngularJS\CompanyController.js" />
+    <Content Include="Scripts\AngularJS\html2canvas.min.js" />
+    <Content Include="Scripts\AngularJS\pdfmake.min.js" />
     <Content Include="Scripts\AngularJS\TailerApp.js" />
     <Content Include="Scripts\AngularJS\UserAndRoleController.js" />
     <Content Include="Scripts\bootstrap.js" />

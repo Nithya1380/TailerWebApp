@@ -33,13 +33,18 @@
                     AccountMasterID = $scope.AccountCode.AccountCode;
 
                 $scope.AccountName = $scope.AccountName || "";
-                $scope.DeliveryFrom = $scope.DeliveryFrom || "";
-                $scope.DeliveryTo = $scope.DeliveryTo || "";
+                var DeliveryFrom =  "";
+                var DeliveryTo =  "";
+
+                if ($scope.ChkDelivery) {
+                    DeliveryFrom = $scope.DeliveryFrom || "";
+                    DeliveryTo = $scope.DeliveryTo || "";
+                }
 
                 $http({
                     method: "POST",
                     url: "MeasurementList.aspx/GetMeasurementList",
-                    data: { AccountCode: AccountMasterID, AccountName: $scope.AccountName, DeliveryFrom: $scope.DeliveryFrom, DeliveryTo: $scope.DeliveryTo },
+                    data: { AccountCode: AccountMasterID, AccountName: $scope.AccountName, DeliveryFrom: DeliveryFrom, DeliveryTo: DeliveryTo },
                     dataType: "json",
                     headers: { "Content-Type": "application/json" }
                 }).then(function onSuccess(response) {
@@ -131,20 +136,20 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="text-align: right;">Delivery from:</td>
+                                    <td style="text-align: right;"><input type="checkbox" ng-model="ChkDelivery" /> Delivery from:</td>
                                     <td colspan="3">
                                         <table>
                                             <tr>
                                                 <td>
                                                     <datepicker date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; float: none;">
-					                                    <input type="text" class="form-control" tabindex="2000" valid-calendar-date ng-model="DeliveryFrom" 
+					                                    <input ng-disabled="!ChkDelivery" type="text" class="form-control" tabindex="2000" valid-calendar-date ng-model="DeliveryFrom" 
 						                                    style="width:110px;"/> 
 				                                    </datepicker>
                                                 </td>
                                                 <td>To</td>
                                                 <td>
                                                     <datepicker date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; float: none;">
-					                                    <input type="text" class="form-control" tabindex="2000" valid-calendar-date ng-model="DeliveryTo" 
+					                                    <input  ng-disabled="!ChkDelivery"  type="text" class="form-control" tabindex="2000" valid-calendar-date ng-model="DeliveryTo" 
 						                                    style="width:110px;"/> 
 				                                    </datepicker>
                                                 </td>

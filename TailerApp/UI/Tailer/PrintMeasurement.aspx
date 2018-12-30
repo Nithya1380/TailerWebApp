@@ -6,8 +6,10 @@
     <title>Print Measurement</title>
     
     <script src="../../Scripts/AngularJS/angular.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+<%--    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>--%>
+    <script src="../../Scripts/AngularJS/pdfmake.min.js"></script>
+    <script src="../../Scripts/AngularJS/html2canvas.min.js"></script>
     <script src="../../Scripts/jquery-1.10.2.js"></script>
     <script src="../../Scripts/jquery-1.10.2.ui.js"></script>
     <script src="../../Scripts/bootstrap.min.js"></script>
@@ -161,7 +163,7 @@
                                 width: 500,
                             }]
                         };
-                        pdfMake.createPdf(docDefinition).download("test.pdf");
+                        pdfMake.createPdf(docDefinition).download($scope.MeasurementDetails.Account.AccountCode + ".pdf");
                     }
                 });
             }
@@ -222,24 +224,24 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <h6 class="lableAdd">{{CompanyInfo.Address1}}, {{CompanyInfo.Address2}},</h6>
-                        <h6 class="lableAdd">{{CompanyInfo.City}}, {{CompanyInfo.State}}-{{CompanyInfo.Pincode}}</h6>
+                        <h6 class="lableAdd" ng-show="CompanyInfo.City || CompanyInfo.State || CompanyInfo.Pincode">{{CompanyInfo.City}}, {{CompanyInfo.State}}-{{CompanyInfo.Pincode}}</h6>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        <h6 class="lableAdd">Ph: {{CompanyInfo.OfficePhoneNo}},{{CompanyInfo.HomePhoneNo}}</h6>
+                        <h6 class="lableAdd" ng-show="CompanyInfo.OfficePhoneNo || CompanyInfo.HomePhoneNo" >Ph: {{CompanyInfo.OfficePhoneNo}},{{CompanyInfo.HomePhoneNo}}</h6>
                     </div>
                 </div>
                 <div style="border: 1px black solid; margin: 5px;">
                     <div class="row" style="margin-left: 5px;">
-                        <div class="col-sm-4">
+                        <div class="col-sm-5">
                             <label class="lblInfotit">Account Code:</label><label class="lblInfoval">{{MeasurementDetails.Account.AccountCode}}</label>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-5">
                             <label class="lblInfotit">Measu No:</label><label class="lblInfoval">{{MeasurementDetails.MeasuNo}}</label>
                         </div>
-                        <div class="col-sm-4">
-                            <label class="lblInfotit">Created Date:</label><label class="lblInfoval">{{MeasurementDetails.MeasCreatedOn}}</label>
+                        <div class="col-sm-2">
+                            <label class="lblInfotit">Qty:</label><label class="lblInfoval">{{MeasurementDetails.Qty}}</label>
                         </div>
                     </div>
                     <div class="row" style="margin-left: 5px;">
@@ -274,7 +276,7 @@
                             <label class="lblInfotit">Date:</label><label class="lblInfoval">{{MeasurementDetails.MeasDate}}</label>
                         </div>
                         <div class="col-sm-4">
-                            <label class="lblInfotit">Qty:</label><label class="lblInfoval">{{MeasurementDetails.Qty}}</label>
+                            <label class="lblInfotit">Created Date:</label><label class="lblInfoval">{{MeasurementDetails.MeasCreatedOn}}</label>
                         </div>
                         <div class="col-sm-4">
                             <label class="lblInfotit">Weight:</label><label class="lblInfoval">{{MeasurementDetails.MeasWeight}}</label>

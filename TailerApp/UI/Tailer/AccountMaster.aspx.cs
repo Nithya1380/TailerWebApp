@@ -133,5 +133,37 @@ namespace TailerApp.UI.Tailer
 
             return returnObj;
         }
+
+        [WebMethod]
+        public static JsonResults GetPincodeDetails(string pincode)
+        {
+            JsonResults plist = new JsonResults();
+            LoginUser currentUser;
+            try
+            {
+                if (!GetUserSession(out currentUser))
+                {
+                    plist.ErrorCode = 1001;
+                    plist.ErrorMessage = "";
+                    return plist;
+                }
+
+                AdminManagerSP adminObj = new AdminManagerSP();
+                if (!adminObj.GetPincodeDetails(currentUser.CompanyID, currentUser.UserId, pincode, out plist))
+                {
+                    plist.ErrorCode = adminObj.GetLastErrorCode();
+                    plist.ErrorMessage = adminObj.GetLastError();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                plist.ErrorCode = -4;
+                plist.ErrorMessage = "Unknown Error Occured";
+                Utils.Write(ex);
+            }
+
+            return plist;
+        }
     }
 }
