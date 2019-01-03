@@ -1182,5 +1182,155 @@ namespace DAL.DBManager
            return ret;
        }
 
+
+       public bool GetSeriesMaster(int companyID, int userID, int BranchID, int SeriesMasterID, out JsonResults outobj)
+       {
+           outobj = new JsonResults();
+           bool ret = false;
+
+           try
+           {
+               this.Connect(this.GetConnString());
+               string spName = "GetSeriesMaster";
+               this.ClearSPParams();
+               this.AddSPIntParam("@Company", companyID);
+               this.AddSPIntParam("@user", userID);
+               this.AddSPIntParam("@Branch", BranchID);
+               this.AddSPIntParam("@SeriesMasterID", SeriesMasterID);
+               this.AddSPReturnIntParam("@return");
+               using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+               {
+                   if (reader.Read())
+                   {
+                       if (!reader.IsDBNull(0))
+                           outobj.JSonstring = reader.GetString(0);
+                   }
+
+                   reader.Close();
+               }
+
+               int retcode = this.GetOutValueInt("@return");
+
+               switch (retcode)
+               {
+                   case 0: ret = true;
+                       break;
+                   default: SetError(-1, "Failed to get Series List. Please try again later");
+                       break;
+               }
+           }
+           catch (Exception ex)
+           {
+               ret = false;
+               Utils.Write(ex);
+           }
+           finally
+           {
+               this.ClearSPParams();
+               this.Disconnect();
+           }
+           return ret;
+       }
+
+       public bool SaveSeriesMaster(int companyID, int userID, int BranchID, int SeriesMasterID, string SeriesMaster, out JsonResults outobj)
+       {
+           outobj = new JsonResults();
+           bool ret = false;
+
+           try
+           {
+               this.Connect(this.GetConnString());
+               string spName = "AddEditSeriesMaster";
+               this.ClearSPParams();
+               this.AddSPIntParam("@Company", companyID);
+               this.AddSPIntParam("@user", userID);
+               this.AddSPIntParam("@Branch", BranchID);
+               this.AddSPIntParam("@SeriesMasterID", SeriesMasterID);
+               this.AddSPStringParam("@SeriesMaster", SeriesMaster);
+               this.AddSPReturnIntParam("@return");
+               using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+               {
+                   if (reader.Read())
+                   {
+                       if (!reader.IsDBNull(0))
+                           outobj.OutValue = Convert.ToInt32(reader.GetValue(0));
+                   }
+
+                   reader.Close();
+               }
+
+               int retcode = this.GetOutValueInt("@return");
+
+               switch (retcode)
+               {
+                   case 0: ret = true;
+                       break;
+                   default: SetError(-1, "Failed to get Series List. Please try again later");
+                       break;
+               }
+           }
+           catch (Exception ex)
+           {
+               ret = false;
+               Utils.Write(ex);
+           }
+           finally
+           {
+               this.ClearSPParams();
+               this.Disconnect();
+           }
+           return ret;
+       }
+
+       public bool GetAuditLogs(int companyID, int userID, int BranchID, string ActivityType, int ActivitID, out JsonResults outobj)
+       {
+           outobj = new JsonResults();
+           bool ret = false;
+
+           try
+           {
+               this.Connect(this.GetConnString());
+               string spName = "GetAuditLogs";
+               this.ClearSPParams();
+               this.AddSPIntParam("@Company", companyID);
+               this.AddSPIntParam("@user", userID);
+               this.AddSPIntParam("@Branch", BranchID);
+               this.AddSPStringParam("@ActivityType", ActivityType);
+               this.AddSPIntParam("@ActivitID", ActivitID);
+               this.AddSPReturnIntParam("@return");
+               using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+               {
+                   if (reader.Read())
+                   {
+                       if (!reader.IsDBNull(0))
+                           outobj.JSonstring = reader.GetString(0);
+                   }
+
+                   reader.Close();
+               }
+
+               int retcode = this.GetOutValueInt("@return");
+
+               switch (retcode)
+               {
+                   case 0: ret = true;
+                       break;
+                   default: SetError(-1, "Failed to get Audit Logs. Please try again later");
+                       break;
+               }
+           }
+           catch (Exception ex)
+           {
+               ret = false;
+               Utils.Write(ex);
+           }
+           finally
+           {
+               this.ClearSPParams();
+               this.Disconnect();
+           }
+           return ret;
+       }
+
     }
 }

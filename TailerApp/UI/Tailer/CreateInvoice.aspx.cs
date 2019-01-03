@@ -156,5 +156,38 @@ namespace TailerApp.UI.Tailer
 
             return returnObj;
         }
+
+        [WebMethod]
+        public static JsonResults GetLatestSeriesMaster()
+        {
+            JsonResults returnObj = new JsonResults();
+            LoginUser currentUser;
+            try
+            {
+                if (!GetUserSession(out currentUser))
+                {
+                    returnObj.ErrorCode = -1001;
+                    returnObj.ErrorMessage = "";
+                }
+
+                CustomerManager customerObj = new CustomerManager();
+                if (customerObj.GetLatestSeriesMaster(currentUser.CompanyID, currentUser.UserId, currentUser.UserBranchID, out returnObj))
+                {
+                    returnObj.ErrorCode = 0;
+                    returnObj.ErrorMessage = "";
+                }
+                else
+                {
+                    returnObj.ErrorCode = customerObj.GetLastErrorCode();
+                    returnObj.ErrorMessage = customerObj.GetLastError();
+                }
+            }
+            catch (Exception ex)
+            {
+                Utils.Write(ex);
+            }
+
+            return returnObj;
+        }
     }
 }

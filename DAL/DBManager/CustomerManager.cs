@@ -1340,5 +1340,53 @@ namespace DAL.DBManager
             }
             return ret;
         }
+
+        public bool GetLatestSeriesMaster(int companyID, int userID, int BranchID, out JsonResults outobj)
+        {
+            outobj = new JsonResults();
+            bool ret = false;
+
+            try
+            {
+                this.Connect(this.GetConnString());
+                string spName = "GetLatestSeriesMaster";
+                this.ClearSPParams();
+                this.AddSPIntParam("@Company", companyID);
+                this.AddSPIntParam("@user", userID);
+                this.AddSPIntParam("@Branch", BranchID);
+                this.AddSPReturnIntParam("@return");
+                using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+                {
+                    if (reader.Read())
+                    {
+                        if (!reader.IsDBNull(0))
+                            outobj.JSonstring = reader.GetString(0);
+                    }
+
+                    reader.Close();
+                }
+
+                int retcode = this.GetOutValueInt("@return");
+
+                switch (retcode)
+                {
+                    case 0: ret = true;
+                        break;
+                    default: SetError(-1, "Failed to get Latest Series. Please try again later");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                ret = false;
+                Utils.Write(ex);
+            }
+            finally
+            {
+                this.ClearSPParams();
+                this.Disconnect();
+            }
+            return ret;
+        }
     }
 }

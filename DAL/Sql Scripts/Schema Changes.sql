@@ -719,3 +719,38 @@ BEGIN TRAN
 		statename VARCHAR(100)	
 	)
 ROLLBACK
+
+--03rd Jan 2019
+BEGIN TRAN
+	CREATE TABLE SeriesMaster(
+		SeriesMasterID INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+		CompanyID	INT NOT NULL,
+		BranchID INT,
+		CreatedOn DATETIME DEFAULT GETDATE(),
+		CreatedBy INT,
+		StartDate DATETIME,
+		EndDate DATETIME,
+		Prefix VARCHAR(50),
+		LastValue INT,
+		WithZero BIT,
+		Width INT,
+		CONSTRAINT FK_SeriesMaster_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID),
+		CONSTRAINT FK_SeriesMaster_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID),
+		CONSTRAINT FK_SeriesMaster_BranchID FOREIGN KEY(BranchID) REFERENCES BranchDetails(BranchID)
+	)
+
+	CREATE TABLE AuditLogs(
+		AuditLogID INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+		CompanyID	INT NOT NULL,
+		BranchID INT,
+		CreatedOn DATETIME DEFAULT GETDATE(),
+		CreatedBy INT,
+		ActivityType VARCHAR(50),
+		ActivitID INT,
+		LogDescription VARCHAR(1000),
+		CONSTRAINT FK_AuditLogs_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID),
+		CONSTRAINT FK_AuditLogs_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID),
+		CONSTRAINT FK_AuditLogs_BranchID FOREIGN KEY(BranchID) REFERENCES BranchDetails(BranchID)
+	)
+
+ROLLBACK

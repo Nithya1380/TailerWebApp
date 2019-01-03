@@ -323,6 +323,15 @@
                                         </tr>
                                     </table>
                                 </li>
+                                <li id="SeriesMaster">
+                                    <table>
+                                        <tr onclick="javascript:onMenuClick('/UI/Tailer/SeriesMasterList.aspx',0,'')">
+                                            <td class="menu_icon">
+                                                <img src="<%=ApplicationVirtualPath %>/Content/Images/circle-outline.png" class="menu_circle" /></td>
+                                            <td class="menu_txt">Series Master</td>
+                                        </tr>
+                                    </table>
+                                </li>
                                 <li id="MeasurementField">
                                     <table>
                                         <tr onclick="javascript:onMenuClick('/UI/Tailer/MeasurementField.aspx',0,'')">

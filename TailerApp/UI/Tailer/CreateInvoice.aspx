@@ -21,6 +21,7 @@
 
          $(function () {
              CustomerAutoComplete('txtCustomer');
+             CustomerAutoComplete('txtMobileNumber');
              ItemAutoComplete();
          });
 
@@ -36,7 +37,15 @@
                      return false;
                  },
                  select: function (event, ui) {
-                     $(this).val(ui.item.CustomerName);
+                     if ($(this)[0].id == 'txtMobileNumber') {
+                         $(this).val(ui.item.CustomerMoNumber);
+                         $("#txtCustomer").val(ui.item.Customer);
+                     }
+                     else {
+                         $(this).val(ui.item.Customer);
+                         $("#txtMobileNumber").val(ui.item.CustomerMoNumber);
+                     }
+
                      $('#_HIDDEN_CUSTOMER_ID').val(ui.item.CustomerMasterID);
                      _CLIENT_HIDDEN_NAME = ui.item.CustomerName;
 
@@ -63,7 +72,9 @@
              var controller = element.controller();
              var scope = element.scope();
 
-             if (angular.element(document.getElementById("txtCustomer")).val() == "ALL" || angular.element(document.getElementById("txtCustomer")).val() == "") {
+             if (txtClientID.value == "ALL" || txtClientID.value == "") {
+                 $("#txtCustomer").val("");
+                 $("#txtMobileNumber").val("");
                  scope.$apply(function () {
                      scope.CustInvoice.CustomerID = 0;
                      $('#_HIDDEN_CUSTOMER_ID').val(0);
@@ -75,6 +86,8 @@
                      scope.CustInvoice.CustomerID = angular.element(document.getElementById("_HIDDEN_CUSTOMER_ID")).val();
                      if (scope.CustInvoice.CustomerID == 0 || scope.CustInvoice.CustomerID == undefined || scope.CustInvoice.CustomerID == null || scope.CustInvoice.CustomerID == "") {
                          element.val("");
+                         $("#txtCustomer").val("");
+                         $("#txtMobileNumber").val("");
                          $('#_HIDDEN_CUSTOMER_ID').val(0);
                      }
                      //else {
@@ -116,7 +129,9 @@
                          return {
                              label: item.CustomerName,
                              CustomerName: item.CustomerName,
-                             CustomerMasterID: item.CustomerMasterID
+                             CustomerMasterID: item.CustomerMasterID,
+                             CustomerMoNumber: item.CustomerMoNumber,
+                             Customer: item.Customer
                          }
                      }
                          ))
@@ -238,6 +253,7 @@
              $scope.ItemCodes = [];
              $scope.customerID = 0;
              $scope.IsCalculateTax = true;
+             $scope.LatestSeriesMaster = {};
 
              $scope.init = function () {
                  $scope.ShowError = false;
@@ -514,6 +530,57 @@
 
              };
 
+             $scope.GetLatestSeriesMaster = function () {
+
+                 $http({
+                     method: "POST",
+                     url: "CreateInvoice.aspx/GetLatestSeriesMaster",
+                     data: { },
+                     dataType: "json",
+                     headers: { "Content-Type": "application/json" }
+                 }).then(function onSuccess(response) {
+                     if (response.data.d.ErrorCode == -1001) {
+                         //Session Expired
+                         return false;
+                     }
+                     if (response.data.d.ErrorCode != 0) {
+                         $scope.ShowError = true;
+                         $scope.InvoiceError = $sce.trustAsHtml(response.data.d.ErrorMessage);
+                         return false;
+                     }
+                     else {
+                         $scope.LatestSeriesMaster = JSON.parse(response.data.d.JSonstring)[0];
+
+                         if($scope.LatestSeriesMaster != undefined)
+                         {
+                             $scope.CustInvoice.InvoiceSeries =
+                                   $scope.LatestSeriesMaster.Prefix +
+                                   ($scope.LatestSeriesMaster.WithZero && $scope.LatestSeriesMaster.Width > 0 && $scope.LatestSeriesMaster.Width > ($scope.LatestSeriesMaster.Prefix + $scope.LatestSeriesMaster.LastValue).length ? $scope.repeatstr($scope.LatestSeriesMaster.Width - ($scope.LatestSeriesMaster.Prefix + $scope.LatestSeriesMaster.LastValue).length) : '')
+                                    + $scope.LatestSeriesMaster.LastValue;
+
+                         }
+
+                     }
+
+                 }, function onFailure(error) {
+                     $scope.ShowError = true;
+                     $scope.InvoiceError = response.data.d.ErrorCode;
+                 });
+
+             };
+
+             $scope.GetLatestSeriesMaster();
+
+             $scope.repeatstr = function (num) {
+                 var ar = new Array();
+
+                 if (num > 0)
+                     ar = new Array(num + 1).join("0");
+
+                 return ar;
+             }
+
+             
          });
      </script>
 </asp:Content>
@@ -533,11 +600,12 @@
                                 <tr>
                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Series:</span></td>
                                     <td>
-                                        <span class="profileValue">
-                                            <select class="form-control" id="drpSeries" data-ng-model="CustInvoice.InvoiceSeries" style="width:80%"
+                                        <span class="profileValue" style="font-weight:bold;">
+                                            {{CustInvoice.InvoiceSeries}}
+                                            <%--<select class="form-control" id="drpSeries" data-ng-model="CustInvoice.InvoiceSeries" style="width:80%"
                                                     data-ng-options="custCat.PickListValue as custCat.PickListLabel for custCat in InvoicePickLists.AccountSeries track by custCat.PickListValue">
                                                     <option value="">None</option>
-                                            </select>
+                                            </select>--%>
                                         </span>
                                         <button class="btn btn-sm btn-success" type="button" title="Normal" style="display:none">
                                               <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
@@ -546,7 +614,11 @@
                                      <td style="text-align: right" class="back_shade"><span class="profileLabel">Mobile:</span></td>
                                     <td >
                                         <span class="profileValue">
-                                            <input type="text" data-ng-model="CustInvoice.MobileNumber" name="MobileNumber" class="form-control" style="width: 95%; margin-left: 5px;" maxlength="10" />
+                                            <input type="text" data-ng-model="CustInvoice.MobileNumber" id="txtMobileNumber" name="MobileNumber" 
+                                                    class="form-control-Multiple autopop-textbox-Search" style="width: 95%; margin-left: 5px;" maxlength="10" 
+                                                    placeholder="{{CustInvoice.MobileNumber}}"
+                                                    onblur="OnClientBlur(this);" onfocus="_OnTextBoxFocus(this)"
+                                                    />
                                         </span>
                                     </td>
                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Bill#:</span></td>
@@ -569,9 +641,10 @@
                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Customer:</span></td>
                                     <td>
                                         <span class="profileValue">
-                                            <input type="text" data-ng-model="CustInvoice.CustomerName" name="Debit" id="txtCustomer" class="form-control-Multiple autopop-textbox-Search" 
+                                            <input type="text" data-ng-model="CustInvoice.CustomerName" name="Debit" id="txtCustomer" 
+                                                class="form-control-Multiple autopop-textbox-Search" 
                                                 style="width: 70%; margin-left: 5px;" maxlength="50"
-                                                 placeholder="{{CustInvoice.CustomerName}}"
+                                                placeholder="{{CustInvoice.CustomerName}}"
                                                 onblur="OnClientBlur(this);" onfocus="_OnTextBoxFocus(this)"
                                                  /> <%--auto-complete="autoCompleteOptions"--%>
                                            <button class="btn btn-sm btn-success" type="button" title="Order" data-ng-click="OnAddNewCustomerClick()">
