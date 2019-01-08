@@ -91,6 +91,13 @@
                 return false;
             };
 
+            $scope.onPrintInvoiceDetailsClick = function (InvoiceID) {
+                var left = (screen.width / 2) - (1100 / 2);
+                var top = (screen.height / 2) - (600 / 2);
+                $window.open("PrintInvoiceDetails.aspx?InvoiceID=" + InvoiceID, "PrintInvoiceDetails", 'resizable=yes,location=1,status=1,scrollbars=1,width=1100,height=600,top=' + top + ', left=' + left);
+                return false;
+            };
+
             $scope.onCheckBoxClick = function () {
                 console.log($scope.SelectAll);
                 if($scope.SelectAll)
@@ -237,7 +244,10 @@
                                 <td>{{Invoice.MasterName}}</td>
                                 <td>{{Invoice.DesignerName}}</td>
                                 <td>{{Invoice.NetAmount}}</td>
-                                <td><a href="#" title="Invoice Details" data-ng-click="onCustomerInvoiceDetailsClick(Invoice.InvoiceID)"><i class="fa fa-info-circle" style="font-size: 24px;"></i></a></td>
+                                <td>
+                                    <a href="#" title="Invoice Details" data-ng-click="onCustomerInvoiceDetailsClick(Invoice.InvoiceID)"><i class="fa fa-info-circle" style="font-size: 24px;"></i></a>
+                                    <a href="#" title="Invoice Details" data-ng-click="onPrintInvoiceDetailsClick(Invoice.InvoiceID)"><i class="fa fa-print" style="font-size: 24px;"></i></a>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

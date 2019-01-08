@@ -8,8 +8,8 @@
     <script src="../../Scripts/AngularJS/angular.js"></script>
     <link href="../../Scripts/angular-datepicker.css" rel="stylesheet" />
     <script src="../../Scripts/angular-datepicker.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <%--<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>--%>
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
         <script src="<%: ResolveUrl("~/Scripts/jquery-1.10.2.js") %>"></script>
@@ -61,20 +61,27 @@
                 });
             };
 
-            $scope.export = function () {
-                html2canvas(document.getElementById('divMainContentInner'), {
-                    onrendered: function (canvas) {
-                        var data = canvas.toDataURL();
-                        var docDefinition = {
-                            content: [{
-                                image: data,
-                                width: 500,
-                            }]
-                        };
-                        pdfMake.createPdf(docDefinition).download('InvoiceDetails_' + $scope.InvoiceID + '.pdf');
-                    }
-                });
-            }
+            $scope.onPrintInvoiceDetailsClick = function () {
+                var left = (screen.width / 2) - (1100 / 2);
+                var top = (screen.height / 2) - (600 / 2);
+                $window.open("PrintInvoiceDetails.aspx?InvoiceID=" + $scope.InvoiceID, "PrintInvoiceDetails", 'resizable=yes,location=1,status=1,scrollbars=1,width=1100,height=600,top=' + top + ', left=' + left);
+                return false;
+            };
+
+            //$scope.export = function () {
+            //    html2canvas(document.getElementById('divMainContentInner'), {
+            //        onrendered: function (canvas) {
+            //            var data = canvas.toDataURL();
+            //            var docDefinition = {
+            //                content: [{
+            //                    image: data,
+            //                    width: 500,
+            //                }]
+            //            };
+            //            pdfMake.createPdf(docDefinition).download('InvoiceDetails_' + $scope.InvoiceID + '.pdf');
+            //        }
+            //    });
+            //}
 
 
         });
@@ -85,7 +92,7 @@
      <div class="container bootstrap snippet" data-ng-app="TailerApp" id="divMainContent" data-ng-controller="InvoiceDetailsController" data-ng-init="init()">
         <div style="text-align:right">
             
-            <button class="btn_ss bg-blue" type="button" data-ng-click="export();">Print</button>
+            <button class="btn_ss bg-blue" type="button" data-ng-click="onPrintInvoiceDetailsClick();">Print</button>
         </div>
         <div id="divMainContentInner">
         <div class="row" >
