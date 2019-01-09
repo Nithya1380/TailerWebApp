@@ -275,6 +275,8 @@
                      ItemDiscount: "",
                      GST: "",
                      SGST: "",
+                     GSTP: 9.00,
+                     SGSTP:9.00,
                      AmountPending: ""
                  }
 
@@ -304,17 +306,42 @@
 
                          if ($scope.IsCalculateTax)
                          {
-                             InvoiceItem.GST = parseFloat(InvoiceItem.AmountPending) * (09.00 / 100.00);
-                             InvoiceItem.SGST = parseFloat(InvoiceItem.AmountPending) * (09.00 / 100.00);
+                             if (!isNaN(InvoiceItem.GSTP) && InvoiceItem.GSTP > 0)
+                             {
+                                 InvoiceItem.GST =parseFloat(InvoiceItem.AmountPending) - (parseFloat(InvoiceItem.AmountPending) * (100 / (100 + InvoiceItem.GSTP)));
+                             }
+                             else {
+                                 InvoiceItem.GST = 0.00;
+                             }
+                             
+                             if (!isNaN(InvoiceItem.SGSTP) && InvoiceItem.SGSTP > 0)
+                             {
+                                 InvoiceItem.SGST =parseFloat(InvoiceItem.AmountPending) - (parseFloat(InvoiceItem.AmountPending) * (100 / (100 + InvoiceItem.SGSTP)));
+                             }
+                             else {
+                                 InvoiceItem.SGST = 0.00;
+                             }
+                            
                          }
                          else {
-                             InvoiceItem.GST = 0.00;
-                             InvoiceItem.SGST = 0.00;
+                             if (!isNaN(InvoiceItem.GSTP) && InvoiceItem.GSTP > 0)
+                                 InvoiceItem.GST = parseFloat(InvoiceItem.AmountPending) * (InvoiceItem.GSTP / 100.00);
+                             else
+                                 InvoiceItem.GST = 0.00;
+
+                             if (!isNaN(InvoiceItem.SGSTP) && InvoiceItem.SGSTP > 0)
+                                 InvoiceItem.SGST = parseFloat(InvoiceItem.AmountPending) * (InvoiceItem.SGSTP / 100.00);
+                             else
+                                 InvoiceItem.SGST = 0.00;
                          }
 
                          InvoiceItem.GST =parseFloat(parseFloat(InvoiceItem.GST).toFixed(2));
                          InvoiceItem.SGST = parseFloat(parseFloat(InvoiceItem.SGST).toFixed(2));
-                         InvoiceItem.AmountPending = parseFloat(parseFloat(InvoiceItem.AmountPending + InvoiceItem.GST + InvoiceItem.SGST).toFixed(2));
+
+                         if ($scope.IsCalculateTax)
+                             InvoiceItem.AmountPending = parseFloat(parseFloat(InvoiceItem.AmountPending - InvoiceItem.GST - InvoiceItem.SGST).toFixed(2));
+                         else
+                             InvoiceItem.AmountPending = parseFloat(parseFloat(InvoiceItem.AmountPending + InvoiceItem.GST + InvoiceItem.SGST).toFixed(2));
                 
                      }
 
@@ -438,6 +465,8 @@
                      ItemDiscount: "",
                      GST: "",
                      SGST: "",
+                     GSTP: 9.00,
+                     SGSTP: 9.00,
                      AmountPending: ""
                  }
 
@@ -780,7 +809,9 @@
                                                     <th>Quantity</th>
                                                     <th>Rate</th>
                                                     <th>Disc(%) & Amt</th>
+                                                    <th>%</th>
                                                     <th>I/C GST</th>
+                                                    <th>%</th>
                                                     <th>SGST</th>
                                                     <th>Amount Pend</th>
                                                 </tr>
@@ -798,7 +829,9 @@
                                                     <td><input type="number" data-ng-model="Invoice.ItemQuantity" class="form-control" style="width: 50px;" data-ng-change="onItemChange(Invoice)" /></td>
                                                     <td><input type="number" data-ng-model="Invoice.ItemPrice" class="form-control" style="width: 80px;" data-ng-change="onItemChange(Invoice)" /></td>
                                                     <td><input type="number" data-ng-model="Invoice.ItemDiscount" class="form-control" style="width: 80px;" data-ng-change="onItemChange(Invoice)" /></td>
+                                                    <td><input type="number" data-ng-model="Invoice.GSTP" class="form-control" style="width: 60px;"  data-ng-change="onItemChange(Invoice)" /></td>
                                                     <td><input type="number" data-ng-model="Invoice.GST" class="form-control" style="width: 80px;" data-ng-disabled="true" data-ng-change="onItemChange(Invoice)" /></td>
+                                                    <td><input type="number" data-ng-model="Invoice.SGSTP" class="form-control" style="width: 60px;"  data-ng-change="onItemChange(Invoice)" /></td>
                                                     <td><input type="number" data-ng-model="Invoice.SGST" class="form-control" style="width: 80px;" data-ng-disabled="true" /></td>
                                                     <td><input type="number" data-ng-model="Invoice.AmountPending" class="form-control" style="width: 100px;" data-ng-disabled="true" /></td>
                                                 </tr>
