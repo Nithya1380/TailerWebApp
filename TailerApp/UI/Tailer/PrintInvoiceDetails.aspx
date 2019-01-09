@@ -162,7 +162,7 @@
     <div ng-app="TailerApp">
         <div ng-controller="PrintInvoiceDetailsController">
             <br>
-            <div id="divInvoiceDetails">
+            <div id="divInvoiceDetails" style="padding:15px">
                 <div class="row">
                     <div class="col-sm-12">
                         <h5 class="lableHed">TAX INVOICE</h5>
@@ -206,73 +206,29 @@
                     </div>
                     <div class="col-sm-4"></div>
                 </div>
-                <div style="border: 1px black solid; margin: 5px;">
-                    <div class="row" style="margin-left: 5px;">
+                <div class="col-sm-12 border">
+                    <div class="row" >
                         <div class="col-sm-8">
                             <label class="lblInfotit">Customer:</label><label class="lblInfoval">{{InvoiceDetails.CustomerName}}</label>
                         </div>
-                        <%--<div class="col-sm-2">
-                            <label class="lblInfotit">Bill#:</label><label class="lblInfoval">{{InvoiceDetails.BillNumber}}</label>
-                        </div>--%>
-                        <div class="col-sm-4">
+
+                        <div class="col-sm-4 border">
                             <label class="lblInfotit">Date:</label><label class="lblInfoval">{{InvoiceDetails.InvoiceDate}}</label>
                         </div>
                     </div>
-                    <div class="row" style="margin-left: 5px;">
+                    <div class="row" >
                         <div class="col-sm-8">
                             <label class="lblInfotit">Mobile:</label><label class="lblInfoval">{{InvoiceDetails.MobileNumber}}</label>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-4 border">
                             <label class="lblInfotit">Series:</label><label class="lblInfoval">{{InvoiceDetails.InvoiceSeries}}</label>
                         </div>
                     </div>
-                        <%--<div class="col-sm-4">
-                            <label class="lblInfotit">Customer:</label><label class="lblInfoval">{{InvoiceDetails.CustomerName}}</label>
-                        </div>--%>
-                        <%--<div class="col-sm-4">
-                            <label class="lblInfotit">Trail Date:</label><label class="lblInfoval">{{InvoiceDetails.TrailDate+' '}}{{InvoiceDetails.TrailTime}}</label>
-                        </div>
-                        <div class="col-sm-4" style="text-align: right; padding-right: 40px; font-weight: bold;">
-                            <label class="lblInfotit"></label>
-                            <label class="lblInfoval">{{InvoiceDetails.NetAmount}}</label>
-                        </div>--%>
-                    <%--</div>
-                    <div class="row" style="margin-left: 5px;">
-                        <div class="col-sm-4">
-                            <label class="lblInfotit">Sales Rep:</label><label class="lblInfoval">{{InvoiceDetails.SelsRepsName}}</label>
-                        </div>
-                        <div class="col-sm-4">
-                            <label class="lblInfotit">Delivery Date:</label><label class="lblInfoval">{{InvoiceDetails.DeliveryDate+' '}}{{InvoiceDetails.DeliveryTime}}</label>
-                        </div>
-                        <div class="col-sm-4">
-                            <label class="lblInfotit"></label>
-                            <label class="lblInfoval"></label>
-                        </div>
-                    </div>
-                    <div class="row" style="margin-left: 5px;">
-                        <div class="col-sm-4">
-                            <label class="lblInfotit">Master:</label><label class="lblInfoval">{{InvoiceDetails.MasterName}}</label>
-                        </div>
-                        <div class="col-sm-4">
-                            <label class="lblInfotit">Designer:</label><label class="lblInfoval">{{InvoiceDetails.DesignerName}}</label>
-                        </div>
-                        <div class="col-sm-4">
-                            <label class="lblInfotit"></label>
-                            <label class="lblInfoval"></label>
-                        </div>
-                    </div>
-                    <div class="row" align="center">
-                        <div class="col-sm-11 divborder"></div>
-                    </div>--%>
-                    <div class="row" style="padding: 0px 25px;">
-                        <%--<div class="col-sm-1" ng-repeat="Invoice in InvoiceDetails.DetailsList">
-                            <label class="lableMes">{{Per.FieldName}}</label><label class="lableMes" ng-show="Per.Lang">({{Per.Lang}})</label>
-                            <div ng-repeat="id in Per.FieldValue" style="padding-left: 20px; padding-bottom: 5px;">
-                                <label class="lableval"><span>{{decimalToFraction(id.val)[0]}}</span><span style="font-size: 12px; vertical-align: top;">{{decimalToFraction(id.val)[1]}}</span></label>
-                            </div>
-                        </div>--%>
-                        <div class="col-sm-12">
-                        <table class="table">
+                        
+                    <div class="row" >
+                        
+                        <div class="col-sm-12" style="padding:0px;">
+                        <table class="table table-bordered" style="margin:0px">
                             <thead>
                                 <tr>
                                     <th>Sr.</th>
@@ -318,15 +274,15 @@
                         </table>
                       </div>
                     </div>
-                    <div class="row" style="margin-left: 5px;">
+                    <div class="row border" >
                         <div class="col-sm-9">
-                            <div class="row" style="margin-left: 5px;">
-                                <div class="col-sm-12">
+                            <div class="row" >
+                                <div class="col-sm-12 border-bottom">
                                     <label class="lblInfotit">Invoice Value in words: </label>
                                     <label class="lblInfoval"></label>
                                 </div>
                             </div>
-                            <div class="row" style="margin-left: 5px;">
+                            <div class="row" >
                                 <div class="col-sm-7">
                                     <label class="lblInfotit">Trial: </label>
                                     <label class="lblInfoval">{{InvoiceDetails.TrailTime}}</label>
@@ -336,7 +292,7 @@
                                     <label class="lblInfoval">{{totalGST}}</label>
                                 </div>
                             </div>
-                            <div class="row" style="margin-left: 5px;">
+                            <div class="row" >
                                 <div class="col-sm-7">
                                     <label class="lblInfotit">Del: </label>
                                     <label class="lblInfoval">{{InvoiceDetails.DeliveryDate}}</label>
@@ -346,7 +302,7 @@
                                     <label class="lblInfoval">{{totalSGST}}</label>
                                 </div>
                             </div>
-                            <div class="row" style="margin-left: 5px;">
+                            <div class="row" >
                                 <div class="col-sm-7">
                                    
                                 </div>
@@ -356,14 +312,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-3">
-                            <div class="row" style="margin-left: 5px;">
+                        <div class="col-sm-3 border">
+                            <div class="row" >
                                 <div class="col-sm-12">
                                     <label class="lblInfotit">TOTAL: </label>
                                     <label class="lblInfoval">{{totalAmountPending}}</label>
                                 </div>
                             </div>
-                            <div class="row" style="margin-left: 5px;">
+                            <div class="row" >
                                 <div class="col-sm-12">
                                     <label class="lblInfotit">Debit: </label>
                                     <label class="lblInfoval">{{totalAmountPending}}</label>
@@ -371,23 +327,7 @@
                             </div>
                         </div>
                     </div>
-                    <%--<div class="row" style="margin-left: 5px;">
-                        <div class="col-sm-4">
-                            <label class="lblInfotit">Payment:</label><label class="lblInfoval">{{InvoiceDetails.PaymentNumber}}</label>
-                        </div>
-                        <div class="col-sm-4">
-                            <label class="lblInfotit">Other Less & Rs:</label><label class="lblInfoval">{{InvoiceDetails.LessRs}}</label>
-                        </div>
-                        <div class="col-sm-4">
-                            <label class="lblInfotit">Less(%) & Rs:</label><label class="lblInfoval">{{InvoiceDetails.LessRsAmount}}</label>
-                        </div>
-                        <div class="col-sm-4">
-                            <label class="lblInfotit">Remarks:</label><label class="lblInfoval">{{InvoiceDetails.Remarks}}</label>
-                        </div>
-                        <div class="col-sm-4">
-                            <label class="lblInfotit">Net Amount:</label><label class="lblInfoval">{{InvoiceDetails.NetAmount}}</label>
-                        </div>
-                    </div>--%>
+                    
                 </div>
             </div>
             <input type="button" value="Downlod" ng-click="export()" />
