@@ -209,7 +209,7 @@
                 <div class="col-sm-12 border">
                     <div class="row" >
                         <div class="col-sm-8">
-                            <label class="lblInfotit">Customer:</label><label class="lblInfoval">{{InvoiceDetails.CustomerName}}</label>
+                            <label class="lblInfoval">{{InvoiceDetails.CustomerName}}</label>
                         </div>
 
                         <div class="col-sm-4 border">
@@ -218,7 +218,7 @@
                     </div>
                     <div class="row" >
                         <div class="col-sm-8">
-                            <label class="lblInfotit">Mobile:</label><label class="lblInfoval">{{InvoiceDetails.MobileNumber}}</label>
+                            <label class="lblInfoval">{{InvoiceDetails.MobileNumber}}</label>
                         </div>
                         <div class="col-sm-4 border">
                             <label class="lblInfotit">Series:</label><label class="lblInfoval">{{InvoiceDetails.InvoiceSeries}}</label>
@@ -231,44 +231,44 @@
                         <table class="table table-bordered" style="margin:0px">
                             <thead>
                                 <tr>
-                                    <th>Sr.</th>
-                                    <th>Item Description</th>
-                                    <th>Quantity</th>
-                                    <th>Rate</th>
-                                    <th colspan="2">Disc(%) & Amt</th>
-                                    <th colspan="2">I/C GST & Amt</th>
-                                    <th colspan="2">SGST & Amt</th>
-                                    <th>Total</th>
+                                    <th style="width:2%;">Sr.</th>
+                                    <th style="width:20%;">Item Description</th>
+                                    <th style="width:2%;">Qty</th>
+                                    <th style="width:5%;">Rate</th>
+                                    <th style="width:6%;" colspan="2">Disc(%) & Amt</th>
+                                    <th style="width:6%;" colspan="2">I/C GST & Amt</th>
+                                    <th style="width:6%;" colspan="2">SGST & Amt</th>
+                                    <th style="width:10%;">Total</th>
                                 </tr>
                             </thead>
                             <tbody data-ng-repeat="Invoice in InvoiceDetails.DetailsList">
                                 <tr>
-                                    <td><span data-ng-bind="$index+1"></span></td>
+                                    <td style="text-align:right;"><span data-ng-bind="$index+1"></span></td>
                                     <td><span data-ng-bind="Invoice.ItemDescription"></span></td>
-                                    <td ng-init="$parent.totalItemQuantity = $parent.totalItemQuantity + Invoice.ItemQuantity" ><span data-ng-bind="Invoice.ItemQuantity"></span></td>
-                                    <td ng-init="$parent.totalItemPrice = $parent.totalItemPrice + Invoice.ItemPrice"><span data-ng-bind="Invoice.ItemPrice"></span></td>
-                                    <td><span></span></td>
-                                    <td ng-init="$parent.totalItemDiscount = $parent.totalItemDiscount + Invoice.ItemDiscount"><span data-ng-bind="Invoice.ItemDiscount"></span></td>
-                                    <td><span></span></td>
-                                    <td ng-init="$parent.totalGST = $parent.totalGST + Invoice.GST"><span data-ng-bind="Invoice.GST"></span></td>
-                                    <td><span></span></td>
-                                    <td ng-init="$parent.totalSGST = $parent.totalSGST + Invoice.SGST"><span data-ng-bind="Invoice.SGST"></span></td>
-                                    <td ng-init="$parent.totalAmountPending = $parent.totalAmountPending + Invoice.AmountPending"><span data-ng-bind="Invoice.AmountPending"></span></td>
+                                    <td style="text-align:right;" ng-init="$parent.totalItemQuantity = $parent.totalItemQuantity + Invoice.ItemQuantity" ><span data-ng-bind="Invoice.ItemQuantity"></span></td>
+                                    <td style="text-align:right;" ng-init="$parent.totalItemPrice = $parent.totalItemPrice + Invoice.ItemPrice">{{Invoice.ItemPrice | currency : ''}}</td>
+                                    <td style="text-align:right;"><span></span></td>
+                                    <td style="text-align:right;" ng-init="$parent.totalItemDiscount = $parent.totalItemDiscount + Invoice.ItemDiscount">{{Invoice.ItemDiscount | currency : ''}}</td>
+                                    <td style="text-align:right;"><span></span></td>
+                                    <td style="text-align:right;" ng-init="$parent.totalGST = $parent.totalGST + Invoice.GST">{{Invoice.GST | currency : ''}}</td>
+                                    <td style="text-align:right;"><span></span></td>
+                                    <td style="text-align:right;" ng-init="$parent.totalSGST = $parent.totalSGST + Invoice.SGST">{{Invoice.SGST | currency : ''}}</td>
+                                    <td style="text-align:right;" ng-init="$parent.totalAmountPending = $parent.totalAmountPending + Invoice.AmountPending">{{Invoice.AmountPending | currency : ''}}</td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <th><span></span></th>
-                                    <th><span> Total: </span></th>
-                                    <th><span data-ng-bind="totalItemQuantity"></span></th>
-                                    <th><span data-ng-bind="totalItemPrice"></span></th>
+                                    <th style="text-align:right;"><span> Total: <br /><br /><br /><br /><br /> </span></th>
+                                    <th style="text-align:right;">{{totalItemQuantity}}</th>
+                                    <th style="text-align:right;">{{totalItemPrice | currency : ''}}</th>
                                     <th><span></span></th>
-                                    <th><span data-ng-bind="totalItemDiscount"></span></th>
+                                    <th style="text-align:right;">{{totalItemDiscount | currency : ''}}</th>
                                     <th><span></span></th>
-                                    <th><span data-ng-bind="totalGST"></span></th>
+                                    <th style="text-align:right;">{{totalGST | currency : '' }}</th>
                                     <th><span></span></th>
-                                    <th><span data-ng-bind="totalSGST"></span></th>
-                                    <th><span data-ng-bind="totalAmountPending"></span></th>
+                                    <th style="text-align:right;" >{{totalSGST | currency : ''}}</th>
+                                    <th style="text-align:right;">{{totalAmountPending | currency : ''}}</th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -289,7 +289,7 @@
                                 </div>
                                 <div class="col-sm-5">
                                     <label class="lblInfotit">CGST: </label>
-                                    <label class="lblInfoval">{{totalGST}}</label>
+                                    <label class="lblInfoval">{{totalGST  | currency : ''}}</label>
                                 </div>
                             </div>
                             <div class="row" >
@@ -299,7 +299,7 @@
                                 </div>
                                 <div class="col-sm-5">
                                     <label class="lblInfotit">SGST: </label>
-                                    <label class="lblInfoval">{{totalSGST}}</label>
+                                    <label class="lblInfoval">{{totalSGST  | currency : ''}}</label>
                                 </div>
                             </div>
                             <div class="row" >
@@ -308,7 +308,7 @@
                                 </div>
                                 <div class="col-sm-5">
                                     <label class="lblInfotit">TOTAL GST: </label>
-                                    <label class="lblInfoval">{{totalGST+totalSGST}}</label>
+                                    <label class="lblInfoval">{{totalGST+totalSGST  | currency : ''}}</label>
                                 </div>
                             </div>
                         </div>
@@ -316,13 +316,13 @@
                             <div class="row" >
                                 <div class="col-sm-12">
                                     <label class="lblInfotit">TOTAL: </label>
-                                    <label class="lblInfoval">{{totalAmountPending}}</label>
+                                    <label class="lblInfoval">{{totalAmountPending  | currency : ''}}</label>
                                 </div>
                             </div>
                             <div class="row" >
                                 <div class="col-sm-12">
                                     <label class="lblInfotit">Debit: </label>
-                                    <label class="lblInfoval">{{totalAmountPending}}</label>
+                                    <label class="lblInfoval">{{totalAmountPending  | currency : ''}}</label>
                                 </div>
                             </div>
                         </div>
