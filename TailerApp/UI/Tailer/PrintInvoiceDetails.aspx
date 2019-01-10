@@ -312,12 +312,12 @@
                                 <tr>
                                     <th style="width:2%;">Sr.</th>
                                     <th style="width:20%;">Item Description</th>
-                                    <th style="width:2%;">Qty</th>
-                                    <th style="width:5%;">Rate</th>
-                                    <th style="width:6%;" colspan="2">Disc(%) & Amt</th>
-                                    <th style="width:6%;" colspan="2">I/C GST & Amt</th>
-                                    <th style="width:6%;" colspan="2">SGST & Amt</th>
-                                    <th style="width:10%;">Total</th>
+                                    <th style="width:2%; text-align:right;">Qty</th>
+                                    <th style="width:5%; text-align:right;">Rate</th>
+                                    <th style="width:10%; text-align:right;" colspan="2">Disc% & Amt</th>
+                                    <th style="width:10%; text-align:right;" colspan="2">I/C GST% & Amt</th>
+                                    <th style="width:10%; text-align:right;" colspan="2">SGST% & Amt</th>
+                                    <th style="width:10%; text-align:right;">Total</th>
                                 </tr>
                             </thead>
                             <tbody data-ng-repeat="Invoice in InvoiceDetails.DetailsList">
@@ -326,11 +326,11 @@
                                     <td><span data-ng-bind="Invoice.ItemDescription"></span></td>
                                     <td style="text-align:right;" ng-init="$parent.totalItemQuantity = $parent.totalItemQuantity + Invoice.ItemQuantity" ><span data-ng-bind="Invoice.ItemQuantity"></span></td>
                                     <td style="text-align:right;" ng-init="$parent.totalItemPrice = $parent.totalItemPrice + Invoice.ItemPrice">{{Invoice.ItemPrice | currency : ''}}</td>
-                                    <td style="text-align:right;"><span></span></td>
+                                    <td style="text-align:right;">{{Invoice.ItemDiscountPer}}</td>
                                     <td style="text-align:right;" ng-init="$parent.totalItemDiscount = $parent.totalItemDiscount + Invoice.ItemDiscount">{{Invoice.ItemDiscount | currency : ''}}</td>
-                                    <td style="text-align:right;"><span></span></td>
+                                    <td style="text-align:right;">{{Invoice.GSTPer}}</td>
                                     <td style="text-align:right;" ng-init="$parent.totalGST = $parent.totalGST + Invoice.GST">{{Invoice.GST | currency : ''}}</td>
-                                    <td style="text-align:right;"><span></span></td>
+                                    <td style="text-align:right;">{{Invoice.SGSTPer}}</td>
                                     <td style="text-align:right;" ng-init="$parent.totalSGST = $parent.totalSGST + Invoice.SGST">{{Invoice.SGST | currency : ''}}</td>
                                     <td style="text-align:right;" ng-init="$parent.totalAmountPending = $parent.totalAmountPending + Invoice.AmountPending">{{Invoice.AmountPending | currency : ''}}</td>
                                 </tr>
@@ -367,8 +367,8 @@
                                     <label class="lblInfoval">{{InvoiceDetails.TrailTime}}</label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <label class="lblInfotit">CGST: </label>
-                                    <label class="lblInfoval">{{totalGST  | currency : ''}}</label>
+                                    <label class="lblInfotit col-sm-5">CGST {{InvoiceDetails.DetailsList[0].GSTPer}}% </label>
+                                    <label class="lblInfoval col-sm-5" style="text-align:right;">{{totalGST  | currency : ''}}</label>
                                 </div>
                             </div>
                             <div class="row" >
@@ -377,31 +377,31 @@
                                     <label class="lblInfoval">{{InvoiceDetails.DeliveryDate}}</label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <label class="lblInfotit">SGST: </label>
-                                    <label class="lblInfoval">{{totalSGST  | currency : ''}}</label>
+                                    <label class="lblInfotit col-sm-5">SGST {{InvoiceDetails.DetailsList[0].SGSTPer}}% </label>
+                                    <label class="lblInfoval col-sm-5" style="text-align:right;">{{totalSGST  | currency : ''}}</label>
                                 </div>
                             </div>
                             <div class="row" >
                                 <div class="col-sm-7">
                                    
                                 </div>
-                                <div class="col-sm-5">
-                                    <label class="lblInfotit">TOTAL GST: </label>
-                                    <label class="lblInfoval">{{totalGST+totalSGST  | currency : ''}}</label>
+                                <div class="col-sm-5" >
+                                    <label class="lblInfotit col-sm-5" style="border-top:1px dashed">TOTAL GST: </label>
+                                    <label class="lblInfoval col-sm-5" style="text-align:right; border-top:1px dashed">{{totalGST+totalSGST  | currency : ''}}</label>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-3 border">
                             <div class="row" >
                                 <div class="col-sm-12">
-                                    <label class="lblInfotit">TOTAL: </label>
-                                    <label class="lblInfoval">{{totalAmountPending  | currency : ''}}</label>
+                                    <label class="lblInfotit col-sm-5">TOTAL: </label>
+                                    <label class="lblInfoval col-sm-5" style="text-align:right">{{totalAmountPending  | currency : ''}}</label>
                                 </div>
                             </div>
                             <div class="row" >
                                 <div class="col-sm-12">
-                                    <label class="lblInfotit">Debit: </label>
-                                    <label class="lblInfoval">{{totalAmountPending  | currency : ''}}</label>
+                                    <label class="lblInfotit col-sm-5">Debit: </label>
+                                    <label class="lblInfoval col-sm-5" style="text-align:right">{{totalAmountPending  | currency : ''}}</label>
                                 </div>
                             </div>
                         </div>

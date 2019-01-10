@@ -274,6 +274,7 @@
                      ItemQuantity: 1,
                      ItemPrice: "",
                      ItemDiscount: "",
+                     ItemDiscountPer: "",
                      GST: "",
                      SGST: "",
                      GSTP: 9.00,
@@ -301,8 +302,10 @@
                      InvoiceItem.AmountPending =parseFloat(parseFloat(parseInt(InvoiceItem.ItemQuantity) * parseFloat(InvoiceItem.ItemPrice)).toFixed(2));
 
                      if (parseFloat(InvoiceItem.AmountPending) > 0) {
-                         if (!isNaN(InvoiceItem.ItemDiscount) && parseFloat(InvoiceItem.ItemDiscount) > 0)
-                             InvoiceItem.AmountPending = InvoiceItem.AmountPending - (parseFloat(InvoiceItem.AmountPending) * (parseFloat(InvoiceItem.ItemDiscount) / 100.00));
+                         if (!isNaN(InvoiceItem.ItemDiscountPer) && parseFloat(InvoiceItem.ItemDiscountPer) > 0) {
+                             InvoiceItem.AmountPending = InvoiceItem.AmountPending - (parseFloat(InvoiceItem.AmountPending) * (parseFloat(InvoiceItem.ItemDiscountPer) / 100.00));
+                             InvoiceItem.ItemDiscount = (parseFloat(InvoiceItem.AmountPending) * (parseFloat(InvoiceItem.ItemDiscountPer) / 100.00));
+                         }
                              
 
                          if ($scope.IsCalculateTax)
@@ -463,6 +466,7 @@
                      ItemDescription: $item.ItemDescription,
                      ItemQuantity: 1,
                      ItemPrice: $item.ItemPrice,
+                     ItemDiscountPer: "",
                      ItemDiscount: "",
                      GST: "",
                      SGST: "",
@@ -809,11 +813,9 @@
                                                     <th>Item Description</th>
                                                     <th>Quantity</th>
                                                     <th>Rate</th>
-                                                    <th>Disc(%) & Amt</th>
-                                                    <th>%</th>
-                                                    <th>I/C GST</th>
-                                                    <th>%</th>
-                                                    <th>SGST</th>
+                                                    <th colspan="2">Disc(%) & Amt</th>
+                                                    <th colspan="2">I/C GST(%) & Amt</th>
+                                                    <th colspan="2">SGST(%) & Amt</th>
                                                     <th>Amount Pend</th>
                                                 </tr>
                                             </thead>
@@ -829,7 +831,8 @@
                                                     <td><input type="text" data-ng-model="Invoice.ItemDescription" class="form-control" style="width: 150px;" /></td>
                                                     <td><input type="number" data-ng-model="Invoice.ItemQuantity" class="form-control" style="width: 50px;" data-ng-change="onItemChange(Invoice)" /></td>
                                                     <td><input type="number" data-ng-model="Invoice.ItemPrice" class="form-control" style="width: 80px;" data-ng-change="onItemChange(Invoice)" /></td>
-                                                    <td><input type="number" data-ng-model="Invoice.ItemDiscount" class="form-control" style="width: 80px;" data-ng-change="onItemChange(Invoice)" /></td>
+                                                    <td><input type="number" data-ng-model="Invoice.ItemDiscountPer" class="form-control" style="width: 80px;" data-ng-change="onItemChange(Invoice)" /></td>
+                                                    <td><input type="number" data-ng-model="Invoice.ItemDiscount" class="form-control" data-ng-disabled="true" style="width: 80px;" data-ng-change="onItemChange(Invoice)" /></td>
                                                     <td><input type="number" data-ng-model="Invoice.GSTP" class="form-control" style="width: 60px;"  data-ng-change="onItemChange(Invoice)" /></td>
                                                     <td><input type="number" data-ng-model="Invoice.GST" class="form-control" style="width: 80px;" data-ng-disabled="true" data-ng-change="onItemChange(Invoice)" /></td>
                                                     <td><input type="number" data-ng-model="Invoice.SGSTP" class="form-control" style="width: 60px;"  data-ng-change="onItemChange(Invoice)" /></td>

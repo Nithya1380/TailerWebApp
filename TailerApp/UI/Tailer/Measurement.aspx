@@ -347,7 +347,7 @@
                                                             <input type="text"  placeholder="Enter number" class="form-control"
 			                                                  style="max-width:220px;" ng-model="MeasurementDetails.Account"  
 			                                                        typeahead-on-select="onSelect($item, $model, $label, this);"
-			                                                        uib-typeahead="Account as Account.AccountCode for Account in AccountList |  filter:{name:$viewValue} | limitTo:10" 
+			                                                        uib-typeahead="Account as Account.AccountCode for Account in AccountList |  filter:{AccountCode:$viewValue} | limitTo:10" 
 			                                                        typeahead-show-hint="true" typeahead-min-length="0"  class="web_txtbox"/>   
                                                             <%--</span>
                                                             <button title="Normal" class="btn btn-sm btn-success" type="button">

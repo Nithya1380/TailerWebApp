@@ -273,7 +273,9 @@ namespace DAL.Model
         public string GST { get; set; }
         public string SGST { get; set; }
         public string AmountPending { get; set; }
-
+        public string ItemDiscountPer { get; set; }
+        public string GSTP { get; set; }
+        public string SGSTP { get; set; }
     }
     public class ST_MeasurementField 
     {
