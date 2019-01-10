@@ -84,6 +84,7 @@
                  scope.$apply(function () {
 
                      scope.CustInvoice.CustomerID = angular.element(document.getElementById("_HIDDEN_CUSTOMER_ID")).val();
+                     scope.CustInvoice.MobileNumber = angular.element(document.getElementById("txtMobileNumber")).val();
                      if (scope.CustInvoice.CustomerID == 0 || scope.CustInvoice.CustomerID == undefined || scope.CustInvoice.CustomerID == null || scope.CustInvoice.CustomerID == "") {
                          element.val("");
                          $("#txtCustomer").val("");
