@@ -1,4 +1,4 @@
-CREATE PROCEDURE GetItemRates
+ALTER PROCEDURE GetItemRates
 ( 
     @CompanyID INT,
 	@UserID INT,
@@ -15,7 +15,13 @@ BEGIN
           ItemMasterID,
 		  CASE WHEN StartDate IS NULL THEN 'From Begining' ELSE CONVERT(VARCHAR,StartDate,101) END AS StartDate,
 		  CASE WHEN EndDate IS NULL THEN 'Till End' ELSE CONVERT(VARCHAR,EndDate,101) END AS EndDate,
-		  ItemPrice 
+		  ItemPrice,
+		  TotalGST,
+		  SGSTPer,
+		  SGST,
+		  CGSTPer,
+		  CGST,
+		  BillAmt 
      FROM ItemRates WITH(nolock)
 	   WHERE CompanyID=@CompanyID
 	     AND ItemMasterID=@ItemMasterID

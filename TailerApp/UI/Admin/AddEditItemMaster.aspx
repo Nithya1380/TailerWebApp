@@ -211,7 +211,8 @@
                     url: "AddEditItemMaster.aspx/AddEditItemRate",
                     data: {
                         StartDate: $scope.ItemRates.StartDate, ItemPrice: $scope.ItemRates.ItemPrice, ItemRateID: $scope.ItemRates.ItemRateID == null ? 0 : $scope.ItemRates.ItemRateID,
-                        itemMasterID: $scope.ItemMasterID
+                        itemMasterID: $scope.ItemMasterID, TotalGST: $scope.ItemRates.TotalGST,
+                        SGSTPer: $scope.ItemRates.SGSTPer, SGST: $scope.ItemRates.SGST, CGSTPer: $scope.ItemRates.CGSTPer, CGST: $scope.ItemRates.CGST, BillAmt: $scope.ItemRates.BillAmt
                     },
                     dataType: "json",
                     headers: { "Content-Type": "application/json" }
@@ -266,9 +267,11 @@
             $scope.OnAddEditItemRatePopUpClick = function (itemRate) {
                 if (itemRate == null || itemRate==undefined)
                 {
-                    $scope.ItemRates = {};
+                    $scope.ItemRates = {StartDate: "", ItemPrice: null, ItemRateID: 0, TotalGST: null,
+                        SGSTPer: null, SGST: null, CGSTPer: null, CGST: null, BillAmt: null};
                 }
                 else {
+                    $scope.ItemRates = itemRate;
                     $scope.ItemRates.ItemRateID = itemRate.ItemRateID;
 
                     if (itemRate.StartDate == 'From Begining')
@@ -284,6 +287,102 @@
                     $scope.ItemRates.ItemPrice = itemRate.ItemPrice;
                 }
             };
+
+
+            $scope.onChangeMasterPrice = function () {
+
+                if ($scope.ItemMaster.ItemPrice != null && $scope.ItemMaster.ItemPrice != 0 && $scope.ItemMaster.ItemPrice != undefined
+                    && $scope.ItemMaster.TotalGST != null && $scope.ItemMaster.TotalGST != 0 && $scope.ItemMaster.TotalGST != undefined
+                    ) {
+
+                    $scope.ItemMaster.SGSTPer = (parseFloat($scope.ItemMaster.TotalGST) / 2).toFixed(2);
+
+                    $scope.ItemMaster.CGSTPer = (parseFloat($scope.ItemMaster.TotalGST) / 2).toFixed(2);
+
+                    var TotalGSTAmt = parseFloat($scope.ItemMaster.ItemPrice) * (parseFloat($scope.ItemMaster.TotalGST) / 100.00);
+
+                    $scope.ItemMaster.SGST = (parseFloat(TotalGSTAmt) / 2).toFixed(2);
+
+                    $scope.ItemMaster.CGST = (parseFloat(TotalGSTAmt) / 2).toFixed(2);
+
+
+                    $scope.ItemMaster.BillAmt = (parseFloat($scope.ItemMaster.ItemPrice) + parseFloat(TotalGSTAmt)).toFixed(2);
+                }
+                else if ($scope.ItemMaster.ItemPrice != null && $scope.ItemMaster.ItemPrice != 0 && $scope.ItemMaster.ItemPrice != undefined) {
+
+                    $scope.ItemMaster.SGST = null;
+                    $scope.ItemMaster.CGST = null;
+                    $scope.ItemMaster.SGSTPer = null;
+                    $scope.ItemMaster.CGSTPer = null;
+                    $scope.ItemMaster.BillAmt = parseFloat($scope.ItemMaster.ItemPrice).toFixed(2);
+
+                } else {
+                    $scope.ItemMaster.SGST = null;
+                    $scope.ItemMaster.CGST = null;
+                    $scope.ItemMaster.SGSTPer = null;
+                    $scope.ItemMaster.CGSTPer = null;
+                    $scope.ItemMaster.BillAmt = null;
+                }
+
+            }
+
+            $scope.OnTaxMasterChange = function () {
+                if ($scope.ItemMaster.ItemPrice != null && $scope.ItemMaster.ItemPrice != 0 && $scope.ItemMaster.ItemPrice != undefined) {
+                    var SGST = $scope.ItemMaster.SGST || 0;
+                    var CGST = $scope.ItemMaster.CGST || 0;
+
+                    $scope.ItemMaster.BillAmt = (parseFloat($scope.ItemMaster.ItemPrice) + parseFloat(SGST) + parseFloat(CGST)).toFixed(2);
+                }
+
+            }
+
+            $scope.onChangePrice = function () {
+
+                if ($scope.ItemRates.ItemPrice != null && $scope.ItemRates.ItemPrice != 0 && $scope.ItemRates.ItemPrice != undefined
+                    && $scope.ItemRates.TotalGST != null && $scope.ItemRates.TotalGST != 0 && $scope.ItemRates.TotalGST != undefined
+                    )
+                {
+
+                    $scope.ItemRates.SGSTPer = (parseFloat($scope.ItemRates.TotalGST) / 2).toFixed(2);
+
+                    $scope.ItemRates.CGSTPer = (parseFloat($scope.ItemRates.TotalGST) / 2).toFixed(2);
+
+                    var TotalGSTAmt = parseFloat($scope.ItemRates.ItemPrice) * (parseFloat($scope.ItemRates.TotalGST) / 100.00);
+
+                    $scope.ItemRates.SGST = (parseFloat(TotalGSTAmt) / 2).toFixed(2);
+
+                    $scope.ItemRates.CGST = (parseFloat(TotalGSTAmt) / 2).toFixed(2);
+
+
+                    $scope.ItemRates.BillAmt = (parseFloat($scope.ItemRates.ItemPrice) + parseFloat(TotalGSTAmt)).toFixed(2);
+                }
+                else if ($scope.ItemRates.ItemPrice != null && $scope.ItemRates.ItemPrice != 0 && $scope.ItemRates.ItemPrice != undefined) {
+
+                    $scope.ItemRates.SGST = null;
+                    $scope.ItemRates.CGST = null;
+                    $scope.ItemRates.SGSTPer = null;
+                    $scope.ItemRates.CGSTPer = null;
+                    $scope.ItemRates.BillAmt = parseFloat($scope.ItemRates.ItemPrice).toFixed(2);
+
+                } else {
+                    $scope.ItemRates.SGST = null;
+                    $scope.ItemRates.CGST = null;
+                    $scope.ItemRates.SGSTPer = null;
+                    $scope.ItemRates.CGSTPer = null;
+                    $scope.ItemRates.BillAmt = null;
+                }
+
+            }
+
+            $scope.OnTaxChange = function () {
+                if ($scope.ItemRates.ItemPrice != null && $scope.ItemRates.ItemPrice != 0 && $scope.ItemRates.ItemPrice != undefined) {
+                        var SGST = $scope.ItemRates.SGST || 0;
+                        var CGST = $scope.ItemRates.CGST || 0;
+                    
+                        $scope.ItemRates.BillAmt = (parseFloat($scope.ItemRates.ItemPrice) + parseFloat(SGST) + parseFloat(CGST)).toFixed(2);
+                }
+
+            }
         });
 
     </script>
@@ -353,7 +452,29 @@
                             <tr>
                                 <td style="text-align:right" class="back_shade"><span class="profileLabel"><span style="color:red">*</span>Price:</span></td>
                                 <td colspan="5">
-                                    <input type="text" data-ng-model="ItemMaster.ItemPrice" class="form-control" style="width: 250px; margin-left: 5px;"  required />
+                                    <input type="text" data-ng-model="ItemMaster.ItemPrice" ng-change="onChangeMasterPrice()" class="form-control" style="width: 250px; margin-left: 5px;  text-align:right;"  required />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right" class="back_shade"><span class="profileLabel">Total GST %:</span></td>
+                                <td colspan="5">
+                                    <input type="text" data-ng-model="ItemMaster.TotalGST" ng-change="onChangeMasterPrice()" class="form-control" style="width: 250px; margin-left: 5px; text-align:right;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right" class="back_shade"><span class="profileLabel">SGST {{ItemMaster.SGSTPer}}%:</span></td>
+                                <td>
+                                    <input type="text" data-ng-model="ItemMaster.SGST" ng-change="OnTaxMasterChange()" class="form-control" style="width: 250px; margin-left: 5px; text-align:right;" />
+                                </td>
+                                <td style="text-align:right" class="back_shade"><span class="profileLabel">CGST {{ItemMaster.CGSTPer}}%:</span></td>
+                                <td>
+                                    <input type="text" data-ng-model="ItemMaster.CGST" ng-change="OnTaxMasterChange()" class="form-control" style="width: 250px; margin-left: 5px; text-align:right;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right" class="back_shade"><span class="profileLabel">Bill Amt:</span></td>
+                                <td colspan="5">
+                                    <input type="text" data-ng-model="ItemMaster.BillAmt" class="form-control" style="width: 250px; margin-left: 5px; text-align:right;" />
                                 </td>
                             </tr>
                            
@@ -433,10 +554,53 @@
                                         </td>
                                         <td>
                                             <span class="profileLabel">
-                                                <input type="text" data-ng-model="ItemRates.ItemPrice" class="form-control" style="width: 250px; margin-left: 5px;" required />
+                                                <input type="text" data-ng-model="ItemRates.ItemPrice" class="form-control" ng-change="onChangePrice()" style="width: 250px; margin-left: 5px; text-align:right" required />
                                                 <input type="hidden" id="hdnItemRateID" value="ItemRates.ItemRateID" />
                                             </span>
                                         </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right" class="back_shade">
+                                            <span class="profileLabel"> Total GST %:</span>
+                                        </td>
+                                         <td>
+                                            <span class="profileLabel">
+                                                <input type="text" data-ng-model="ItemRates.TotalGST" class="form-control" ng-change="onChangePrice()" style="width: 250px; margin-left: 5px; text-align:right;" />
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right" class="back_shade">
+                                            <span class="profileLabel"> SGST {{ItemRates.SGSTPer}}%:</span>
+                                        </td>
+                                        <td>
+                                            <span class="profileLabel">
+                                                <input type="text" data-ng-model="ItemRates.SGST" class="form-control" ng-change="OnTaxChange()" style="width: 250px; margin-left: 5px; text-align:right" />
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right" class="back_shade">
+                                            <span class="profileLabel"> CGST {{ItemRates.CGSTPer}}%:</span>
+                                        </td>
+                                        <td>
+                                            <span class="profileLabel">
+                                                <input type="text" data-ng-model="ItemRates.CGST" class="form-control" ng-change="OnTaxChange()" style="width: 250px; margin-left: 5px; text-align:right" />
+                                            </span>
+                                        </td>
+                                    </tr>
+                                     <tr>
+                                        <td style="text-align: right" class="back_shade">
+                                            <span class="profileLabel"> Bill Amt:</span>
+                                        </td>
+                                        <td>
+                                            <span class="profileLabel">
+                                                <input type="text" data-ng-model="ItemRates.BillAmt" class="form-control" style="width: 250px; margin-left: 5px; text-align:right" />
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+
                                     </tr>
                                 </table>
                             </div>

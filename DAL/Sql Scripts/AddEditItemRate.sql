@@ -5,7 +5,13 @@ ALTER PROCEDURE AddEditItemRate
 	@ItemMasterID INT,
 	@ItemRateID INT,
 	@StartDate VARCHAR(15),
-	@ItemPrice VARCHAR(10)
+	@ItemPrice VARCHAR(10),
+	@TotalGST FLOAT = 0, 
+	@SGSTPer FLOAT = 0, 
+	@SGST FLOAT = 0, 
+	@CGSTPer FLOAT = 0, 
+	@CGST FLOAT = 0, 
+	@BillAmt FLOAT = 0
 )
 
 AS
@@ -29,15 +35,21 @@ BEGIN
 								   ORDER BY StartDate DESC)
 
 	 IF EXISTS(SELECT 1 FROM ItemRates WITH(nolock) WHERE CompanyID=@CompanyID AND ItemMasterID=@ItemMasterID 
-		             AND ItemRateID=@PreviousRateID AND StartDate>DATEADD(DAY,-1,CONVERT(DATE,@StartDate)))
+		             AND ItemRateID=@PreviousRateID AND StartDate>DATEADD(DAY,-1,CONVERT(DATE,@StartDate,103)))
 			RETURN -3
 
 	 UPDATE ItemRates SET ItemPrice=@ItemPrice,
-	                      StartDate=@StartDate
+	                      StartDate= CONVERT(DATE,@StartDate,103),
+						  TotalGST = @TotalGST, 
+						  SGSTPer = @SGSTPer, 
+						  SGST = @SGST, 
+						  CGSTPer = @CGSTPer, 
+						  CGST = @CGST, 
+						  BillAmt = @BillAmt
 		WHERE CompanyID=@CompanyID AND ItemMasterID=@ItemMasterID
 		  AND ItemRateID=@ItemRateID
 
-	 UPDATE ItemRates SET EndDate=DATEADD(DAY,-1,CONVERT(DATE,@StartDate))
+	 UPDATE ItemRates SET EndDate=DATEADD(DAY,-1,CONVERT(DATE,@StartDate, 103))
 		WHERE ItemRateID=@PreviousRateID
 	
   END
@@ -52,8 +64,8 @@ BEGIN
 		   WHERE CompanyID=@CompanyID
 		     AND ItemmasterID=@ItemMasterID
 
-	   INSERT INTO ItemRates(ItemMasterID,CompanyID,ItemPrice,EndDate,CreatedOn,CreatedBy) 
-	   VALUES(@ItemMasterID,@CompanyID,@BasePrice,DATEADD(DAY,-1,CONVERT(DATE,@StartDate)),GETDATE(),@UserID)
+	   INSERT INTO ItemRates(ItemMasterID,CompanyID,ItemPrice,EndDate,CreatedOn,CreatedBy, TotalGST, SGSTPer, SGST, CGSTPer, CGST, BillAmt) 
+	   VALUES(@ItemMasterID,@CompanyID,@BasePrice,DATEADD(DAY,-1,CONVERT(DATE,@StartDate, 103)),GETDATE(),@UserID,  @TotalGST, @SGSTPer, @SGST, @CGSTPer, @CGST, @BillAmt)
 
 	   SELECT @PreviousRateID=SCOPE_IDENTITY()
 	 END
@@ -66,16 +78,16 @@ BEGIN
 									   ORDER BY StartDate DESC)
 
 		IF EXISTS(SELECT 1 FROM ItemRates WITH(nolock) WHERE CompanyID=@CompanyID AND ItemMasterID=@ItemMasterID 
-		             AND ItemRateID=@PreviousRateID AND StartDate>DATEADD(DAY,-1,CONVERT(DATE,@StartDate)))
+		             AND ItemRateID=@PreviousRateID AND StartDate>DATEADD(DAY,-1,CONVERT(DATE,@StartDate, 103)))
 			RETURN -3
 
-		 UPDATE ItemRates SET EndDate=DATEADD(DAY,-1,CONVERT(DATE,@StartDate))
+		 UPDATE ItemRates SET EndDate=DATEADD(DAY,-1,CONVERT(DATE,@StartDate,103))
 		   WHERE ItemRateID=@PreviousRateID
 
 	END
 
-	INSERT INTO ItemRates(ItemMasterID,CompanyID,ItemPrice,StartDate,CreatedOn,CreatedBy) 
-	   VALUES(@ItemMasterID,@CompanyID,@ItemPrice,@StartDate,GETDATE(),@UserID)
+	INSERT INTO ItemRates(ItemMasterID,CompanyID,ItemPrice,StartDate,CreatedOn,CreatedBy, TotalGST, SGSTPer, SGST, CGSTPer, CGST, BillAmt) 
+	   VALUES(@ItemMasterID,@CompanyID,@ItemPrice,CONVERT(DATE,@StartDate,103),GETDATE(),@UserID, @TotalGST, @SGSTPer, @SGST, @CGSTPer, @CGST, @BillAmt)
   END
 
   RETURN 1

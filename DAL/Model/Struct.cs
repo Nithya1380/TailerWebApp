@@ -203,6 +203,12 @@ namespace DAL.Model
         public string ItemGroup { get; set; }
         public string ItemAlias{ get; set; }
         public string ItemPrice { get; set; }
+        public string TotalGST { get; set; } 
+		public string SGSTPer { get; set; }
+		public string SGST { get; set; }
+		public string CGSTPer { get; set; }
+		public string CGST { get; set; }
+		public string BillAmt { get; set; }
     }
 
     public class ItemMasterList:JsonResults

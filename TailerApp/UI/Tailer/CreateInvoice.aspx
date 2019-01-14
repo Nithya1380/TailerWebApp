@@ -255,6 +255,7 @@
              $scope.customerID = 0;
              $scope.IsCalculateTax = true;
              $scope.LatestSeriesMaster = {};
+             $scope.InvoiceID = 0;
 
              $scope.init = function () {
                  $scope.ShowError = false;
@@ -277,8 +278,8 @@
                      ItemDiscountPer: "",
                      GST: "",
                      SGST: "",
-                     GSTP: 9.00,
-                     SGSTP:9.00,
+                     GSTP: null,
+                     SGSTP: null,
                      AmountPending: ""
                  }
 
@@ -299,53 +300,59 @@
 
              $scope.onItemChange = function (InvoiceItem) {
                  if (InvoiceItem != null && InvoiceItem != undefined && !isNaN(InvoiceItem.ItemQuantity) && !isNaN(InvoiceItem.ItemPrice)) {
-                     InvoiceItem.AmountPending =parseFloat(parseFloat(parseInt(InvoiceItem.ItemQuantity) * parseFloat(InvoiceItem.ItemPrice)).toFixed(2));
+                     InvoiceItem.AmountPending = parseFloat(parseInt(InvoiceItem.ItemQuantity) * parseFloat(InvoiceItem.BillAmt)).toFixed(2);
+
+                     if (!isNaN(InvoiceItem.ItemGST) && InvoiceItem.ItemGST > 0)
+                         InvoiceItem.GST = parseFloat(parseInt(InvoiceItem.ItemQuantity) * parseFloat(InvoiceItem.ItemGST)).toFixed(2);
+
+                     if (!isNaN(InvoiceItem.ItemSGST) && InvoiceItem.ItemSGST > 0)
+                         InvoiceItem.SGST = parseFloat(parseInt(InvoiceItem.ItemQuantity) * parseFloat(InvoiceItem.ItemSGST)).toFixed(2);
 
                      if (parseFloat(InvoiceItem.AmountPending) > 0) {
                          if (!isNaN(InvoiceItem.ItemDiscountPer) && parseFloat(InvoiceItem.ItemDiscountPer) > 0) {
-                             InvoiceItem.AmountPending = InvoiceItem.AmountPending - (parseFloat(InvoiceItem.AmountPending) * (parseFloat(InvoiceItem.ItemDiscountPer) / 100.00));
-                             InvoiceItem.ItemDiscount = (parseFloat(InvoiceItem.AmountPending) * (parseFloat(InvoiceItem.ItemDiscountPer) / 100.00));
+                             InvoiceItem.AmountPending = (InvoiceItem.AmountPending - (parseFloat(InvoiceItem.AmountPending) * (parseFloat(InvoiceItem.ItemDiscountPer) / 100.00))).toFixed(2);
+                             InvoiceItem.ItemDiscount = (parseFloat(InvoiceItem.AmountPending) * (parseFloat(InvoiceItem.ItemDiscountPer) / 100.00)).toFixed(2);
                          }
                              
 
-                         if ($scope.IsCalculateTax)
-                         {
-                             if (!isNaN(InvoiceItem.GSTP) && InvoiceItem.GSTP > 0)
-                             {
-                                 InvoiceItem.GST =parseFloat(InvoiceItem.AmountPending) - (parseFloat(InvoiceItem.AmountPending) * (100 / (100 + InvoiceItem.GSTP)));
-                             }
-                             else {
-                                 InvoiceItem.GST = 0.00;
-                             }
+                         //if ($scope.IsCalculateTax)
+                         //{
+                         //    if (!isNaN(InvoiceItem.GSTP) && InvoiceItem.GSTP > 0)
+                         //    {
+                         //        InvoiceItem.GST =parseFloat(InvoiceItem.AmountPending) - (parseFloat(InvoiceItem.AmountPending) * (100 / (100 + InvoiceItem.GSTP)));
+                         //    }
+                         //    else {
+                         //        InvoiceItem.GST = 0.00;
+                         //    }
                              
-                             if (!isNaN(InvoiceItem.SGSTP) && InvoiceItem.SGSTP > 0)
-                             {
-                                 InvoiceItem.SGST =parseFloat(InvoiceItem.AmountPending) - (parseFloat(InvoiceItem.AmountPending) * (100 / (100 + InvoiceItem.SGSTP)));
-                             }
-                             else {
-                                 InvoiceItem.SGST = 0.00;
-                             }
+                         //    if (!isNaN(InvoiceItem.SGSTP) && InvoiceItem.SGSTP > 0)
+                         //    {
+                         //        InvoiceItem.SGST =parseFloat(InvoiceItem.AmountPending) - (parseFloat(InvoiceItem.AmountPending) * (100 / (100 + InvoiceItem.SGSTP)));
+                         //    }
+                         //    else {
+                         //        InvoiceItem.SGST = 0.00;
+                         //    }
                             
-                         }
-                         else {
-                             if (!isNaN(InvoiceItem.GSTP) && InvoiceItem.GSTP > 0)
-                                 InvoiceItem.GST = parseFloat(InvoiceItem.AmountPending) * (InvoiceItem.GSTP / 100.00);
-                             else
-                                 InvoiceItem.GST = 0.00;
+                         //}
+                         //else {
+                         //    if (!isNaN(InvoiceItem.GSTP) && InvoiceItem.GSTP > 0)
+                         //        InvoiceItem.GST = parseFloat(InvoiceItem.AmountPending) * (InvoiceItem.GSTP / 100.00);
+                         //    else
+                         //        InvoiceItem.GST = 0.00;
 
-                             if (!isNaN(InvoiceItem.SGSTP) && InvoiceItem.SGSTP > 0)
-                                 InvoiceItem.SGST = parseFloat(InvoiceItem.AmountPending) * (InvoiceItem.SGSTP / 100.00);
-                             else
-                                 InvoiceItem.SGST = 0.00;
-                         }
+                         //    if (!isNaN(InvoiceItem.SGSTP) && InvoiceItem.SGSTP > 0)
+                         //        InvoiceItem.SGST = parseFloat(InvoiceItem.AmountPending) * (InvoiceItem.SGSTP / 100.00);
+                         //    else
+                         //        InvoiceItem.SGST = 0.00;
+                         //}
 
-                         InvoiceItem.GST =parseFloat(parseFloat(InvoiceItem.GST).toFixed(2));
-                         InvoiceItem.SGST = parseFloat(parseFloat(InvoiceItem.SGST).toFixed(2));
+                         //InvoiceItem.GST =parseFloat(parseFloat(InvoiceItem.GST).toFixed(2));
+                         //InvoiceItem.SGST = parseFloat(parseFloat(InvoiceItem.SGST).toFixed(2));
 
-                         if ($scope.IsCalculateTax)
-                             InvoiceItem.AmountPending = parseFloat(parseFloat(InvoiceItem.AmountPending - InvoiceItem.GST - InvoiceItem.SGST).toFixed(2));
-                         else
-                             InvoiceItem.AmountPending = parseFloat(parseFloat(InvoiceItem.AmountPending + InvoiceItem.GST + InvoiceItem.SGST).toFixed(2));
+                         //if ($scope.IsCalculateTax)
+                         //    InvoiceItem.AmountPending = parseFloat(parseFloat(InvoiceItem.AmountPending - InvoiceItem.GST - InvoiceItem.SGST).toFixed(2));
+                         //else
+                         //    InvoiceItem.AmountPending = parseFloat(parseFloat(InvoiceItem.AmountPending + InvoiceItem.GST + InvoiceItem.SGST).toFixed(2));
                 
                      }
 
@@ -380,7 +387,7 @@
              }
 
              $scope.CalculateNetAmount = function () {
-                 $scope.CustInvoice.NetAmount = $scope.TotalAmount;
+                 $scope.CustInvoice.NetAmount = $scope.TotalAmount.toFixed(2);
              }
 
              //$scope.autoCompleteOptions = {
@@ -465,14 +472,17 @@
                      ItemCode: $item.ItemCode,
                      ItemDescription: $item.ItemDescription,
                      ItemQuantity: 1,
-                     ItemPrice: $item.ItemPrice,
+                     ItemPrice: $item.ItemPrice.toFixed(2),
                      ItemDiscountPer: "",
                      ItemDiscount: "",
-                     GST: "",
-                     SGST: "",
-                     GSTP: 9.00,
-                     SGSTP: 9.00,
-                     AmountPending: ""
+                     GST: $item.CGST,
+                     SGST: $item.SGST,
+                     ItemGST: $item.CGST,
+                     ItemSGST: $item.SGST,
+                     GSTP: $item.CGSTPer,
+                     SGSTP: $item.SGSTPer,
+                     AmountPending: $item.BillAmt,
+                     BillAmt: $item.BillAmt
                  }
 
                  $scope.InvoiceList[$index] = invoice;
@@ -552,6 +562,7 @@
                          $scope.ShowError = true;
                          $scope.InvoiceError = $sce.trustAsHtml("Invoice Created Successfully! <b> Bill Number :" + response.data.d.JSonstring + "<b>");
                          $scope.AlertClass = "alert-success";
+                         $scope.InvoiceID = response.data.d.OutValue;
 
                          return false;
                      }
@@ -613,6 +624,13 @@
 
                  return ar;
              }
+
+             $scope.onPrintInvoiceDetailsClick = function () {
+                 var left = (screen.width / 2) - (1100 / 2);
+                 var top = (screen.height / 2) - (600 / 2);
+                 $window.open("PrintInvoiceDetails.aspx?InvoiceID=" + $scope.InvoiceID, "PrintInvoiceDetails", 'resizable=yes,location=1,status=1,scrollbars=1,width=1100,height=600,top=' + top + ', left=' + left);
+                 return false;
+             };
 
              
          });
@@ -774,8 +792,9 @@
                                         </span>
                                     </td>
                                     <td colspan="4" style="text-align:right">
-                                        <input type="checkbox" data-ng-model="IsCalculateTax" data-ng-change="ReCalculateTax()" /> Include Tax
+                                       <%-- <input type="checkbox" data-ng-model="IsCalculateTax" data-ng-change="ReCalculateTax()" /> Include Tax--%>
                                         <button class="btn btn-lg btn-success" type="button" data-ng-click="onCreateInvoiceClick();"><i class="fa fa-dollar"></i>Create</button>
+                                        <input class="btn btn-lg btn-success" type="button" data-ng-click="onPrintInvoiceDetailsClick();" ng-show="InvoiceID>0" value="Print" />
                                     </td>
                                 </tr>
                             </tbody>
@@ -829,15 +848,15 @@
                                                          />   
                                                     </td>
                                                     <td><input type="text" data-ng-model="Invoice.ItemDescription" class="form-control" style="width: 150px;" /></td>
-                                                    <td><input type="number" data-ng-model="Invoice.ItemQuantity" class="form-control" style="width: 50px;" data-ng-change="onItemChange(Invoice)" /></td>
-                                                    <td><input type="number" data-ng-model="Invoice.ItemPrice" class="form-control" style="width: 80px;" data-ng-change="onItemChange(Invoice)" /></td>
-                                                    <td><input type="number" data-ng-model="Invoice.ItemDiscountPer" class="form-control" style="width: 80px;" data-ng-change="onItemChange(Invoice)" /></td>
-                                                    <td><input type="number" data-ng-model="Invoice.ItemDiscount" class="form-control" data-ng-disabled="true" style="width: 80px;" data-ng-change="onItemChange(Invoice)" /></td>
-                                                    <td><input type="number" data-ng-model="Invoice.GSTP" class="form-control" style="width: 60px;"  data-ng-change="onItemChange(Invoice)" /></td>
-                                                    <td><input type="number" data-ng-model="Invoice.GST" class="form-control" style="width: 80px;" data-ng-disabled="true" data-ng-change="onItemChange(Invoice)" /></td>
-                                                    <td><input type="number" data-ng-model="Invoice.SGSTP" class="form-control" style="width: 60px;"  data-ng-change="onItemChange(Invoice)" /></td>
-                                                    <td><input type="number" data-ng-model="Invoice.SGST" class="form-control" style="width: 80px;" data-ng-disabled="true" /></td>
-                                                    <td><input type="number" data-ng-model="Invoice.AmountPending" class="form-control" style="width: 100px;" data-ng-disabled="true" /></td>
+                                                    <td><input type="number" data-ng-model="Invoice.ItemQuantity" class="form-control" style="width: 50px; text-align:right;" data-ng-change="onItemChange(Invoice)" /></td>
+                                                    <td><input type="text" data-ng-model="Invoice.ItemPrice" class="form-control" style="width: 80px; text-align:right;" data-ng-disabled="true" data-ng-change="onItemChange(Invoice)" /></td>
+                                                    <td><input type="number" data-ng-model="Invoice.ItemDiscountPer" class="form-control" style="width: 80px; text-align:right;" data-ng-change="onItemChange(Invoice)" /></td>
+                                                    <td><input type="text" data-ng-model="Invoice.ItemDiscount" class="form-control" data-ng-disabled="true" style="width: 80px; text-align:right;" data-ng-change="onItemChange(Invoice)" /></td>
+                                                    <td><input type="text" data-ng-model="Invoice.GSTP" class="form-control" style="width: 60px; text-align:right;"  data-ng-change="onItemChange(Invoice)" /></td>
+                                                    <td><input type="text" data-ng-model="Invoice.GST" class="form-control" style="width: 80px; text-align:right;" data-ng-disabled="true" data-ng-change="onItemChange(Invoice)" /></td>
+                                                    <td><input type="text" data-ng-model="Invoice.SGSTP" class="form-control" style="width: 60px; text-align:right;"  data-ng-change="onItemChange(Invoice)" /></td>
+                                                    <td><input type="text" data-ng-model="Invoice.SGST" class="form-control" style="width: 80px; text-align:right;" data-ng-disabled="true" /></td>
+                                                    <td><input type="text" data-ng-model="Invoice.AmountPending" class="form-control" style="width: 100px;  text-align:right;" data-ng-disabled="true" /></td>
                                                 </tr>
                                             </tbody>
                                         </table>

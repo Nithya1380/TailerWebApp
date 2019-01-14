@@ -35,10 +35,10 @@ BEGIN TRY
 	FROM SeriesMaster WITH(NOLOCK) WHERE SeriesMaster.CompanyID = @Company AND SeriesMasterID = @SeriesMasterID
 		FOR JSON PATH
 
-BEGIN TRAN
-	UPDATE SeriesMaster SET LastValue = ISNULL(LastValue,0)+1 
-		WHERE SeriesMaster.CompanyID = @Company AND SeriesMasterID = @SeriesMasterID
-COMMIT TRAN
+--BEGIN TRAN
+--	UPDATE SeriesMaster SET LastValue = ISNULL(LastValue,0)+1 
+--		WHERE SeriesMaster.CompanyID = @Company AND SeriesMasterID = @SeriesMasterID
+--COMMIT TRAN
 END TRY
 BEGIN CATCH
 	ROLLBACK

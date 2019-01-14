@@ -126,6 +126,7 @@ namespace TailerApp.UI.Tailer
             JsonResults returnObj = new JsonResults();
             LoginUser currentUser;
             string billNumber = "";
+            int InvoiceID = 0;
             try
             {
                 if (!GetUserSession(out currentUser))
@@ -135,13 +136,14 @@ namespace TailerApp.UI.Tailer
                 }
 
                 CustomerManager customerObj = new CustomerManager();
-                if (customerObj.CreateNewInvoice(currentUser.CompanyID, currentUser.UserId, currentUser.UserBranchID, ref customerInvoice, ref InvoiceList, out billNumber))
+                if (customerObj.CreateNewInvoice(currentUser.CompanyID, currentUser.UserId, currentUser.UserBranchID, ref customerInvoice, ref InvoiceList, out billNumber, out InvoiceID))
                 {
                     returnObj.ErrorCode = 0;
                     returnObj.ErrorMessage = "";
 
 
                     returnObj.JSonstring = billNumber;
+                    returnObj.OutValue = InvoiceID;
                 }
                 else
                 {

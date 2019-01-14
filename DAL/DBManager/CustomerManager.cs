@@ -1038,10 +1038,11 @@ namespace DAL.DBManager
             }
             return ret;
         }
-        public bool CreateNewInvoice(int companyID, int userID, int customerBranch, ref CustomerInvoice customerInvoice, ref List<CustomerInvoiceList> customerInvoiceList, out string billNumber)
+        public bool CreateNewInvoice(int companyID, int userID, int customerBranch, ref CustomerInvoice customerInvoice, ref List<CustomerInvoiceList> customerInvoiceList, out string billNumber, out int InvoiceID)
         {
             bool ret = false;
             billNumber = string.Empty;
+            InvoiceID = 0;
             try
             {
                 this.Connect(this.GetConnString());
@@ -1054,6 +1055,7 @@ namespace DAL.DBManager
                 this.AddSPStringParam("@customerInvoiceList", Newtonsoft.Json.JsonConvert.SerializeObject(customerInvoiceList));
                 this.AddSPReturnIntParam("@return");
                 this.AddSPStringParamOut("@BillNumber", 100);
+                this.AddSPIntParamOut("@InvoiceID");
                 this.ExecuteNonSP(spName);
                 int retcode = this.GetOutValueInt("@return");
 
@@ -1062,6 +1064,7 @@ namespace DAL.DBManager
                     case 1:
                         ret = true;
                         billNumber = this.GetOutValueString("@BillNumber");
+                        InvoiceID = this.GetOutValueInt("@InvoiceID");
                         break;
                     case -2:
                         SetError(-2, "Mandatory fileds are not entered. Failed to create Invoice.");

@@ -153,7 +153,8 @@ namespace TailerApp.UI.Admin
         }
 
         [WebMethod]
-        public static JsonResults AddEditItemRate(string StartDate, string ItemPrice, int ItemRateID, int itemMasterID)
+        public static JsonResults AddEditItemRate(string StartDate, string ItemPrice, int ItemRateID, int itemMasterID, string TotalGST,
+           string SGSTPer, string SGST, string CGSTPer, string CGST, string BillAmt)
         {
             JsonResults invoiceList = new JsonResults();
             LoginUser currentUser;
@@ -166,7 +167,9 @@ namespace TailerApp.UI.Admin
                 }
 
                 AdminManagerSP customerObj = new AdminManagerSP();
-                if (customerObj.AddEditItemRate(currentUser.CompanyID, currentUser.UserId, ItemRateID, itemMasterID, ItemPrice, StartDate))
+                if (customerObj.AddEditItemRate(currentUser.CompanyID, currentUser.UserId, ItemRateID, itemMasterID, ItemPrice, StartDate, string.IsNullOrEmpty(TotalGST) ? 0 : Convert.ToSingle(TotalGST),
+                    string.IsNullOrEmpty(SGSTPer) ? 0 : Convert.ToSingle(SGSTPer), string.IsNullOrEmpty(SGST) ? 0 : Convert.ToSingle(SGST), string.IsNullOrEmpty(CGSTPer) ? 0 : Convert.ToSingle(CGSTPer),
+                    string.IsNullOrEmpty(CGST) ? 0 : Convert.ToSingle(CGST), string.IsNullOrEmpty(BillAmt) ? 0 : Convert.ToSingle(BillAmt)))
                 {
                     invoiceList.ErrorCode = 0;
                     invoiceList.ErrorMessage = "";

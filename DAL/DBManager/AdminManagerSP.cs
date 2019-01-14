@@ -1001,7 +1001,8 @@ namespace DAL.DBManager
            return ret;
        }
 
-       public bool AddEditItemRate(int companyID, int userID, int ItemRateID, int itemMasterID, string ItemPrice, string StartDate)
+       public bool AddEditItemRate(int companyID, int userID, int ItemRateID, int itemMasterID, string ItemPrice, string StartDate, float TotalGST, 
+           float SGSTPer, float SGST, float CGSTPer, float CGST, float BillAmt)
        {
            bool ret = false;
 
@@ -1016,6 +1017,12 @@ namespace DAL.DBManager
                this.AddSPIntParam("@ItemRateID", ItemRateID);
                this.AddSPStringParam("@StartDate", StartDate);
                this.AddSPStringParam("@ItemPrice", ItemPrice);
+               this.AddSPFloatParam("@TotalGST", TotalGST);
+               this.AddSPFloatParam("@SGSTPer", SGSTPer);
+               this.AddSPFloatParam("@SGST", SGST);
+               this.AddSPFloatParam("@CGSTPer", CGSTPer);
+               this.AddSPFloatParam("@CGST", CGST);
+               this.AddSPFloatParam("@BillAmt", BillAmt);
                this.AddSPReturnIntParam("@return");
                this.ExecuteNonSP(spName);
                int retcode = this.GetOutValueInt("@return");

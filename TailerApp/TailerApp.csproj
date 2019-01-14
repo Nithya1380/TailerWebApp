@@ -215,6 +215,7 @@
     <Content Include="UI\Tailer\Measurement.aspx" />
     <Content Include="UI\Tailer\MeasurementField.aspx" />
     <Content Include="UI\Tailer\MeasurementList.aspx" />
+    <Content Include="UI\Tailer\PrintInvoiceDetails.aspx" />
     <Content Include="UI\Tailer\PrintMeasurement.aspx" />
     <Content Include="UI\Tailer\SeriesMasterList.aspx" />
     <Content Include="UI\Tailer\TailerHome.aspx" />
@@ -447,6 +448,13 @@
     </Compile>
     <Compile Include="UI\Tailer\MeasurementList.aspx.designer.cs">
       <DependentUpon>MeasurementList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tailer\PrintInvoiceDetails.aspx.cs">
+      <DependentUpon>PrintInvoiceDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Tailer\PrintInvoiceDetails.aspx.designer.cs">
+      <DependentUpon>PrintInvoiceDetails.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Tailer\PrintMeasurement.aspx.cs">
       <DependentUpon>PrintMeasurement.aspx</DependentUpon>
