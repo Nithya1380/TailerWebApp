@@ -256,6 +256,8 @@
              $scope.IsCalculateTax = true;
              $scope.LatestSeriesMaster = {};
              $scope.InvoiceID = 0;
+             var d = new Date();
+             $scope.CustInvoice.InvoiceDate = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear();
 
              $scope.init = function () {
                  $scope.ShowError = false;
@@ -276,11 +278,12 @@
                      ItemPrice: "",
                      ItemDiscount: "",
                      ItemDiscountPer: "",
-                     GST: "",
-                     SGST: "",
+                     GST: 0,
+                     SGST: 0,
                      GSTP: null,
                      SGSTP: null,
-                     AmountPending: ""
+                     AmountPending: "",
+                     BasePrice: 0
                  }
 
                  $scope.InvoiceList.push(invoice);
@@ -300,19 +303,36 @@
 
              $scope.onItemChange = function (InvoiceItem) {
                  if (InvoiceItem != null && InvoiceItem != undefined && !isNaN(InvoiceItem.ItemQuantity) && !isNaN(InvoiceItem.ItemPrice)) {
-                     InvoiceItem.AmountPending = parseFloat(parseInt(InvoiceItem.ItemQuantity) * parseFloat(InvoiceItem.BillAmt)).toFixed(2);
+                     
+                     var BasePrice = parseInt(InvoiceItem.ItemQuantity) * parseFloat(InvoiceItem.ItemPrice);
 
-                     if (!isNaN(InvoiceItem.ItemGST) && InvoiceItem.ItemGST > 0)
-                         InvoiceItem.GST = parseFloat(parseInt(InvoiceItem.ItemQuantity) * parseFloat(InvoiceItem.ItemGST)).toFixed(2);
+                     InvoiceItem.BasePrice = BasePrice;
 
-                     if (!isNaN(InvoiceItem.ItemSGST) && InvoiceItem.ItemSGST > 0)
-                         InvoiceItem.SGST = parseFloat(parseInt(InvoiceItem.ItemQuantity) * parseFloat(InvoiceItem.ItemSGST)).toFixed(2);
+                     if (!isNaN(InvoiceItem.ItemDiscountPer) && parseFloat(InvoiceItem.ItemDiscountPer) > 0) {
+                         InvoiceItem.BasePrice = (parseFloat(BasePrice) - (parseFloat(BasePrice) * (parseFloat(InvoiceItem.ItemDiscountPer) / 100.00))).toFixed(2);
+                         InvoiceItem.ItemDiscount = (parseFloat(BasePrice) * (parseFloat(InvoiceItem.ItemDiscountPer) / 100.00)).toFixed(2);
+                     }
 
-                     if (parseFloat(InvoiceItem.AmountPending) > 0) {
-                         if (!isNaN(InvoiceItem.ItemDiscountPer) && parseFloat(InvoiceItem.ItemDiscountPer) > 0) {
-                             InvoiceItem.AmountPending = (InvoiceItem.AmountPending - (parseFloat(InvoiceItem.AmountPending) * (parseFloat(InvoiceItem.ItemDiscountPer) / 100.00))).toFixed(2);
-                             InvoiceItem.ItemDiscount = (parseFloat(InvoiceItem.AmountPending) * (parseFloat(InvoiceItem.ItemDiscountPer) / 100.00)).toFixed(2);
-                         }
+                     if (!isNaN(InvoiceItem.GSTP) && parseFloat(InvoiceItem.GSTP) > 0) {
+                         InvoiceItem.GST = (parseFloat(InvoiceItem.BasePrice) * (parseFloat(InvoiceItem.GSTP) / 100.00)).toFixed(2);
+                     }
+
+                     if (!isNaN(InvoiceItem.SGSTP) && parseFloat(InvoiceItem.SGSTP) > 0) {
+                         InvoiceItem.SGST = (parseFloat(InvoiceItem.BasePrice) * (parseFloat(InvoiceItem.SGSTP) / 100.00)).toFixed(2);
+                     }
+
+                     InvoiceItem.AmountPending = parseFloat(InvoiceItem.BasePrice);
+
+                     if (!isNaN(InvoiceItem.GST) && parseFloat(InvoiceItem.GST) > 0)
+                         InvoiceItem.AmountPending = parseFloat(InvoiceItem.AmountPending) + parseFloat(InvoiceItem.GST);
+
+                     if (!isNaN(InvoiceItem.SGST) && parseFloat(InvoiceItem.SGST) > 0)
+                         InvoiceItem.AmountPending = parseFloat(InvoiceItem.AmountPending) + parseFloat(InvoiceItem.SGST);
+
+                     InvoiceItem.AmountPending = parseFloat(InvoiceItem.AmountPending).toFixed(2);
+
+                     //if (parseFloat(InvoiceItem.AmountPending) > 0) {
+                         
                              
 
                          //if ($scope.IsCalculateTax)
@@ -354,7 +374,7 @@
                          //else
                          //    InvoiceItem.AmountPending = parseFloat(parseFloat(InvoiceItem.AmountPending + InvoiceItem.GST + InvoiceItem.SGST).toFixed(2));
                 
-                     }
+                     //}
 
 
                      $scope.CalculateTotal();
@@ -372,22 +392,38 @@
              };
 
              $scope.CalculateTotal = function () {
-                 $scope.TotalAmount = 0.00;
+                 $scope.TotalAmount = 0;
+                 $scope.TotalBasePrice = 0;
+                 $scope.TotalCGST = 0;
+                 $scope.TotalSGST = 0;
                  if ($scope.InvoiceList != null && $scope.InvoiceList != undefined) {
                      angular.forEach($scope.InvoiceList, function (InvoiceItem) {
-                         if (InvoiceItem != null && InvoiceItem != undefined && !isNaN(InvoiceItem.AmountPending)) {
-                             $scope.TotalAmount += InvoiceItem.AmountPending;
+                         if (InvoiceItem != null && InvoiceItem != undefined) {
+                             if (!isNaN(InvoiceItem.AmountPending))
+                                 $scope.TotalAmount = parseFloat($scope.TotalAmount) + parseFloat(InvoiceItem.AmountPending);
+
+                             if (!isNaN(InvoiceItem.BasePrice))
+                                 $scope.TotalBasePrice = parseFloat($scope.TotalBasePrice) + parseFloat(InvoiceItem.BasePrice);
+
+                             if (!isNaN(InvoiceItem.GST))
+                                 $scope.TotalCGST = parseFloat($scope.TotalCGST) + parseFloat(InvoiceItem.GST);
+
+                             if (!isNaN(InvoiceItem.SGST))
+                                 $scope.TotalSGST = parseFloat($scope.TotalSGST) + parseFloat(InvoiceItem.SGST);
                          }
                      });
                  }
          
-                 $scope.TotalAmount = parseFloat(parseFloat($scope.TotalAmount).toFixed(2));
+                 //$scope.TotalAmount = parseFloat(parseFloat($scope.TotalAmount).toFixed(2));
                  $scope.CalculateNetAmount();
              
              }
 
              $scope.CalculateNetAmount = function () {
-                 $scope.CustInvoice.NetAmount = $scope.TotalAmount.toFixed(2);
+                 $scope.CustInvoice.NetAmount = $scope.TotalAmount;
+                 $scope.CustInvoice.TotalBasePrice = $scope.TotalBasePrice;
+                 $scope.CustInvoice.TotalCGST = $scope.TotalCGST;
+                 $scope.CustInvoice.TotalSGST = $scope.TotalSGST;
              }
 
              //$scope.autoCompleteOptions = {
@@ -482,7 +518,9 @@
                      GSTP: $item.CGSTPer,
                      SGSTP: $item.SGSTPer,
                      AmountPending: $item.BillAmt,
-                     BillAmt: $item.BillAmt
+                     BillAmt: $item.BillAmt,
+                     BasePrice: $item.ItemPrice.toFixed(2),
+                     TotalGST: $item.TotalGST
                  }
 
                  $scope.InvoiceList[$index] = invoice;
@@ -603,6 +641,7 @@
                                    ($scope.LatestSeriesMaster.WithZero && $scope.LatestSeriesMaster.Width > 0 && $scope.LatestSeriesMaster.Width > ($scope.LatestSeriesMaster.Prefix + $scope.LatestSeriesMaster.LastValue).length ? $scope.repeatstr($scope.LatestSeriesMaster.Width - ($scope.LatestSeriesMaster.Prefix + $scope.LatestSeriesMaster.LastValue).length) : '')
                                     + $scope.LatestSeriesMaster.LastValue;
 
+                             $scope.CustInvoice.BillNumber = $scope.LatestSeriesMaster.LastValue;
                          }
 
                      }
@@ -675,8 +714,9 @@
                                     </td>
                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Bill#:</span></td>
                                     <td >
-                                        <span class="profileValue">
-                                            <input type="text" data-ng-model="CustInvoice.BillNumber" name="BillNumber" class="form-control" style="width: 95%; margin-left: 5px;" maxlength="10" />
+                                        <span class="profileValue" style="font-weight:bold; min-width:50px;">
+                                            {{CustInvoice.BillNumber}}
+                                           <%-- <input type="text" data-ng-model="CustInvoice.BillNumber" name="BillNumber" class="form-control" style="width: 95%; margin-left: 5px;" maxlength="10" />--%>
                                         </span>
                                     </td>
                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Date:</span></td>
@@ -729,8 +769,8 @@
                                        
                                     </td>
                                     <td colspan="4" rowspan="2">
-                                        <span style="text-align:right;font-weight:bold;font-size:20px;float:right" data-ng-bind="TotalAmount">
-                                            
+                                        <span style="text-align:right;font-weight:bold;font-size:20px;float:right" >
+                                            {{TotalAmount | currency : '' }}
                                         </span>
                                     </td>
                                 </tr>
@@ -914,9 +954,10 @@
                                                         </span>
                                                     </td>
                                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Net Amount:</span></td>
-                                                    <td >
-                                                        <span class="profileValue">
-                                                            <input type="text" data-ng-model="CustInvoice.NetAmount" name="Debit" class="form-control" data-ng-disabled="true" style="width: 250px; margin-left: 5px;" maxlength="50" />
+                                                    <td style="text-align:right;">
+                                                        <span class="profileValue" >
+                                                            {{CustInvoice.NetAmount | currency : ''}}
+                                                            <%--<input type="text" data-ng-model="CustInvoice.NetAmount" name="Debit" class="form-control" data-ng-disabled="true" style="width: 250px; margin-left: 5px;" maxlength="50" />--%>
                                                         </span>
                                                     </td>
                                                 </tr>

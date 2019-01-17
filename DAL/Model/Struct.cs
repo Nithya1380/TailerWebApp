@@ -264,6 +264,9 @@ namespace DAL.Model
         public string LessRsAmount { get; set; }
         public string Remarks { get; set; }
         public string NetAmount { get; set; }
+        public string TotalBasePrice { get; set; }
+        public string TotalCGST { get; set; }
+        public string TotalSGST { get; set; }
 
 
     }
@@ -282,6 +285,7 @@ namespace DAL.Model
         public string ItemDiscountPer { get; set; }
         public string GSTP { get; set; }
         public string SGSTP { get; set; }
+        public string BasePrice { get; set; }
     }
     public class ST_MeasurementField 
     {
