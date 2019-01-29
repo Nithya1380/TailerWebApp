@@ -116,5 +116,38 @@ namespace TailerApp.UI.Tailer
             return returnObj;
         }
 
+        [WebMethod]
+        public static JsonResults DeleteMeasurement(string MeasurementFieldID)
+        {
+            JsonResults Measur = new JsonResults();
+
+            LoginUser currentUser;
+            try
+            {
+                if (!GetUserSession(out currentUser))
+                {
+                    Measur.ErrorCode = 1001;
+                    Measur.ErrorMessage = "";
+                    return Measur;
+                }
+
+                CustomerManager adminObj = new CustomerManager();
+                if (!adminObj.DeleteMeasurementField(currentUser.CompanyID, currentUser.UserId, string.IsNullOrEmpty(MeasurementFieldID) ? 0 : Convert.ToInt32(MeasurementFieldID)))
+                {
+                    Measur.ErrorCode = adminObj.GetLastErrorCode();
+                    Measur.ErrorMessage = adminObj.GetLastError();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Measur.ErrorCode = -4;
+                Measur.ErrorMessage = "Unknown Error Occured";
+                Utils.Write(ex);
+            }
+
+            return Measur;
+        }
+
     }
 }

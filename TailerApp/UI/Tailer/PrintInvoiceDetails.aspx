@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Print Measurement</title>
+    <title>Print Invoice</title>
 
     <script src="../../Scripts/AngularJS/angular.js"></script>
     <script src="../../Scripts/AngularJS/pdfmake.min.js"></script>
@@ -31,6 +31,7 @@
             width: 100%;
             font-weight: normal;
             text-align: center;
+            line-height:0.7;
         }
 
         .divborder {
@@ -42,6 +43,7 @@
         .lableAdd {
             text-align: center;
             width: 100%;
+            line-height:0.7;
         }
 
         .lblInfotit {
@@ -248,7 +250,7 @@
                     </div>
                 </div>
                 <div class="row" style="padding-left: 25px;">
-                    <div class="col-sm-4">
+                    <div class="col-sm-4" style="line-height: 1.2;">
                         <div class="row">
                             <div class="col-sm-12">
                                 <span class="lableHed">GSTNIN : </span><span> {{CompanyInfo.BranchGSTIN}} </span>
@@ -285,7 +287,7 @@
                     </div>
                     <div class="col-sm-4"></div>
                 </div>
-                <div class="col-sm-12 border">
+                <div class="col-sm-12 border" style="line-height:1;">
                     <div class="row" >
                         <div class="col-sm-8">
                             <label class="lblInfoval">{{InvoiceDetails.CustomerName}}</label>
@@ -307,21 +309,21 @@
                     <div class="row" >
                         
                         <div class="col-sm-12" style="padding:0px;">
-                        <table class="table table-bordered" style="margin:0px">
+                        <table class="table table-bordered" style="margin:0px;line-height:0.4">
                             <thead>
-                                <tr>
+                                <tr >
                                     <th style="width:2%;">Sr.</th>
                                     <th style="width:20%;">Item Description</th>
                                     <th style="width:2%; text-align:right;">Qty</th>
                                     <th style="width:5%; text-align:right;">Rate</th>
                                     <th style="width:10%; text-align:right;" colspan="2">Disc% & Amt</th>
-                                    <th style="width:10%; text-align:right;" colspan="2">I/C GST% & Amt</th>
-                                    <th style="width:10%; text-align:right;" colspan="2">SGST% & Amt</th>
+                                    <th style="width:10%; text-align:right;" colspan="2">C% & Amt</th>
+                                    <th style="width:10%; text-align:right;" colspan="2">S% & Amt</th>
                                     <th style="width:10%; text-align:right;">Total</th>
                                 </tr>
                             </thead>
-                            <tbody data-ng-repeat="Invoice in InvoiceDetails.DetailsList">
-                                <tr>
+                            <tbody>
+                                <tr  data-ng-repeat="Invoice in InvoiceDetails.DetailsList">
                                     <td style="text-align:right;"><span data-ng-bind="$index+1"></span></td>
                                     <td><span data-ng-bind="Invoice.ItemDescription"></span></td>
                                     <td style="text-align:right;" ng-init="$parent.totalItemQuantity = $parent.totalItemQuantity + Invoice.ItemQuantity" ><span data-ng-bind="Invoice.ItemQuantity"></span></td>
@@ -391,17 +393,17 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-3 border">
-                            <div class="row" >
-                                <div class="col-sm-12">
-                                    <label class="lblInfotit col-sm-5">TOTAL: </label>
-                                    <label class="lblInfoval col-sm-5" style="text-align:right">{{totalAmountPending  | currency : ''}}</label>
+                        <div class="col-sm-3 border" style="padding-right:0px;">
+                            <div class="row" style="padding-right:0px;" >
+                                <div class="col-sm-12" style="padding-right:0px;">
+                                    <label class="lblInfotit col-sm-6">TOTAL: </label>
+                                    <label class="lblInfoval col-sm-5" style="text-align:right;padding-right:2px;">{{totalAmountPending  | currency : ''}}</label>
                                 </div>
                             </div>
-                            <div class="row" >
-                                <div class="col-sm-12">
-                                    <label class="lblInfotit col-sm-5">Debit: </label>
-                                    <label class="lblInfoval col-sm-5" style="text-align:right">{{totalAmountPending  | currency : ''}}</label>
+                            <div class="row" style="padding-right:0px;">
+                                <div class="col-sm-12" style="padding-right:0px;">
+                                    <label class="lblInfotit col-sm-6">Debit: </label>
+                                    <label class="lblInfoval col-sm-5" style="text-align:right; padding-right:0px;">{{totalAmountPending  | currency : ''}}</label>
                                 </div>
                             </div>
                         </div>
@@ -409,7 +411,7 @@
                     
                 </div>
             </div>
-            <input type="button" value="Downlod" ng-click="export()" />
+            <input type="button" style="display:none;" value="Downlod" ng-click="export()" />
         </div>
     </div>
 

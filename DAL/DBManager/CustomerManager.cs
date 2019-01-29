@@ -927,6 +927,50 @@ namespace DAL.DBManager
             return ret;
         }
 
+
+        public bool DeleteMeasurementField(int CompanyID, int User, int MeasurementFieldID)
+        {
+            bool ret = false;
+
+            try
+            {
+                this.Connect(this.GetConnString());
+                string spName = "DeleteMeasurementField";
+                this.ClearSPParams();
+
+                this.AddSPIntParam("@CompanyID", CompanyID);
+                this.AddSPIntParam("@user", User);
+                this.AddSPIntParam("@MeasurementFieldID", MeasurementFieldID);
+                this.AddSPReturnIntParam("@return");
+
+                this.ExecuteNonSP(spName);
+
+                int retcode = this.GetOutValueInt("@return");
+                switch (retcode)
+                {
+                    case 0:
+                        ret = true;
+                        break;
+
+                    default:
+                        SetError(1, "Failed to delete Measurement field. Please try again later.");
+                        break;
+                }
+
+            }
+            catch (Exception e)
+            {
+                SetError(-100, "Failed to delete Measurement field. Please try again later");
+                Utils.Write(0, 0, "CustomerManager", "SaveMeasurementField", "", "", e);
+            }
+            finally
+            {
+                this.ClearSPParams();
+                this.Disconnect();
+            }
+            return ret;
+        }
+
         public bool GetInvoicePickLists(int companyID, int customerID, int userID, out InvoicePickLists invoicePickLists)
         {
             invoicePickLists = new InvoicePickLists();

@@ -93,6 +93,8 @@
                     }
 
                     $scope.ItemMaster = response.data.d.ItemsList[0];
+                    var Group = $scope.ItemMaster.ItemGroup;
+                    $scope.ItemMaster.Group = { PickListValue: Group, PickListLabel: Group };
 
                 }, function onFailure(error) {
                     $scope.ShowError = true;
@@ -104,6 +106,7 @@
             $scope.AddEditItemMaster = function () {
                 $scope.ShowError = false;
                 $scope.CustomerError = "";
+                $scope.ItemMaster.ItemGroup = $scope.ItemMaster.Group.PickListValue;
 
                 if (!$scope.ValidateAdd())
                     return false;
@@ -147,7 +150,7 @@
                 if ($scope.ItemMaster.ItemCode == '' || $scope.ItemMaster.ItemCode == null) {
                     errors = '<li>Item Code</li>';
                 }
-                if ($scope.ItemMaster.ItemGroup == '' || $scope.ItemMaster.ItemGroup == null) {
+                if ($scope.ItemMaster.Group == '' || $scope.ItemMaster.Group == null) {
                     errors += '<li>Item Group</li>';
                 }
                 if ($scope.ItemMaster.ItemDescription == '' || $scope.ItemMaster.ItemDescription == null) {
@@ -427,8 +430,8 @@
                                 </td>
                                 <td colspan="5">
                                     <span class="profileLabel">
-                                        <select class="form-control" id="drpItemGroup" data-ng-model="ItemMaster.ItemGroup"
-                                             data-ng-options="custCat.PickListValue as custCat.PickListLabel for custCat in ItemGroupPickLists.PickListItems track by custCat.PickListValue">
+                                        <select class="form-control" id="drpItemGroup" data-ng-model="ItemMaster.Group"
+                                             data-ng-options="custCat.PickListValue for custCat in ItemGroupPickLists.PickListItems track by custCat.PickListValue">
                                                <option value="">Select Group</option>
                                         </select>
                                     </span>

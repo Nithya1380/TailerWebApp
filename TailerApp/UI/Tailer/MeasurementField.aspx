@@ -38,7 +38,7 @@
                     $scope.MeasurField.forEach(function (item, index) {
                         $scope.MeasurField[index].ItemGroup = { PickListLabel: item.ValItemGroup, PickListValue: item.ValItemGroup };
                     });
-                    debugger
+                    
 
                 }, function onFailure(error) {
                     debugger
@@ -81,7 +81,7 @@
                 $scope.MeasurField.forEach(function (item, index) {
                     $scope.MeasurField[index].ValItemGroup = item.ItemGroup.PickListValue;
                 });
-                debugger
+                
                 $http({
                     method: "POST",
                     url: "MeasurementField.aspx/SaveMeasurementField",
@@ -131,6 +131,41 @@
                 $scope.MeasurField.push({ FieldName: '', MeasurementFieldID: 0, isRrepeat: false, OrderBy: or });
             }
 
+            $scope.DeleteMeasurement = function (obj) {
+
+                var index = $scope.MeasurField.indexOf(obj);
+
+                if (!confirm("You are about to delete the measure field '" + $scope.MeasurField[index].FieldName + "'. Do you want to continue"))
+                    return false;
+
+                var MeasurementFieldID = $scope.MeasurField[index].MeasurementFieldID || 0;
+                if (MeasurementFieldID != 0) {
+                    $http({
+                        method: "POST",
+                        url: "MeasurementField.aspx/DeleteMeasurement",
+                        data: { MeasurementFieldID: MeasurementFieldID },
+                        dataType: "json",
+                        headers: { "Content-Type": "application/json" }
+                    }).then(function onSuccess(response) {
+                        if (response.data.d.ErrorCode == 1001) {
+                            $window.SessionOut();
+                            return false;
+                        }
+                        if (response.data.d.ErrorCode != 0) {
+                            alert(response.data.d.ErrorMessage);
+                            return false;
+                        }
+                        $scope.MeasurField.splice(index, 1);
+
+                    }, function onFailure(error) {
+                        debugger
+                    });
+                } else {
+                    $scope.MeasurField.splice(index, 1);
+                }
+
+            }
+
         });
 
     </script>
@@ -158,10 +193,11 @@
                                 <th style="width: 15%">Rrepeat</th>
                                 <th style="width: 5%"></th>
                                 <th style="width: 5%"></th>
+                                <th style="width: 5%"></th>
                             </tr>
                         </thead>
-                        <tbody ng-repeat="Measur in MeasurField | orderBy : 'OrderBy'">
-                            <tr>
+                        <tbody >
+                            <tr ng-repeat="Measur in MeasurField | orderBy : 'OrderBy'">
                                 <td>
                                     <input type="text" maxlength="50" class="form-control" ng-model="Measur.FieldName" style="width: 70%" />
                                 </td>
@@ -174,10 +210,10 @@
                                         <option value="">Select Group</option>
                                     </select>
                                 </td>
-                                <td>
-                                    <input type="checkbox" ng-model="Measur.isRrepeat" /></td>
-                                <td><a ng-show="!$last" ng-click="movedown(Measur.OrderBy)"><i class="fa fa-angle-down" style="font-size: 36px"></i></a></td>
-                                <td><a ng-show="!$first" ng-click="moveup(Measur.OrderBy)"><i class="fa fa-angle-up" style="font-size: 36px"></i></a></td>
+                                <td><input type="checkbox" ng-model="Measur.isRrepeat" /></td>
+                                <td><a ng-show="!$last" ng-click="movedown(Measur.OrderBy)" style="cursor: pointer;"><i class="fa fa-angle-down" style="font-size: 36px"></i></a></td>
+                                <td><a ng-show="!$first" ng-click="moveup(Measur.OrderBy)" style="cursor: pointer;"><i class="fa fa-angle-up" style="font-size: 36px"></i></a></td>
+                                <td><a ng-click="DeleteMeasurement(Measur)" style="cursor: pointer;"><i class="fa fa fa-trash-o" style="font-size: 24px; color:red;"></i></a></td>
                             </tr>
                         </tbody>
                     </table>

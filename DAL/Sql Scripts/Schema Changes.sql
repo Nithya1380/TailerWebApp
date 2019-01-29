@@ -765,3 +765,9 @@ ALTER TABLE ItemMaster ADD TotalGST FLOAT, SGSTPer FLOAT, SGST FLOAT, CGSTPer FL
 --17th Jan 2019
 ALTER TABLE InvoiceDetails ADD BasePrice FLOAT
 ALTER TABLE Invoices ADD TotalBasePrice FLOAT, TotalCGST FLOAT, TotalSGST FLOAT
+
+--28th Jan 2018
+ALTER TABLE Invoices ADD CrdNumber VARCHAR(50), CrdName  VARCHAR(100), CrdPhone VARCHAR(50), CrdBank VARCHAR(50)
+
+ALTER TABLE MeasurementFieldMaster ADD isDeleted BIT DEFAULT 0, DeletedBy INT, DeletedOn DATETIME,
+CONSTRAINT FK_MeasurementFieldMaster_DeletedBy FOREIGN KEY(DeletedBy) REFERENCES Users(UserID)

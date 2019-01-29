@@ -258,7 +258,7 @@ namespace DAL.Model
         public int DesignerID { get; set; }
         public string DeliveryDate { get; set; }
         public string DeliveryTime { get; set; }
-        public string PaymentNumber { get; set; }
+        //public string PaymentNumber { get; set; }
         public string InvoiceLessCategory { get; set; }
         public string LessRs { get; set; }
         public string LessRsAmount { get; set; }
@@ -267,7 +267,15 @@ namespace DAL.Model
         public string TotalBasePrice { get; set; }
         public string TotalCGST { get; set; }
         public string TotalSGST { get; set; }
-
+        public string CrdNumber { get; set; }
+        public string CrdName { get; set; }
+        public string CrdPhone { get; set; }
+        public string CrdBank { get; set; }
+        public class PaymentNumber
+        {
+            public string PickListValue { get; set; }
+            public string PickListLabel { get; set; }
+        }
 
     }
 

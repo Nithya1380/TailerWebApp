@@ -258,7 +258,7 @@
              $scope.InvoiceID = 0;
              var d = new Date();
              $scope.CustInvoice.InvoiceDate = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear();
-
+             $scope.CustInvoice.PaymentNumber = { PickListValue: "Cash", PickListLabel: "Cash" };
              $scope.init = function () {
                  $scope.ShowError = false;
                  $scope.InvoiceError = '';
@@ -301,7 +301,8 @@
                  return false;
              };
 
-             $scope.onItemChange = function (InvoiceItem) {
+             $scope.onItemChange = function (InvoiceItem, isCalculateTotal) {
+                 isCalculateTotal =  isCalculateTotal || true;
                  if (InvoiceItem != null && InvoiceItem != undefined && !isNaN(InvoiceItem.ItemQuantity) && !isNaN(InvoiceItem.ItemPrice)) {
                      
                      var BasePrice = parseInt(InvoiceItem.ItemQuantity) * parseFloat(InvoiceItem.ItemPrice);
@@ -311,6 +312,9 @@
                      if (!isNaN(InvoiceItem.ItemDiscountPer) && parseFloat(InvoiceItem.ItemDiscountPer) > 0) {
                          InvoiceItem.BasePrice = (parseFloat(BasePrice) - (parseFloat(BasePrice) * (parseFloat(InvoiceItem.ItemDiscountPer) / 100.00))).toFixed(2);
                          InvoiceItem.ItemDiscount = (parseFloat(BasePrice) * (parseFloat(InvoiceItem.ItemDiscountPer) / 100.00)).toFixed(2);
+                     } else {
+                         InvoiceItem.BasePrice = BasePrice;
+                         InvoiceItem.ItemDiscount = null;
                      }
 
                      if (!isNaN(InvoiceItem.GSTP) && parseFloat(InvoiceItem.GSTP) > 0) {
@@ -376,8 +380,8 @@
                 
                      //}
 
-
-                     $scope.CalculateTotal();
+                     if (isCalculateTotal)
+                        $scope.CalculateTotal();
                  }
              }
 
@@ -396,6 +400,7 @@
                  $scope.TotalBasePrice = 0;
                  $scope.TotalCGST = 0;
                  $scope.TotalSGST = 0;
+                 $scope.TotalLessRsAmount = 0;
                  if ($scope.InvoiceList != null && $scope.InvoiceList != undefined) {
                      angular.forEach($scope.InvoiceList, function (InvoiceItem) {
                          if (InvoiceItem != null && InvoiceItem != undefined) {
@@ -410,6 +415,9 @@
 
                              if (!isNaN(InvoiceItem.SGST))
                                  $scope.TotalSGST = parseFloat($scope.TotalSGST) + parseFloat(InvoiceItem.SGST);
+
+                             if (!isNaN(InvoiceItem.ItemDiscount) && InvoiceItem.ItemDiscount != null)
+                                 $scope.TotalLessRsAmount = parseFloat($scope.TotalLessRsAmount) + parseFloat(InvoiceItem.ItemDiscount);
                          }
                      });
                  }
@@ -424,6 +432,22 @@
                  $scope.CustInvoice.TotalBasePrice = $scope.TotalBasePrice;
                  $scope.CustInvoice.TotalCGST = $scope.TotalCGST;
                  $scope.CustInvoice.TotalSGST = $scope.TotalSGST;
+                 $scope.CustInvoice.LessRsAmount = $scope.TotalLessRsAmount.toFixed(2);
+             }
+
+             $scope.onLessRsChange = function () {
+                 angular.forEach($scope.InvoiceList, function (InvoiceItem) {
+                     if (InvoiceItem != null && InvoiceItem != undefined) {
+                         if (!isNaN($scope.CustInvoice.LessRs))
+                             InvoiceItem.ItemDiscountPer = $scope.CustInvoice.LessRs
+                         else
+                             InvoiceItem.ItemDiscountPer = null;
+
+                         $scope.onItemChange(InvoiceItem);
+                     }
+                 });
+
+                 $scope.CalculateTotal();
              }
 
              //$scope.autoCompleteOptions = {
@@ -607,7 +631,7 @@
 
                  }, function onFailure(error) {
                      $scope.ShowError = true;
-                     $scope.InvoiceError = response.data.d.ErrorCode;
+                     $scope.InvoiceError = error.statusText;
                  });
 
 
@@ -913,7 +937,7 @@
                                                     <td >
                                                         <span class="profileValue">
                                                             <select class="form-control" id="drpInvoicePaymentMethod" data-ng-model="CustInvoice.PaymentNumber" style="width:250px;"
-                                                                   data-ng-options="custCat.PickListValue as custCat.PickListLabel for custCat in InvoicePickLists.InvoicePaymentMethod track by custCat.PickListValue">
+                                                                   data-ng-options="custCat.PickListValue for custCat in InvoicePickLists.InvoicePaymentMethod track by custCat.PickListValue">
                                                                  <option value="">Select</option>
                                                             </select>
                                                         </span>
@@ -932,8 +956,8 @@
                                                     <td >
                                                         <span class="profileValue" >
 
-                                                            <input type="number" data-ng-model="CustInvoice.LessRs" name="LessRs" class="form-control-Multiple" style="width: 80px; margin-left: 5px;"  />
-                                                            <input type="number" data-ng-model="CustInvoice.LessRsAmount" name="LessRsAmount" class="form-control-Multiple" style="width: 150px; margin-left: 5px;"  />
+                                                            <input type="number" data-ng-model="CustInvoice.LessRs" name="LessRs" class="form-control-Multiple" data-ng-change="onLessRsChange()" style="width: 80px; margin-left: 5px; text-align:right;"  />
+                                                            <input type="text" data-ng-model="CustInvoice.LessRsAmount" name="LessRsAmount" data-ng-disabled="true" class="form-control-Multiple" style="width: 150px; margin-left: 5px; text-align:right;"  />
                                                         </span>
                                                     </td>
                                                 </tr>
@@ -966,6 +990,24 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="CreditCardTab">
+                                    <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Number</th>
+                                                    <th>Name</th>
+                                                    <th>Phone</th>
+                                                    <th>Bank</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><input type="text" data-ng-model="CustInvoice.CrdNumber" class="form-control" style="width: 98%;" /></td>
+                                                    <td><input type="text" data-ng-model="CustInvoice.CrdName" class="form-control" style="width: 98%;" /></td>
+                                                    <td><input type="text" data-ng-model="CustInvoice.CrdPhone" class="form-control" style="width: 98%;" /></td>
+                                                    <td><input type="text" data-ng-model="CustInvoice.CrdBank" class="form-control" style="width: 98%;" /></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                 </div>
                                 <div class="tab-pane" id="TaxTab">
                                 </div>
