@@ -428,9 +428,12 @@
              }
 
              $scope.CalculateNetAmount = function () {
-                 $scope.CustInvoice.NetAmount = $scope.TotalAmount;
+                 $scope.CustInvoice.NetAmount = Math.round($scope.TotalAmount);
+                 $scope.CustInvoice.RoundOnOff = (Math.round($scope.TotalAmount) - $scope.TotalAmount).toFixed(2);
+                 $scope.CustInvoice.TotalAmount = $scope.TotalAmount.toFixed(2);
+                 $scope.TotalAmount = Math.round($scope.TotalAmount);
                  $scope.CustInvoice.TotalBasePrice = $scope.TotalBasePrice;
-                 $scope.CustInvoice.TotalCGST = $scope.TotalCGST;
+                 $scope.CustInvoice.TotalCGST = $scope.TotalCGST;s
                  $scope.CustInvoice.TotalSGST = $scope.TotalSGST;
                  $scope.CustInvoice.LessRsAmount = $scope.TotalLessRsAmount.toFixed(2);
              }
@@ -695,7 +698,11 @@
                  return false;
              };
 
-             
+             $scope.onMeasureClick = function (Measur) {
+                 $window.location.href = "Measurement.aspx?InvoiceID=" + $scope.InvoiceID;
+                 return false;
+             };
+
          });
      </script>
 </asp:Content>
@@ -781,7 +788,7 @@
                                                         </datepicker>
                                                     </td>
                                                     <td>
-                                                        <input type="text" data-ng-model="CustInvoice.TrailTime" name="TrailTime" class="form-control-Multiple" style="width: 60px; margin-left: 5px;" maxlength="10" />
+                                                        <input type="number" data-ng-model="CustInvoice.TrailTime" name="TrailTime" class="form-control-Multiple" style="width: 60px; margin-left: 5px;" maxlength="10" />
                                                     </td>
                                                     <td>
                                                         <button class="btn btn-sm btn-success" type="button" title="Book">
@@ -806,9 +813,7 @@
                                                      data-ng-options="custCat.EmployeeMasterID as custCat.EmployeeName for custCat in InvoicePickLists.SalesReps track by custCat.EmployeeMasterID">
                                                  <option value="">Select</option>
                                              </select>
-                                            
                                         </span>
-                                        
                                     </td>
                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Delivery Date:</span></td>
                                     <td >
@@ -820,7 +825,7 @@
                                                         </datepicker>
                                                 </td>
                                                 <td>
-                                                    <input type="text" data-ng-model="CustInvoice.DeliveryTime" name="DeliveryTime" class="form-control-Multiple" style="width: 60px; margin-left: 5px;" maxlength="10" />
+                                                    <input type="number" data-ng-model="CustInvoice.DeliveryTime" name="DeliveryTime" class="form-control-Multiple" style="width: 60px; margin-left: 5px;" maxlength="10" />
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-sm btn-success" type="button" title="Refresh">
@@ -828,11 +833,7 @@
                                                     </button>
                                                 </td>
                                             </tr>
-                                        </table>
-                                           
-                                            
-                                           
-                                        
+                                        </table>                                       
                                     </td>
                                 </tr>
                                 <tr>
@@ -857,8 +858,9 @@
                                     </td>
                                     <td colspan="4" style="text-align:right">
                                        <%-- <input type="checkbox" data-ng-model="IsCalculateTax" data-ng-change="ReCalculateTax()" /> Include Tax--%>
-                                        <button class="btn btn-lg btn-success" type="button" data-ng-click="onCreateInvoiceClick();"><i class="fa fa-dollar"></i>Create</button>
-                                        <input class="btn btn-lg btn-success" type="button" data-ng-click="onPrintInvoiceDetailsClick();" ng-show="InvoiceID>0" value="Print" />
+                                        <button class="btn_ss bg-blue" type="button" data-ng-click="onCreateInvoiceClick();"><i class="fa fa-dollar"></i>Create</button>
+                                        <input class="btn_ss bg-blue" type="button" data-ng-click="onPrintInvoiceDetailsClick();" ng-show="InvoiceID>0" value="Print" />
+                                        <input class="btn_ss bg-blue" type="button" ng-if="false" data-ng-click="onMeasureClick();" ng-show="InvoiceID>0" value="Add Measure" />
                                     </td>
                                 </tr>
                             </tbody>
@@ -942,9 +944,9 @@
                                                             </select>
                                                         </span>
                                                     </td>
-                                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Other Less & Rs:</span></td>
+                                                    <td style="text-align: right" class="back_shade"><span ng-if="false" class="profileLabel">Other Less & Rs:</span></td>
                                                     <td >
-                                                        <span class="profileValue" >
+                                                        <span class="profileValue" ng-if="false" >
                                                             <select class="form-control" id="drpInvoiceLess" data-ng-model="CustInvoice.InvoiceLessCategory" style="width: 150px;"
                                                                    data-ng-options="custCat.PickListValue as custCat.PickListLabel for custCat in InvoicePickLists.InvoiceLessCategory track by custCat.PickListValue">
                                                                  <option value="">None</option>
@@ -968,7 +970,9 @@
                                                             <input type="text" data-ng-model="CustInvoice.Remarks" name="Remarks" class="form-control-Multiple" style="width: 250px; margin-left: 5px;" maxlength="50" />
                                                         </span>
                                                     </td>
-                                                    <td style="text-align: right" class="back_shade"><span class="profileLabel">Tax:</span></td>
+                                                    <td style="text-align: right; min-width:60px;" class="back_shade"><span ng-show="CustInvoice.RoundOnOff" class="profileLabel">{{CustInvoice.RoundOnOff<0?'Round Off: ':'Round On: '}}</span></td>
+                                                    <td style="text-align:right; min-width:30px;"><span ng-show="CustInvoice.RoundOnOff">{{CustInvoice.RoundOnOff>0?CustInvoice.RoundOnOff:CustInvoice.RoundOnOff*-1}}</span></td>
+                                                    <%--<td style="text-align: right" class="back_shade"><span class="profileLabel">Tax:</span></td>
                                                     <td >
                                                         <span class="profileValue" >
                                                             <select class="form-control" id="drpInvoiceTax" data-ng-model="CustInvoice.InvoiceLessCategory" 
@@ -976,7 +980,7 @@
                                                                  <option value="">None</option>
                                                             </select>
                                                         </span>
-                                                    </td>
+                                                    </td>--%>
                                                     <td style="text-align: right" class="back_shade"><span class="profileLabel">Net Amount:</span></td>
                                                     <td style="text-align:right;">
                                                         <span class="profileValue" >

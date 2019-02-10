@@ -237,21 +237,33 @@
                         <div class="col-sm-5">
                             <label class="lblInfotit">Account Code:</label><label class="lblInfoval">{{MeasurementDetails.Account.AccountCode}}</label>
                         </div>
-                        <div class="col-sm-5">
+                        <div class="col-sm-4">
                             <label class="lblInfotit">Measu No:</label><label class="lblInfoval">{{MeasurementDetails.MeasuNo}}</label>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <label class="lblInfotit">Qty:</label><label class="lblInfoval">{{MeasurementDetails.Qty}}</label>
                         </div>
                     </div>
                     <div class="row" style="margin-left: 5px;">
-                        <div class="col-sm-4">
+                        <div class="col-sm-5">
                             <label class="lblInfotit">Account Name:</label><label class="lblInfoval">{{MeasurementDetails.Account.AccountName}}</label>
+                        </div>
+                        <div class="col-sm-4">
+                            <label class="lblInfotit">Sales Rep:</label><label class="lblInfoval">{{MeasurementDetails.SalesRep.EmployeeName}}</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="lblInfotit">Bill No:</label><label class="lblInfoval">{{MeasurementDetails.Invoice.BillNumber}}</label>
                         </div>
                     </div>
                     <div class="row" style="margin-left: 5px;">
-                        <div class="col-sm-4">
+                        <div class="col-sm-5">
                             <label class="lblInfotit">Item:</label><label class="lblInfoval">{{MeasurementDetails.SelectedItem.ItemDescription}}</label>
+                        </div>
+                        <div class="col-sm-4">
+                            <label class="lblInfotit">Master:</label><label class="lblInfoval">{{MeasurementDetails.Master.EmployeeName}}</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="lblInfotit">Designer:</label><label class="lblInfoval">{{MeasurementDetails.Designer.EmployeeName}}</label>
                         </div>
                     </div>
                     <div class="row" align="center">
@@ -279,14 +291,13 @@
                             <label class="lblInfotit">Created Date:</label><label class="lblInfoval">{{MeasurementDetails.MeasCreatedOn}}</label>
                         </div>
                         <div class="col-sm-4">
-                            <label class="lblInfotit">Weight:</label><label class="lblInfoval">{{MeasurementDetails.MeasWeight}}</label>
+                            <label class="lblInfotit">Created By:</label><label class="lblInfoval">{{MeasurementDetails.CreatedBy}}</label>
                         </div>
                     </div>
                 </div>
             </div>
-            <input type="button" value="Downlod" ng-click="export()" />
+            <input ng-if="false" type="button" value="Downlod" ng-click="export()" />
         </div>
     </div>
-
 </body>
 </html>

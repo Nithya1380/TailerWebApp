@@ -86,7 +86,7 @@ namespace TailerApp.UI.Tailer
         }
 
         [WebMethod]
-        public static ItemMasterList GetItemList()
+        public static ItemMasterList GetItemList(string InvoiceID)
         {
             ItemMasterList returnObj = new ItemMasterList();
             LoginUser currentUser;
@@ -100,7 +100,7 @@ namespace TailerApp.UI.Tailer
                 }
 
                 AdminManagerSP customerObj = new AdminManagerSP();
-                if (customerObj.GetItemMasterList(currentUser.CompanyID, currentUser.UserId, 0, out returnObj))
+                if (customerObj.GetItemMasterList(currentUser.CompanyID, currentUser.UserId, 0, out returnObj, string.IsNullOrEmpty(InvoiceID) ? 0 : Convert.ToInt32(InvoiceID)))
                 {
                     returnObj.ErrorCode = 0;
                     returnObj.ErrorMessage = "";
@@ -151,6 +151,74 @@ namespace TailerApp.UI.Tailer
             }
 
             return returnObj;
+        }
+
+        [WebMethod]
+        public static JsonResults GetAccountInvoiceList(string AccountID)
+        {
+            JsonResults returnObj = new JsonResults();
+            LoginUser currentUser;
+            try
+            {
+                if (!GetUserSession(out currentUser))
+                {
+                    returnObj.ErrorCode = 1001;
+                    returnObj.ErrorMessage = "";
+                    return returnObj;
+                }
+
+                CustomerManager customerObj = new CustomerManager();
+                if (customerObj.GetAccountInvoiceList(currentUser.CompanyID, currentUser.UserId, string.IsNullOrEmpty(AccountID)?0:Convert.ToInt32(AccountID),  out returnObj))
+                {
+                    returnObj.ErrorCode = 0;
+                    returnObj.ErrorMessage = "";
+                }
+                else
+                {
+                    returnObj.ErrorCode = -1;
+                    returnObj.ErrorMessage = "Failed to get Account Invoice List. please try again later";
+                }
+            }
+            catch (Exception ex)
+            {
+                Utils.Write(ex);
+            }
+
+            return returnObj;
+        }
+
+        [WebMethod]
+        public static JsonResults GetEmployee()
+        {
+            JsonResults emplList = new JsonResults();
+            LoginUser currentUser;
+            try
+            {
+                if (!GetUserSession(out currentUser))
+                {
+                    emplList.ErrorCode = 1001;
+                    emplList.ErrorMessage = "";
+                    return emplList;
+                }
+
+                AdminManagerSP adminObj = new AdminManagerSP();
+                if (adminObj.GetEmployeeList(currentUser.CompanyID, currentUser.UserId, true, out emplList))
+                {
+                    emplList.ErrorCode = 0;
+                    emplList.ErrorMessage = "";
+                }
+                else
+                {
+                    emplList.ErrorCode = 1;
+                    emplList.ErrorMessage = "Failed to get Employee List. please try again later";
+                }
+            }
+            catch (Exception ex)
+            {
+                Utils.Write(ex);
+            }
+
+            return emplList;
         }
 
         [WebMethod]

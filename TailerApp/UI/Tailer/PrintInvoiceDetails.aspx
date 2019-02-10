@@ -31,7 +31,7 @@
             width: 100%;
             font-weight: normal;
             text-align: center;
-            line-height:0.7;
+            line-height:0.98;
         }
 
         .divborder {
@@ -54,6 +54,25 @@
 
         .lblInfoval {
             text-align: left;
+        }
+        .border{
+            border: 1px solid #2a2a2b!important
+        }
+        .table-bordered{
+            border: 1px solid #2a2a2b
+        }
+        .table-bordered td, .table-bordered th{
+            border:1px solid #2a2a2b!important
+        }
+        .border-left{
+            border-left:1px solid #2a2a2b!important
+        } .border-right{
+            border-right:1px solid #2a2a2b!important
+        }.border-top{
+            border-top:1px solid #2a2a2b!important
+        }
+         .border-bottom{
+            border-bottom:1px solid #2a2a2b!important
         }
     </style>
 
@@ -96,7 +115,10 @@
 
                     $scope.InvoiceDetails = JSON.parse(response.data.d.JSonstring);
                     $scope.InvoiceDetails.DetailsList = JSON.parse(response.data.d.JSonstring2);
+                    var ItemCount = $scope.InvoiceDetails.DetailsList.length;
+                    var ArrayCount = parseInt(ItemCount / 9) + (ItemCount % 9 > 0 ? 1 : 0);
 
+                    $scope.InvoiceRepeat = new Array(ArrayCount);
 
                 }, function onFailure(error) {
 
@@ -243,8 +265,8 @@
     <div ng-app="TailerApp">
         <div ng-controller="PrintInvoiceDetailsController">
             <br>
-            <div id="divInvoiceDetails" style="padding:15px">
-                <div class="row">
+            <div id="divInvoiceDetails" style="padding:15px" ng-repeat="Inv in InvoiceRepeat track by $index">
+                <div class="row" ng-init="Inv.start=$index*9">
                     <div class="col-sm-12">
                         <h5 class="lableHed">TAX INVOICE</h5>
                     </div>
@@ -287,9 +309,9 @@
                     </div>
                     <div class="col-sm-4"></div>
                 </div>
-                <div class="col-sm-12 border" style="line-height:1;">
+                <div class="col-sm-12" style="line-height:1;">
                     <div class="row" >
-                        <div class="col-sm-8">
+                        <div class="col-sm-8 border-left border-top">
                             <label class="lblInfoval">{{InvoiceDetails.CustomerName}}</label>
                         </div>
 
@@ -298,10 +320,10 @@
                         </div>
                     </div>
                     <div class="row" >
-                        <div class="col-sm-8">
+                        <div class="col-sm-8 border-left border-top">
                             <label class="lblInfoval">{{InvoiceDetails.MobileNumber}}</label>
                         </div>
-                        <div class="col-sm-4 border">
+                        <div class="col-sm-4 border-right border-left">
                             <label class="lblInfotit">Series:</label><label class="lblInfoval">{{InvoiceDetails.InvoiceSeries}}</label>
                         </div>
                     </div>
@@ -316,20 +338,20 @@
                                     <th style="width:20%;">Item Description</th>
                                     <th style="width:2%; text-align:right;">Qty</th>
                                     <th style="width:5%; text-align:right;">Rate</th>
-                                    <th style="width:10%; text-align:right;" colspan="2">Disc% & Amt</th>
+                                    <th style="width:10%; text-align:right;" ng-show="totalItemDiscount>0" colspan="2">Disc% & Amt</th>
                                     <th style="width:10%; text-align:right;" colspan="2">C% & Amt</th>
                                     <th style="width:10%; text-align:right;" colspan="2">S% & Amt</th>
                                     <th style="width:10%; text-align:right;">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr  data-ng-repeat="Invoice in InvoiceDetails.DetailsList">
+                                <tr  data-ng-repeat="Invoice in InvoiceDetails.DetailsList | limitTo: 9 : Inv.start">
                                     <td style="text-align:right;"><span data-ng-bind="$index+1"></span></td>
                                     <td><span data-ng-bind="Invoice.ItemDescription"></span></td>
                                     <td style="text-align:right;" ng-init="$parent.totalItemQuantity = $parent.totalItemQuantity + Invoice.ItemQuantity" ><span data-ng-bind="Invoice.ItemQuantity"></span></td>
                                     <td style="text-align:right;" ng-init="$parent.totalItemPrice = $parent.totalItemPrice + Invoice.ItemPrice">{{Invoice.ItemPrice | currency : ''}}</td>
-                                    <td style="text-align:right;">{{Invoice.ItemDiscountPer}}</td>
-                                    <td style="text-align:right;" ng-init="$parent.totalItemDiscount = $parent.totalItemDiscount + Invoice.ItemDiscount">{{Invoice.ItemDiscount | currency : ''}}</td>
+                                    <td style="text-align:right;" ng-show="$parent.totalItemDiscount>0" >{{Invoice.ItemDiscountPer}}</td>
+                                    <td style="text-align:right;" ng-show="$parent.totalItemDiscount>0" ng-init="$parent.totalItemDiscount = $parent.totalItemDiscount + Invoice.ItemDiscount">{{Invoice.ItemDiscount | currency : ''}}</td>
                                     <td style="text-align:right;">{{Invoice.GSTPer}}</td>
                                     <td style="text-align:right;" ng-init="$parent.totalGST = $parent.totalGST + Invoice.GST">{{Invoice.GST | currency : ''}}</td>
                                     <td style="text-align:right;">{{Invoice.SGSTPer}}</td>
@@ -343,8 +365,8 @@
                                     <th style="text-align:right;"><span> Total: <br /><br /><br /><br /><br /> </span></th>
                                     <th style="text-align:right;">{{totalItemQuantity}}</th>
                                     <th style="text-align:right;">{{totalItemPrice | currency : ''}}</th>
-                                    <th><span></span></th>
-                                    <th style="text-align:right;">{{totalItemDiscount | currency : ''}}</th>
+                                    <th ng-show="$parent.totalItemDiscount>0"><span></span></th>
+                                    <th style="text-align:right;" ng-show="$parent.totalItemDiscount>0">{{totalItemDiscount | currency : ''}}</th>
                                     <th><span></span></th>
                                     <th style="text-align:right;">{{totalGST | currency : '' }}</th>
                                     <th><span></span></th>
@@ -393,17 +415,29 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-3 border" style="padding-right:0px;">
+                        <div class="col-sm-3 border-left" style="padding-right:0px;">
                             <div class="row" style="padding-right:0px;" >
                                 <div class="col-sm-12" style="padding-right:0px;">
                                     <label class="lblInfotit col-sm-6">TOTAL: </label>
-                                    <label class="lblInfoval col-sm-5" style="text-align:right;padding-right:2px;">{{totalAmountPending  | currency : ''}}</label>
+                                    <label class="lblInfoval col-sm-5" style="text-align:right;padding-right:2px;">{{InvoiceDetails.TotalAmount  | currency : ''}}</label>
                                 </div>
                             </div>
                             <div class="row" style="padding-right:0px;">
                                 <div class="col-sm-12" style="padding-right:0px;">
                                     <label class="lblInfotit col-sm-6">Debit: </label>
-                                    <label class="lblInfoval col-sm-5" style="text-align:right; padding-right:0px;">{{totalAmountPending  | currency : ''}}</label>
+                                    <label class="lblInfoval col-sm-5" style="text-align:right; padding-right:0px;">{{InvoiceDetails.TotalAmount  | currency : ''}}</label>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-right:0px;" ng-show="InvoiceDetails.RoundOnOff">
+                                <div class="col-sm-12" style="padding-right:0px;"> 
+                                    <label class="lblInfotit col-sm-6">{{InvoiceDetails.RoundOnOff<0?'Round Off':'Round On'}}: </label>
+                                    <label class="lblInfoval col-sm-5" style="text-align:right; padding-right:0px;">{{InvoiceDetails.RoundOnOff>0?InvoiceDetails.RoundOnOff:InvoiceDetails.RoundOnOff*-1  | currency : ''}}</label>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-right:0px;">
+                                <div class="col-sm-12" style="padding-right:0px;">
+                                    <label class="lblInfotit col-sm-6">Net Amount: </label>
+                                    <label class="lblInfoval col-sm-5" style="text-align:right; padding-right:0px;">{{InvoiceDetails.NetAmount  | currency : ''}}</label>
                                 </div>
                             </div>
                         </div>

@@ -209,6 +209,7 @@ namespace DAL.Model
 		public string CGSTPer { get; set; }
 		public string CGST { get; set; }
 		public string BillAmt { get; set; }
+        public string ItemQuantity { get; set; }
     }
 
     public class ItemMasterList:JsonResults
@@ -271,6 +272,8 @@ namespace DAL.Model
         public string CrdName { get; set; }
         public string CrdPhone { get; set; }
         public string CrdBank { get; set; }
+        public string RoundOnOff { get; set; }
+        public string TotalAmount { get; set; }
         public class PaymentNumber
         {
             public string PickListValue { get; set; }

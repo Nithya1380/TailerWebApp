@@ -3,7 +3,7 @@
 <asp:Content ID="content_Head" runat="server" ContentPlaceHolderID="HeaderContent">
     <link href="../Style/autocomplete.css" rel="stylesheet" />
     <script src="../../Scripts/AngularJS/angular.js"></script>
-   <%-- <script src="../../Scripts/AngularJS/autocomplete.js"></script>--%>
+    <%-- <script src="../../Scripts/AngularJS/autocomplete.js"></script>--%>
     <script src="../../Scripts/angular-datepicker.js"></script>
     <link href="../../Scripts/CalendarControl.css" rel="stylesheet" />
     <link href="../../Scripts/angular-datepicker.css" rel="stylesheet" />
@@ -79,7 +79,7 @@
                 $http({
                     method: "POST",
                     url: "Measurement.aspx/GetMeasurementMaster",
-                    data: { MeasurMasterID: $scope.MeasurementID, isPrint : false },
+                    data: { MeasurMasterID: $scope.MeasurementID, isPrint: false },
                     dataType: "json",
                     headers: { "Content-Type": "application/json" }
                 }).then(function onSuccess(response) {
@@ -91,29 +91,32 @@
                         alert(response.data.d.ErrorMessage);
                         return false;
                     }
-                    
+
                     if (response.data.d.JSonstring2 != null && response.data.d.JSonstring2 != "")
                         $scope.MeasurementField = JSON.parse(response.data.d.JSonstring2);
 
                     if (response.data.d.JSonstring != null && response.data.d.JSonstring != "") {
                         $scope.MeasurementDetails = JSON.parse(response.data.d.JSonstring)[0];
-                        //$scope.AccountCode = $scope.MeasurementDetails.AccountID;
-                    }                   
+                        if ($scope.MeasurementDetails.Account.AccountMasterID > 0)
+                            $scope.GetAccountInvoiceList($scope.MeasurementDetails.Account.AccountMasterID, 1);
+                    }
 
                     $scope.SelectedItem = angular.copy($scope.MeasurementDetails.SelectedItem);
+
+                   
 
                 }, function onFailure(error) {
 
                 });
             };
 
-            $scope.GetItemList = function () {
+            $scope.GetItemList = function (InvoiceID) {
                 $scope.ItemList = {};
-                  
+
                 $http({
                     method: "POST",
                     url: "Measurement.aspx/GetItemList",
-                    data: {},
+                    data: { InvoiceID: InvoiceID },
                     dataType: "json",
                     headers: { "Content-Type": "application/json" }
                 }).then(function onSuccess(response) {
@@ -128,6 +131,10 @@
 
                     //$scope.ItemList = JSON.parse(response.data.d.ItemsList);
                     $scope.ItemList = response.data.d.ItemsList;
+                    if ($scope.SelectedItem != undefined && $scope.SelectedItem.ItemmasterID > 0 && $scope.MeasurementID == 0) {
+                        if ($scope.ItemList.filter(function (x) { return x.ItemmasterID == $scope.SelectedItem.ItemmasterID }).length > 0)
+                            $scope.MeasurementDetails.Qty = $scope.ItemList.filter(function (x) { return x.ItemmasterID == $scope.SelectedItem.ItemmasterID })[0].ItemQuantity;
+                    }
 
                 }, function onFailure(error) {
 
@@ -137,8 +144,9 @@
 
             $scope.GetMeasurementMaster();
 
-            $scope.GetItemList();
-
+            if ($scope.MeasurementID == 0)
+                $scope.GetItemList(0);
+   
             $scope.MeasurementFieldfilter = function (group) {
                 return $scope.MeasurementField.filter(function (x) { return x.ItemGroup == group || x.ItemGroup == 'Mix' });
             }
@@ -226,7 +234,7 @@
             };
 
             $scope.GetAccountList();
-           
+
 
             $scope.AddItemToList = function (Obj) {
                 debugger;
@@ -238,7 +246,92 @@
             }
 
             $scope.onSelect = function ($item, $model, $label, Obj) {
+                $scope.GetAccountInvoiceList($item.AccountMasterID, 0);
                 return false;
+            }
+
+            $scope.AccountInvoiceList = {};
+
+            $scope.GetAccountInvoiceList = function (AccountID, Context) {
+                $scope.AccountInvoiceList = {};
+
+                $http({
+                    method: "POST",
+                    url: "Measurement.aspx/GetAccountInvoiceList",
+                    data: { AccountID: AccountID },
+                    dataType: "json",
+                    headers: { "Content-Type": "application/json" }
+                }).then(function onSuccess(response) {
+                    if (response.data.d.ErrorCode == 1001) {
+                        $window.SessionOut();
+                        return false;
+                    }
+                    if (response.data.d.ErrorCode != 0) {
+                        alert(response.data.d.ErrorMessage);
+                        return false;
+                    }
+
+                    $scope.AccountInvoiceList = JSON.parse(response.data.d.JSonstring);
+
+                    if ($scope.AccountInvoiceList.length > 0 && Context == 0) {
+                        $scope.MeasurementDetails.Invoice = $scope.AccountInvoiceList[0];
+                        $scope.OnInvoiceChange($scope.AccountInvoiceList[0]);
+                    } else {
+                        $scope.GetItemList($scope.MeasurementDetails.Invoice.InvoiceID);
+                    }
+
+                }, function onFailure(error) {
+
+                });
+            };
+
+            $scope.EmployeeList = {};
+
+            $scope.GetEmployeeList = function () {
+                $scope.EmployeeList = {};
+
+                $http({
+                    method: "POST",
+                    url: "Measurement.aspx/GetEmployee",
+                    data: {},
+                    dataType: "json",
+                    headers: { "Content-Type": "application/json" }
+                }).then(function onSuccess(response) {
+                    if (response.data.d.ErrorCode == 1001) {
+                        $window.SessionOut();
+                        return false;
+                    }
+                    if (response.data.d.ErrorCode != 0) {
+                        alert(response.data.d.ErrorMessage);
+                        return false;
+                    }
+
+                    $scope.EmployeeList = JSON.parse(response.data.d.JSonstring);
+
+                }, function onFailure(error) {
+
+                });
+            };
+
+            $scope.GetEmployeeList();
+
+            $scope.GetEmployeebyPosition = function (Position) {
+                return $scope.EmployeeList.filter(function (x) { return x.Position == Position });
+            };
+
+            $scope.OnInvoiceChange = function(obj){
+                $scope.MeasurementDetails.TrialDate = obj.TrailTime;
+                $scope.MeasurementDetails.DeliDate = obj.DeliveryTime;
+                $scope.MeasurementDetails.MeasDate = obj.InvoiceDate;
+                $scope.MeasurementDetails.SalesRep = { EmployeeMasterID: obj.SalesRepID, EmployeeName: '' };
+                $scope.MeasurementDetails.Master = { EmployeeMasterID: obj.MasterID, EmployeeName: '' };
+                $scope.MeasurementDetails.Designer = { EmployeeMasterID: obj.DesignerID, EmployeeName: '' };
+                $scope.GetItemList(obj.InvoiceID);
+            }
+
+            $scope.onSelectedItemChange = function (obj) {
+                if(obj.ItemQuantity)
+                    $scope.MeasurementDetails.Qty = parseInt(obj.ItemQuantity);
             }
 
             $scope.PrintMeasurementMaster = function () {
@@ -275,8 +368,6 @@
                     $scope.PrintMeasurementMaster();
                 }
 
-                    
-
             };
 
             $scope.keyUpFunc = function ($event) {
@@ -284,40 +375,39 @@
                     $scope.ctrlDown = false;
             };
 
-            
+
 
         });
-       
+
 
     </script>
 
     <style>
-        .col-sm-1{
+        .col-sm-1 {
             width: 12.33%;
             padding-right: 2px;
-            padding-left: 2px; 
+            padding-left: 2px;
         }
 
-        .lbl-text-right{
-            text-align:right;
-            padding-top:5px;
+        .lbl-text-right {
+            text-align: right;
+            padding-top: 5px;
         }
 
-        .text-sameLine{
-            width:50%;
-            float:left;
+        .text-sameLine {
+            width: 50%;
+            float: left;
         }
 
-         ._720kb-datepicker-calendar-day._720kb-datepicker-today {
-              background:#2e6e9e;
-              color:white;
-         }
-
+        ._720kb-datepicker-calendar-day._720kb-datepicker-today {
+            background: #2e6e9e;
+            color: white;
+        }
     </style>
-    
+
 </asp:Content>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="container bootstrap snippet" data-ng-app="TailerApp" data-ng-controller="MeasurementController" >
+    <div class="container bootstrap snippet" data-ng-app="TailerApp" data-ng-controller="MeasurementController">
         <div class="row">
             <div class="page-header-new col-lg-12">
                 Measurement
@@ -344,11 +434,11 @@
                                                     <tr>
                                                         <td class="back_shade" style="text-align: right;"><span class="profileLabel">Account code:</span></td>
                                                         <td>
-                                                            <input type="text"  placeholder="Enter number" class="form-control"
-			                                                  style="max-width:220px;" ng-model="MeasurementDetails.Account"  
-			                                                        typeahead-on-select="onSelect($item, $model, $label, this);"
-			                                                        uib-typeahead="Account as Account.AccountCode for Account in AccountList |  filter:{AccountCode:$viewValue} | limitTo:10" 
-			                                                        typeahead-show-hint="true" typeahead-min-length="0"  class="web_txtbox"/>   
+                                                            <input type="text" placeholder="Enter number" class="form-control"
+                                                                style="max-width: 220px;" ng-model="MeasurementDetails.Account"
+                                                                typeahead-on-select="onSelect($item, $model, $label, this);"
+                                                                uib-typeahead="Account as Account.AccountCode for Account in AccountList |  filter:{AccountCode:$viewValue} | limitTo:10"
+                                                                typeahead-show-hint="true" typeahead-min-length="0" class="web_txtbox" />
                                                             <%--</span>
                                                             <button title="Normal" class="btn btn-sm btn-success" type="button">
                                                                 Refresh
@@ -357,14 +447,14 @@
                                                         <td class="back_shade" style="text-align: right;"><span class="profileLabel">Measu No:</span></td>
                                                         <td>
                                                             <span class="profileValue">
-                                                                <input  class="form-control ng-pristine ng-untouched ng-valid ng-empty ng-valid-maxlength" style="width: 95%; margin-left: 5px;" type="text" maxlength="10" data-ng-model="MeasurementDetails.MeasuNo">
+                                                                <input class="form-control ng-pristine ng-untouched ng-valid ng-empty ng-valid-maxlength" style="width: 95%; margin-left: 5px;" type="text" maxlength="10" data-ng-model="MeasurementDetails.MeasuNo">
                                                             </span>
                                                         </td>
                                                         <td class="back_shade" style="text-align: right;"><span class="profileLabel">Create Date:</span></td>
                                                         <td>
                                                             <span class="profileValue">
                                                                 <%--<input name="Debit" class="form-control ng-pristine ng-untouched ng-valid ng-empty ng-valid-maxlength" style="width: 95%; margin-left: 5px;" type="text" maxlength="10" data-ng-model="MeasurementDetails.MeasCreatedOn">--%>
-                                                                <datepicker  date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; float: none;">
+                                                                <datepicker date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; float: none;">
 					                                                <input type="text" class="form-control" tabindex="2000" valid-calendar-date ng-model="MeasurementDetails.MeasCreatedOn" 
 						                                                style="width:110px;"/> 
 				                                                </datepicker>
@@ -378,7 +468,43 @@
                                                                 <input name="Debit" class="form-control-Multiple ng-pristine ng-untouched ng-valid ng-empty ng-valid-maxlength" style="width: 70%; margin-left: 5px;" type="text" maxlength="50" data-ng-model="MeasurementDetails.Account.AccountName">
                                                             </span>
                                                         </td>
-                                                        <td></td>
+                                                        <td class="back_shade" style="text-align: right;"><span class="profileLabel">Bill No:</span></td>
+                                                        <td>
+                                                            <span class="profileValue">
+                                                                <select class="form-control" ng-change="OnInvoiceChange(MeasurementDetails.Invoice)" data-ng-model="MeasurementDetails.Invoice" style="width: 95%; margin-left: 5px;"
+                                                                    data-ng-options="Invoice.BillNumber for Invoice in AccountInvoiceList track by Invoice.InvoiceID">                                                              
+                                                                </select>
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                         <td class="back_shade" style="text-align: right;"><span class="profileLabel">Sales Rep:</span></td>
+                                                        <td>
+                                                            <span class="profileValue">
+                                                                <select class="form-control" data-ng-model="MeasurementDetails.SalesRep" style="width: 95%; margin-left: 5px;"
+                                                                    data-ng-options="SalesRep.EmployeeName for SalesRep in GetEmployeebyPosition('SalesRep') track by SalesRep.EmployeeMasterID">  
+                                                                    <option value="">Select</option>                                                            
+                                                                </select>
+                                                            </span>
+                                                        </td>
+                                                         <td class="back_shade" style="text-align: right;"><span class="profileLabel">Master:</span></td>
+                                                        <td>
+                                                            <span class="profileValue">
+                                                                <select class="form-control" data-ng-model="MeasurementDetails.Master" style="width: 95%; margin-left: 5px;"
+                                                                    data-ng-options="Master.EmployeeName for Master in GetEmployeebyPosition('Master') track by Master.EmployeeMasterID"> 
+                                                                    <option value="">Select</option>                                                             
+                                                                </select>
+                                                            </span>
+                                                        </td>
+                                                         <td class="back_shade" style="text-align: right;"><span class="profileLabel">Designer:</span></td>
+                                                        <td>
+                                                            <span class="profileValue">
+                                                                <select class="form-control" data-ng-model="MeasurementDetails.Designer" style="width: 95%; margin-left: 5px;"
+                                                                    data-ng-options="Designer.EmployeeName for Designer in GetEmployeebyPosition('Designer') track by Designer.EmployeeMasterID">                                                              
+                                                                    <option value="">Select</option>
+                                                                </select>
+                                                            </span>
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -393,21 +519,20 @@
                                             <table class="profile_table" style="width: 100%;">
                                                 <tbody>
                                                     <tr>
-                                                        <td class="back_shade" style="text-align: right; width:30%">
+                                                        <td class="back_shade" style="text-align: right; width: 30%">
                                                             <span class="profileLabel">
-                                                                 <select class="form-control"
+                                                                <select class="form-control"
                                                                     ng-options="option.ItemDescription for option in ItemList track by option.ItemmasterID"
-                                                                    ng-model="SelectedItem">
+                                                                    ng-model="SelectedItem" ng-change="onSelectedItemChange(SelectedItem)">
                                                                 </select>
                                                             </span>
                                                         </td>
-                                                        <td style="width:30%">
+                                                        <td style="width: 30%">
                                                             <span class="profileValue">
-                                                                <input type="text" class="form-control" style="width:100%" data-ng-model="MeasurementDetails.ItemDesc" />
+                                                                <input type="text" class="form-control" style="width: 100%" data-ng-model="MeasurementDetails.ItemDesc" />
                                                             </span>
                                                         </td>
-                                                        <td style="width:30%">
-                                                            {{SelectedItem.ItemGroup}}
+                                                        <td style="width: 30%">{{SelectedItem.ItemGroup}}
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -423,7 +548,7 @@
                                             <label for="txtFullName" class="lbl-text-right">Body/Fit</label>
                                             <div style="padding-left: 20px; padding-bottom: 5px;">
                                                 <input type="text" class="form-control" style="padding-left: 20px;" ng-model="MeasurementDetails.BodyFit">
-                                             </div>
+                                            </div>
                                         </div>
                                         <div class="col-sm-4">
                                             <label for="txtFullName" class="lbl-text-right">Remark</label>
@@ -439,65 +564,65 @@
                                             </select>
                                         </div>--%>
                                     </div>
-                                     <div class="row">
-                                         <div class="col-sm-8">
-                                             <div class="row">
-                                                 <div class="col-sm-4" ng-repeat="Per in MeasurementFieldfilter(SelectedItem.ItemGroup);">
-                                                     <label for="drpSex" class="lbl-text-right">{{Per.FieldName}}</label>
-			                                        <div ng-repeat="id in Per.FieldValue" style="padding-left: 20px; padding-bottom: 5px;">
-				                                        <input type="number"  class="form-control" ng-model="id.val" style="text-align: right; width:50%; display:initial;" />
+                                    <div class="row">
+                                        <div class="col-sm-8">
+                                            <div class="row">
+                                                <div class="col-sm-4" ng-repeat="Per in MeasurementFieldfilter(SelectedItem.ItemGroup);">
+                                                    <label for="drpSex" class="lbl-text-right">{{Per.FieldName}}</label>
+                                                    <div ng-repeat="id in Per.FieldValue" style="padding-left: 20px; padding-bottom: 5px;">
+                                                        <input type="number" class="form-control" ng-model="id.val" style="text-align: right; width: 50%; display: initial;" />
                                                         <i class="fa fa-remove" ng-show="Per.FieldValue.length > 1" ng-click="RemoveItemToList(this, $index)"></i>
-				                                        <i ng-show="$last && $parent.Per.isRrepeat" style="display:block;" class="fa fa-plus-square" ng-click="AddItemToList(this)"></i>
-			                                        </div>
-		                                          </div>
-                                             </div>
-                                         </div>
-                                         <div class="col-sm-4">
+                                                        <i ng-show="$last && $parent.Per.isRrepeat" style="display: block;" class="fa fa-plus-square" ng-click="AddItemToList(this)"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
                                             <div class="row">
                                                 <div class="col-sm-6">
                                                     <label class="lbl-text-right">Trial Date</label>
-                                                    <datepicker  date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; float: none;">
+                                                    <datepicker date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; float: none;">
 					                                    <input type="text" class="form-control" tabindex="2000" valid-calendar-date ng-model="MeasurementDetails.TrialDate" 
 						                                    style="width:110px;"/> 
 				                                    </datepicker>
-                                                    
+
                                                 </div>
-                                             </div>
-                                             <div class="row">
+                                            </div>
+                                            <div class="row">
                                                 <div class="col-sm-6">
-                                                        <label for="drpSex" class="lbl-text-right">Deli Date</label>
-                                                        <%--<input type="text" class="form-control" ng-model="MeasurementDetails.DeliDate">--%>
-                                                        <datepicker  date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; float: none;">
+                                                    <label for="drpSex" class="lbl-text-right">Deli Date</label>
+                                                    <%--<input type="text" class="form-control" ng-model="MeasurementDetails.DeliDate">--%>
+                                                    <datepicker date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; float: none;">
 					                                        <input type="text" class="form-control" tabindex="2000" valid-calendar-date ng-model="MeasurementDetails.DeliDate" 
 						                                        style="width:110px;"/> 
 				                                        </datepicker>
                                                 </div>
-                                             </div>
-                                             <div class="row">
+                                            </div>
+                                            <div class="row">
                                                 <div class="col-sm-6">
                                                     <label for="drpSex" class="lbl-text-right">Date</label>
                                                     <%--<input type="text" class="form-control" ng-model="MeasurementDetails.MeasDate">--%>
-                                                    <datepicker  date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; float: none;">
+                                                    <datepicker date-format="dd/MM/yyyy" style="width: 0px; margin-left: 0px; float: none;">
 					                                    <input type="text" class="form-control" tabindex="2000" valid-calendar-date ng-model="MeasurementDetails.MeasDate" 
 						                                    style="width:110px;"/> 
 				                                    </datepicker>
                                                 </div>
-                                             </div>
-                                             <div class="row">
+                                            </div>
+                                            <div class="row">
                                                 <div class="col-sm-6">
                                                     <label for="drpSex" class="lbl-text-right">Qty</label>
                                                     <input type="number" class="form-control" ng-model="MeasurementDetails.Qty">
                                                 </div>
-                                              </div>
-                                             <div class="row">
+                                            </div>
+                                            <div class="row">
                                                 <div class="col-sm-6">
                                                     <label for="drpSex" class="lbl-text-right">Weight</label>
                                                     <input type="number" class="form-control" ng-model="MeasurementDetails.MeasWeight">
                                                 </div>
-                                              </div>
-                                         </div>
-                                     </div>
-                                    
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <%--<div class="form-group row">
                                         <label for="txtFullName" class="col-sm-1 lbl-text-right">Length</label>
                                         <div class="col-sm-1">

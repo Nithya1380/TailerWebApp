@@ -593,7 +593,7 @@ namespace DAL.DBManager
            return ret;
        }
 
-       public bool GetItemMasterList(int companyID, int userID,int itemMasterID ,out ItemMasterList itemsMasterList)
+       public bool GetItemMasterList(int companyID, int userID,int itemMasterID ,out ItemMasterList itemsMasterList, int InvoiceID = 0)
        {
            itemsMasterList = new ItemMasterList();
            itemsMasterList.ItemsList = new List<ItemMaster>();
@@ -608,6 +608,7 @@ namespace DAL.DBManager
                this.AddSPIntParam("@companyID", companyID);
                this.AddSPIntParam("@UserID", userID);
                this.AddSPIntParam("@ItemMasterID", itemMasterID);
+               this.AddSPIntParam("@InvoiceID", InvoiceID);
                this.AddSPReturnIntParam("@return");
                using (SqlDataReader reader = this.ExecuteSelectSP(spName))
                {

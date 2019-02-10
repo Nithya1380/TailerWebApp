@@ -1435,5 +1435,56 @@ namespace DAL.DBManager
             }
             return ret;
         }
+
+        public bool GetAccountInvoiceList(int CompanyID, int User, int AccountID, out JsonResults Accou)
+        {
+
+            bool ret = false;
+            Accou = new JsonResults();
+            try
+            {
+                this.Connect(this.GetConnString());
+                string spName = "_Get_AccountInvoiceList";
+                this.ClearSPParams();
+                this.AddSPIntParam("@Company", CompanyID);
+                this.AddSPIntParam("@user", User);
+                this.AddSPIntParam("@AccountID", AccountID);
+                this.AddSPReturnIntParam("@return");
+
+                using (SqlDataReader reader = this.ExecuteSelectSP(spName))
+                {
+                    while (reader.Read())
+                    {
+                        if (!reader.IsDBNull(0))
+                            Accou.JSonstring = reader.GetString(0);
+                        else
+                            Accou.JSonstring = "";
+                    }
+
+                    reader.Close();
+                    int retcode = this.GetOutValueInt("@return");
+                    switch (retcode)
+                    {
+                        case 0:
+                            ret = true;
+                            break;
+                        default:
+                            SetError(1, "Failed to get Account Invoice List. Please try again later");
+                            break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                SetError(1, "Failed to get Account Invoice List . Please try again later");
+                Utils.Write(0, 0, "CustomerManager", "GetAccountInvoiceList", "", "", e);
+            }
+            finally
+            {
+                this.ClearSPParams();
+                this.Disconnect();
+            }
+            return ret;
+        }
     }
 }
