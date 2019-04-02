@@ -15,10 +15,15 @@ namespace TailerApp.UI.Tailer
     public partial class Measurement : PageBase
     {
         public int MeasurementID = 0;
+        public int InvoiceID = 0;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(this.GetDecryptedQueryString("MeasurementID")))
                 MeasurementID = Convert.ToInt32(this.GetDecryptedQueryString("MeasurementID"));
+
+            if (!string.IsNullOrEmpty(this.GetDecryptedQueryString("InvoiceID")))
+                InvoiceID = Convert.ToInt32(this.GetDecryptedQueryString("InvoiceID"));
+            
         }
 
         [WebMethod]
@@ -54,7 +59,7 @@ namespace TailerApp.UI.Tailer
         }
 
         [WebMethod]
-        public static ST_Measurement GetMeasurementMaster(string MeasurMasterID, bool isPrint)
+        public static ST_Measurement GetMeasurementMaster(string MeasurMasterID, bool isPrint, string InvoiceID)
         {
             ST_Measurement Measur = new ST_Measurement();
             LoginUser currentUser;
@@ -68,7 +73,7 @@ namespace TailerApp.UI.Tailer
                 }
 
                 CustomerManager adminObj = new CustomerManager();
-                if (!adminObj.GetMeasurementMaster(currentUser.CompanyID, currentUser.UserId, string.IsNullOrEmpty(MeasurMasterID) ? 0 : Convert.ToInt32(MeasurMasterID), out Measur, isPrint))
+                if (!adminObj.GetMeasurementMaster(currentUser.CompanyID, currentUser.UserId, string.IsNullOrEmpty(MeasurMasterID) ? 0 : Convert.ToInt32(MeasurMasterID), out Measur, isPrint, string.IsNullOrEmpty(InvoiceID) ? 0 : Convert.ToInt32(InvoiceID)))
                 {
                     Measur.ErrorCode = adminObj.GetLastErrorCode();
                     Measur.ErrorMessage = adminObj.GetLastError();

@@ -45,7 +45,7 @@
                 LastName: '',
                 Address: { Address1: '', City: '', State: '', MobileNo: '' }
             }
-            $scope.isMailValid = false;
+            $scope.isMailValid = true;
 
             $scope.GetEmployeeMasterDetails = function () {
                 $scope.EmployeeDetails = {};
@@ -131,7 +131,7 @@
                 if ($scope.EmployeeDetails.Address.MobileNo == '' || $scope.EmployeeDetails.Address.MobileNo == null) {
                     $scope.errors.push('Mobile No');
                 }
-                if (!$scope.isMailValid) {
+                if (!$scope.isMailValid && $scope.EmployeeDetails.Address.EmailID != "") {
                     $scope.errors.push('Invalid EmailID');
                 }
 

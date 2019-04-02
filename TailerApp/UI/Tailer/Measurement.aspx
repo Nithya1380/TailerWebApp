@@ -12,6 +12,7 @@
     <script type="text/javascript" lang="javascript">
 
         var MeasurementID = "<%=MeasurementID%>";
+        var InvoiceID = "<%=InvoiceID%>";
 
         var tailerApp = angular.module("TailerApp", ['720kb.datepicker', 'ui.bootstrap']);
 
@@ -66,6 +67,7 @@
 
         tailerApp.controller("MeasurementController", function ($scope, $window, $http, $rootScope) {
             $scope.MeasurementID = $window.MeasurementID;
+            $scope.InvoiceID = $window.InvoiceID;
             $scope.MeasurementDetails = {};
             $scope.isDeleted = false;
             $scope.ItemList = {};
@@ -79,7 +81,7 @@
                 $http({
                     method: "POST",
                     url: "Measurement.aspx/GetMeasurementMaster",
-                    data: { MeasurMasterID: $scope.MeasurementID, isPrint: false },
+                    data: { MeasurMasterID: $scope.MeasurementID, isPrint: false, InvoiceID: $window.InvoiceID },
                     dataType: "json",
                     headers: { "Content-Type": "application/json" }
                 }).then(function onSuccess(response) {
@@ -148,7 +150,7 @@
                 $scope.GetItemList(0);
    
             $scope.MeasurementFieldfilter = function (group) {
-                return $scope.MeasurementField.filter(function (x) { return x.ItemGroup == group || x.ItemGroup == 'Mix' });
+                return $scope.MeasurementField.filter(function (x) { return x.ItemGroup == group || x.ItemGroup == 'Mix' || group == 'Mix' });
             }
 
             $scope.SaveMeasurementMaster = function () {
@@ -273,7 +275,12 @@
 
                     $scope.AccountInvoiceList = JSON.parse(response.data.d.JSonstring);
 
-                    if ($scope.AccountInvoiceList.length > 0 && Context == 0) {
+                    if ($scope.InvoiceID > 0 && $scope.AccountInvoiceList.length > 0) {
+                        if ($scope.AccountInvoiceList.filter(function (x) { return x.InvoiceID == $scope.InvoiceID }).length > 0) {
+                            $scope.MeasurementDetails.Invoice = $scope.AccountInvoiceList.filter(function (x) { return x.InvoiceID == $scope.InvoiceID })[0];
+                            $scope.OnInvoiceChange($scope.AccountInvoiceList.filter(function (x) { return x.InvoiceID == $scope.InvoiceID })[0]);
+                        }
+                    } else if ($scope.AccountInvoiceList.length > 0 && Context == 0) {
                         $scope.MeasurementDetails.Invoice = $scope.AccountInvoiceList[0];
                         $scope.OnInvoiceChange($scope.AccountInvoiceList[0]);
                     } else {
@@ -434,7 +441,7 @@
                                                     <tr>
                                                         <td class="back_shade" style="text-align: right;"><span class="profileLabel">Account code:</span></td>
                                                         <td>
-                                                            <input type="text" placeholder="Enter number" class="form-control"
+                                                            <input  ng-disabled="InvoiceID>0" type="text" placeholder="Enter number" class="form-control"
                                                                 style="max-width: 220px;" ng-model="MeasurementDetails.Account"
                                                                 typeahead-on-select="onSelect($item, $model, $label, this);"
                                                                 uib-typeahead="Account as Account.AccountCode for Account in AccountList |  filter:{AccountCode:$viewValue} | limitTo:10"
@@ -470,7 +477,7 @@
                                                         </td>
                                                         <td class="back_shade" style="text-align: right;"><span class="profileLabel">Bill No:</span></td>
                                                         <td>
-                                                            <span class="profileValue">
+                                                            <span class="profileValue" ng-disabled="InvoiceID>0">
                                                                 <select class="form-control" ng-change="OnInvoiceChange(MeasurementDetails.Invoice)" data-ng-model="MeasurementDetails.Invoice" style="width: 95%; margin-left: 5px;"
                                                                     data-ng-options="Invoice.BillNumber for Invoice in AccountInvoiceList track by Invoice.InvoiceID">                                                              
                                                                 </select>

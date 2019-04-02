@@ -520,7 +520,7 @@ namespace DAL.DBManager
             return ret;
         }
 
-        public bool GetMeasurementMaster(int companyID, int userID, int MeasurementMasterID, out ST_Measurement Measu, bool isPrint = false)
+        public bool GetMeasurementMaster(int companyID, int userID, int MeasurementMasterID, out ST_Measurement Measu, bool isPrint = false, int InvoiceID=0)
         {
             Measu = new ST_Measurement();
             Measu.MeasurementList = new List<ST_MeasurementField>();
@@ -535,6 +535,7 @@ namespace DAL.DBManager
                 this.AddSPIntParam("@user", userID);
                 this.AddSPIntParam("@MeasurementMasterID", MeasurementMasterID);
                 this.AddSPBoolParam("@isPrint", isPrint);
+                this.AddSPIntParam("@InvoiceID", InvoiceID);
                 this.AddSPReturnIntParam("@return");
 
                 using (SqlDataReader reader = this.ExecuteSelectSP(spName))

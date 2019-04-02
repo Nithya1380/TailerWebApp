@@ -107,6 +107,19 @@
                 var winobj = window.open(navigateurl, winName, windowFeatures);
                 winobj.focus();
             }
+
+            $scope.AddEditCompanylogo = function () {
+
+                var width = 550;
+                var height = 320;
+                var left = (screen.width / 2) - (width / 2);
+                var top = ((screen.height / 2) - (height / 2)) - 50;
+                var windowFeatures = "width=" + width + ",height=" + height + ",status,resizable,scrollbars,modal,left=" + left + ",top=" + top + "";
+                var URL = "../Admin/EditLogo.aspx?"
+                var URLdata = "CompanyID=" + $scope.CompanyList[0].CompanyID;
+                var winName = "Add Company"
+                OnAjaxSuccessURLEncryptedData(URL+URLdata, winName, windowFeatures);
+            }
         });
 
     </script>
@@ -121,8 +134,9 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card_bg">
-                    <div class="button_div" style="float: right; max-width: 200px;">
+                    <div class="button_div" style="float: right; max-width: 250px;">
                         <button class="btn_ss bg-blue" type="button" data-ng-click="GetCmpBnhList();">Display</button>
+                        <button class="btn_ss bg-blue" type="button" data-ng-click="AddEditCompanylogo();">Edit Logo</button>
                     </div>
 
                     <table class="table card_table table-hover">

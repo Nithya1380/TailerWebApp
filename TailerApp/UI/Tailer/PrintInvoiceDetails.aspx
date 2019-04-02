@@ -90,6 +90,7 @@
             $scope.totalItemQuantity = 0;
             $scope.totalItemPrice = 0;
             $scope.totalItemDiscount = 0;
+            $scope.ShowItemDiscount = false;
             $scope.totalGST = 0;
             $scope.totalSGST = 0;
             $scope.totalAmountPending = 0;
@@ -266,13 +267,13 @@
         <div ng-controller="PrintInvoiceDetailsController">
             <br>
             <div id="divInvoiceDetails" style="padding:15px" ng-repeat="Inv in InvoiceRepeat track by $index">
-                <div class="row" ng-init="Inv.start=$index*9">
-                    <div class="col-sm-12">
-                        <h5 class="lableHed">TAX INVOICE</h5>
-                    </div>
-                </div>
-                <div class="row" style="padding-left: 25px;">
+                <div class="row" style="padding-left: 25px;" ng-init="Inv.start=$index*9">
                     <div class="col-sm-4" style="line-height: 1.2;">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                &nbsp
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <span class="lableHed">GSTNIN : </span><span> {{CompanyInfo.BranchGSTIN}} </span>
@@ -292,6 +293,11 @@
                     <div class="col-sm-4">
                         <div class="row">
                             <div class="col-sm-12">
+                                <h5 class="lableHed">TAX INVOICE</h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
                                 <h5 class="lableHed">{{CompanyInfo.CompanyName}}<span> ({{CompanyInfo.BranchName}}) </span></h5>
                             </div>
                         </div>
@@ -307,7 +313,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-4"></div>
+                    <div class="col-sm-4">
+                        <asp:Image ID="img_Logo" class="rounded mx-auto d-block" alt="..." runat="server" Width="225" Height="80" ImageUrl="../Img/LogoPrivew.png" />
+                    </div>
                 </div>
                 <div class="col-sm-12" style="line-height:1;">
                     <div class="row" >
@@ -338,7 +346,7 @@
                                     <th style="width:20%;">Item Description</th>
                                     <th style="width:2%; text-align:right;">Qty</th>
                                     <th style="width:5%; text-align:right;">Rate</th>
-                                    <th style="width:10%; text-align:right;" ng-show="totalItemDiscount>0" colspan="2">Disc% & Amt</th>
+                                    <th style="width:10%; text-align:right;" ng-show="ShowItemDiscount" colspan="2">Disc% & Amt</th>
                                     <th style="width:10%; text-align:right;" colspan="2">C% & Amt</th>
                                     <th style="width:10%; text-align:right;" colspan="2">S% & Amt</th>
                                     <th style="width:10%; text-align:right;">Total</th>
@@ -350,8 +358,8 @@
                                     <td><span data-ng-bind="Invoice.ItemDescription"></span></td>
                                     <td style="text-align:right;" ng-init="$parent.totalItemQuantity = $parent.totalItemQuantity + Invoice.ItemQuantity" ><span data-ng-bind="Invoice.ItemQuantity"></span></td>
                                     <td style="text-align:right;" ng-init="$parent.totalItemPrice = $parent.totalItemPrice + Invoice.ItemPrice">{{Invoice.ItemPrice | currency : ''}}</td>
-                                    <td style="text-align:right;" ng-show="$parent.totalItemDiscount>0" >{{Invoice.ItemDiscountPer}}</td>
-                                    <td style="text-align:right;" ng-show="$parent.totalItemDiscount>0" ng-init="$parent.totalItemDiscount = $parent.totalItemDiscount + Invoice.ItemDiscount">{{Invoice.ItemDiscount | currency : ''}}</td>
+                                    <td style="text-align:right;" ng-show="$parent.ShowItemDiscount" >{{Invoice.ItemDiscountPer}}</td>
+                                    <td style="text-align:right;" ng-show="$parent.ShowItemDiscount" ng-init="$parent.totalItemDiscount = $parent.totalItemDiscount + Invoice.ItemDiscount; $parent.ShowItemDiscount=Invoice.ItemDiscount>0?true:$parent.ShowItemDiscount;">{{Invoice.ItemDiscount | currency : ''}}</td>
                                     <td style="text-align:right;">{{Invoice.GSTPer}}</td>
                                     <td style="text-align:right;" ng-init="$parent.totalGST = $parent.totalGST + Invoice.GST">{{Invoice.GST | currency : ''}}</td>
                                     <td style="text-align:right;">{{Invoice.SGSTPer}}</td>
@@ -365,8 +373,8 @@
                                     <th style="text-align:right;"><span> Total: <br /><br /><br /><br /><br /> </span></th>
                                     <th style="text-align:right;">{{totalItemQuantity}}</th>
                                     <th style="text-align:right;">{{totalItemPrice | currency : ''}}</th>
-                                    <th ng-show="$parent.totalItemDiscount>0"><span></span></th>
-                                    <th style="text-align:right;" ng-show="$parent.totalItemDiscount>0">{{totalItemDiscount | currency : ''}}</th>
+                                    <th ng-show="ShowItemDiscount"><span></span></th>
+                                    <th style="text-align:right;" ng-show="ShowItemDiscount">{{totalItemDiscount | currency : ''}}</th>
                                     <th><span></span></th>
                                     <th style="text-align:right;">{{totalGST | currency : '' }}</th>
                                     <th><span></span></th>
@@ -425,7 +433,13 @@
                             <div class="row" style="padding-right:0px;">
                                 <div class="col-sm-12" style="padding-right:0px;">
                                     <label class="lblInfotit col-sm-6">Debit: </label>
-                                    <label class="lblInfoval col-sm-5" style="text-align:right; padding-right:0px;">{{InvoiceDetails.TotalAmount  | currency : ''}}</label>
+                                    <label class="lblInfoval col-sm-5" style="text-align:right; padding-right:0px;">{{InvoiceDetails.NetAmount  | currency : ''}}</label>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-right:0px;" ng-show="InvoiceDetails.LessRsAmount">
+                                <div class="col-sm-12" style="padding-right:0px;"> 
+                                    <label class="lblInfotit col-sm-6">Less Amount: </label>
+                                    <label class="lblInfoval col-sm-5" style="text-align:right; padding-right:0px;">{{InvoiceDetails.LessRsAmount | currency : ''}}</label>
                                 </div>
                             </div>
                             <div class="row" style="padding-right:0px;" ng-show="InvoiceDetails.RoundOnOff">

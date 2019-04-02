@@ -18,6 +18,32 @@ namespace TailerApp.UI.Tailer
         {
             if (!string.IsNullOrEmpty(Request.QueryString.Get("InvoiceID")))
                 InvoiceID = Convert.ToInt32(Request.QueryString.Get("InvoiceID"));
+
+            if (!IsPostBack)
+            {
+                GetLogo();
+            }
+        }
+        void GetLogo()
+        {
+            byte[] CompanyLogo = null;
+            AdminManagerSP ManagerObj = new AdminManagerSP();
+            if (!ManagerObj.GetCompanyLogo(CURRENT_USER.CompanyID, CURRENT_USER.UserId, out CompanyLogo))
+            {
+                Utils.ShowAlert(this, ManagerObj.GetLastError());
+            }
+            else
+            {
+                if (CompanyLogo != null)
+                {
+                    string base64ImageData = Convert.ToBase64String(CompanyLogo, 0, CompanyLogo.Length);
+                    img_Logo.ImageUrl = "data:image/png;base64," + base64ImageData;
+                }
+                else
+                {
+                    img_Logo.Visible = false;
+                }
+            }
         }
 
         [WebMethod]

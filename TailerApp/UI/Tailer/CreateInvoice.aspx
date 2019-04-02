@@ -283,7 +283,8 @@
                      GSTP: null,
                      SGSTP: null,
                      AmountPending: "",
-                     BasePrice: 0
+                     BasePrice: 0,
+                     TotalGST: 0
                  }
 
                  $scope.InvoiceList.push(invoice);
@@ -317,21 +318,25 @@
                          InvoiceItem.ItemDiscount = null;
                      }
 
-                     if (!isNaN(InvoiceItem.GSTP) && parseFloat(InvoiceItem.GSTP) > 0) {
-                         InvoiceItem.GST = (parseFloat(InvoiceItem.BasePrice) * (parseFloat(InvoiceItem.GSTP) / 100.00)).toFixed(2);
-                     }
-
-                     if (!isNaN(InvoiceItem.SGSTP) && parseFloat(InvoiceItem.SGSTP) > 0) {
-                         InvoiceItem.SGST = (parseFloat(InvoiceItem.BasePrice) * (parseFloat(InvoiceItem.SGSTP) / 100.00)).toFixed(2);
-                     }
-
                      InvoiceItem.AmountPending = parseFloat(InvoiceItem.BasePrice);
 
-                     if (!isNaN(InvoiceItem.GST) && parseFloat(InvoiceItem.GST) > 0)
-                         InvoiceItem.AmountPending = parseFloat(InvoiceItem.AmountPending) + parseFloat(InvoiceItem.GST);
+                     if (!isNaN(InvoiceItem.TotalGST) && parseFloat(InvoiceItem.TotalGST) > 0) {
 
-                     if (!isNaN(InvoiceItem.SGST) && parseFloat(InvoiceItem.SGST) > 0)
-                         InvoiceItem.AmountPending = parseFloat(InvoiceItem.AmountPending) + parseFloat(InvoiceItem.SGST);
+                         var TotalGSTAmt = parseFloat(InvoiceItem.BasePrice) * (parseFloat(InvoiceItem.TotalGST) / 100.00);
+
+                         InvoiceItem.GST = (parseFloat(TotalGSTAmt) / 2).toFixed(2);
+
+                         InvoiceItem.SGST = (parseFloat(TotalGSTAmt) / 2).toFixed(2);
+
+                         InvoiceItem.AmountPending = parseFloat(InvoiceItem.BasePrice) + parseFloat(TotalGSTAmt);
+                     }
+
+
+                     //if (!isNaN(InvoiceItem.GST) && parseFloat(InvoiceItem.GST) > 0)
+                     //    InvoiceItem.AmountPending = parseFloat(InvoiceItem.AmountPending) + parseFloat(InvoiceItem.GST);
+
+                     //if (!isNaN(InvoiceItem.SGST) && parseFloat(InvoiceItem.SGST) > 0)
+                     //    InvoiceItem.AmountPending = parseFloat(InvoiceItem.AmountPending) + parseFloat(InvoiceItem.SGST);
 
                      InvoiceItem.AmountPending = parseFloat(InvoiceItem.AmountPending).toFixed(2);
 
@@ -433,7 +438,7 @@
                  $scope.CustInvoice.TotalAmount = $scope.TotalAmount.toFixed(2);
                  $scope.TotalAmount = Math.round($scope.TotalAmount);
                  $scope.CustInvoice.TotalBasePrice = $scope.TotalBasePrice;
-                 $scope.CustInvoice.TotalCGST = $scope.TotalCGST;s
+                 $scope.CustInvoice.TotalCGST = $scope.TotalCGST;
                  $scope.CustInvoice.TotalSGST = $scope.TotalSGST;
                  $scope.CustInvoice.LessRsAmount = $scope.TotalLessRsAmount.toFixed(2);
              }
@@ -860,7 +865,7 @@
                                        <%-- <input type="checkbox" data-ng-model="IsCalculateTax" data-ng-change="ReCalculateTax()" /> Include Tax--%>
                                         <button class="btn_ss bg-blue" type="button" data-ng-click="onCreateInvoiceClick();"><i class="fa fa-dollar"></i>Create</button>
                                         <input class="btn_ss bg-blue" type="button" data-ng-click="onPrintInvoiceDetailsClick();" ng-show="InvoiceID>0" value="Print" />
-                                        <input class="btn_ss bg-blue" type="button" ng-if="false" data-ng-click="onMeasureClick();" ng-show="InvoiceID>0" value="Add Measure" />
+                                        <input class="btn_ss bg-blue" type="button" data-ng-click="onMeasureClick();" ng-show="InvoiceID>0" value="Add Measure" />
                                     </td>
                                 </tr>
                             </tbody>

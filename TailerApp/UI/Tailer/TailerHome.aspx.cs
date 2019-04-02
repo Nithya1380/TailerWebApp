@@ -43,7 +43,7 @@ namespace TailerApp.UI.Tailer
                 {
                     sbHtml.Append("<div class=\"row BranchDiv\">");
                     sbHtml.Append("<div class=\"col-lg-6 col-md-6 col-sm-6\">");
-                    sbHtml.Append("<div class=\"card\">");
+                    sbHtml.Append("<div class=\"card\" style=\"width: 50%; position: fixed; overflow-y: scroll; max-height: 70%;\">");
                     sbHtml.Append("<div class=\"row\">");
                     sbHtml.Append("<table class=\"table\">");
                     sbHtml.Append("<thead><tr><th colspan=\"2\">Select Branch To Continue</th></tr></thead>");
@@ -52,10 +52,10 @@ namespace TailerApp.UI.Tailer
                     foreach (BranchDetail item in userBranchList)
                     {
                         sbHtml.Append("<tr>");
-                        sbHtml.Append("<td>");
+                        sbHtml.Append("<td style=\"width: 85%;\">");
                         sbHtml.Append(item.BranchName);
                         sbHtml.Append("</td>");
-                        sbHtml.Append("<td>");
+                        sbHtml.Append("<td style=\"width: 15%;\">");
                         sbHtml.Append("<input type=\"button\" value=\"Select\" class=\"btn btn-lg btn-success\" data-ng-click=\"OnBranchSelection(" + item.BranchID + ")\" />");
                         sbHtml.Append("</td>");
                         sbHtml.Append("</tr>");

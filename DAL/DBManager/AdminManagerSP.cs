@@ -1340,5 +1340,113 @@ namespace DAL.DBManager
            return ret;
        }
 
+       public bool GetCompanyLogo(int CompanyID, int userID, out byte[] CompanyLogo)
+       {
+           bool ret;
+           int retval;
+           CompanyLogo = null;
+           string spName = "GetCompanyLogo";
+
+           try
+           {
+               this.Connect(this.GetConnString());
+               this.ClearSPParams();
+               this.AddSPIntParam("@Company", CompanyID);
+               this.AddSPIntParam("@user", userID);
+               this.AddSPReturnIntParam("@retval");
+
+               using (SqlDataReader rdr = this.ExecuteSelectSP(spName))
+               {
+                   while (rdr.Read())
+                   {
+                       if (!rdr.IsDBNull(0))
+                           CompanyLogo = (byte[])rdr.GetValue(0);
+                       else
+                           CompanyLogo = null;
+                   }
+               }
+
+               retval = this.GetOutValueInt("@retval");
+
+               switch (retval)
+               {
+                   case 0: SetError(1, "");
+                       ret = true;
+                       break;
+
+                   case -1: SetError(-1, "Invalid HHA ID.");
+                       ret = false;
+                       break;
+
+                   default: SetError(-2, "Failed to Get Company Logo..Please contact Support");
+                       ret = false;
+                       break;
+               }
+           }
+
+           catch (Exception e)
+           {
+               ret = false;
+               SetError(-3, "Failed to Get Company Logo..Please contact Support");
+               Utils.Write(CompanyID, userID, "HHAManager.cs", "_HHA_GetCompanyLogo", "", "", e);
+           }
+           finally
+           {
+               this.ClearSPParams();
+               this.Disconnect();
+           }
+           return ret;
+       }
+
+       public bool SaveCompanyLogo(int CompanyID, int userID, byte[] CompanyLogo, string LogoName)
+       {
+           bool ret;
+           int retval;
+           string spName = "SaveCompanyLogo";
+
+           try
+           {
+               this.Connect(this.GetConnString());
+               this.ClearSPParams();
+               this.AddSPIntParam("@Company", CompanyID);
+               this.AddSPIntParam("@user", userID);
+               this.AddSPVarBinaryParam("@CompanyLogo", CompanyLogo);
+               this.AddSPStringParam("@LogoName", LogoName);
+               this.AddSPReturnIntParam("@retval");
+
+               this.ExecuteSelectSP(spName);
+
+               retval = this.GetOutValueInt("@retval");
+
+               switch (retval)
+               {
+                   case 0: SetError(1, "");
+                       ret = true;
+                       break;
+
+                   case -1: SetError(-1, "Invalid Company ID.");
+                       ret = false;
+                       break;
+
+                   default: SetError(-2, "Failed to Get Company Logo..Please contact Support");
+                       ret = false;
+                       break;
+               }
+           }
+
+           catch (Exception e)
+           {
+               ret = false;
+               SetError(-3, "Failed to Get Company Logo..Please contact Support");
+               Utils.Write(CompanyID, userID, "HHAManager.cs", "_HHA_SaveNewLogo", "", "", e);
+           }
+           finally
+           {
+               this.ClearSPParams();
+               this.Disconnect();
+           }
+           return ret;
+       }
+
     }
 }

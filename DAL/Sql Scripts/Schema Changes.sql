@@ -777,3 +777,16 @@ ALTER TABLE Invoices ADD RoundOnOff FLOAT, TotalAmount FLOAT
 ALTER TABLE MeasurementMaster ADD InvoiceID INT, Designer INT, MasterID INT, SalesRep INT, BillNo VARCHAR(100)
 ALTER TABLE MeasurementMaster ADD CONSTRAINT FK_MeasurementMaster_InvoiceID FOREIGN KEY(InvoiceID) REFERENCES Invoices(InvoiceID)
 
+--11th Feb 2019
+CREATE TABLE CompanyLogo 
+(
+	CompanyLogoID INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+	CompanyID	INT NOT NULL,
+	CreatedBy INT,
+	CreatedOn DATETIME DEFAULT GETDATE(),
+	CompanyLogo IMAGE,
+	LogoName VARCHAR(100),
+	CONSTRAINT FK_CompanyLogo_CompanyID FOREIGN KEY(CompanyID) REFERENCES CompanyMaster(CompanyID),
+	CONSTRAINT FK_CompanyLogo_CreatedBy FOREIGN KEY(CreatedBy) REFERENCES Users(UserID)
+
+)

@@ -187,6 +187,7 @@
     <Content Include="UI\Admin\AdminHome.aspx" />
     <Content Include="UI\Admin\Branch_AddModify.aspx" />
     <Content Include="UI\Admin\Company_AddModify.aspx" />
+    <Content Include="UI\Admin\EditLogo.aspx" />
     <Content Include="UI\Admin\ItemsMaster.aspx" />
     <Content Include="UI\Admin\AddModifyRole.aspx" />
     <Content Include="UI\Admin\AdminHome.aspx" />
@@ -196,6 +197,7 @@
     <Content Include="UI\Admin\UserAndRole.aspx" />
     <Content Include="UI\Common\Login.aspx" />
     <Content Include="UI\Img\12345.jpeg" />
+    <Content Include="UI\Img\LogoPrivew.png" />
     <Content Include="UI\Img\PopUpMaster.jpeg" />
     <Content Include="UI\Style\autocomplete.css" />
     <Content Include="UI\Style\bootstrap.min.css" />
@@ -328,6 +330,13 @@
     </Compile>
     <Compile Include="UI\Admin\Company_AddModify.aspx.designer.cs">
       <DependentUpon>Company_AddModify.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\EditLogo.aspx.cs">
+      <DependentUpon>EditLogo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\EditLogo.aspx.designer.cs">
+      <DependentUpon>EditLogo.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Admin\ItemsMaster.aspx.cs">
       <DependentUpon>ItemsMaster.aspx</DependentUpon>

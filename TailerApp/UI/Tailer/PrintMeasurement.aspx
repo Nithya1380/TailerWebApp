@@ -74,7 +74,7 @@
                 $http({
                     method: "POST",
                     url: "Measurement.aspx/GetMeasurementMaster",
-                    data: { MeasurMasterID: $scope.MeasurementID, isPrint: true },
+                    data: { MeasurMasterID: $scope.MeasurementID, isPrint: true, InvoiceID: 0 },
                     dataType: "json",
                     headers: { "Content-Type": "application/json" }
                 }).then(function onSuccess(response) {

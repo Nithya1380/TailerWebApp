@@ -7,7 +7,7 @@
             z-index:1002;
             position:relative;
             margin-left:5%;
-            margin-top:-10%;
+            margin-top:5%;
         }
 
         .BlackOverlay
@@ -102,7 +102,9 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div data-ng-app="TailerApp" id="divMainContent" data-ng-controller="TailerHomeController" data-ng-init="init()">
-
+        <div class="row" id="div_BranchSelection" clientidmode="static" runat="server">
+            <div class="BranchDiv" style="display: none"></div>
+        </div>
         <div class="row">
             <div class="page-header-new col-lg-12">
                 Dashboard
@@ -113,7 +115,7 @@
         <div class="row">
             <div class="col-lg-3">
                 <div class="card">
-                    <table style="width: 100%">
+                    <table style="width: 100%;">
                         <tr data-ng-click="onDashboardCounterClick('/UI/Tailer/InvoiceList.aspx?FromPage=3',DashboardDetails.DelivaryOfTheDay)">
                             <td rowspan="2">
                                 <div class="delivery_outer">
@@ -203,14 +205,14 @@
                             <tr>
                             <th>Branch Code</th>
                             <th>Name</th>
-                            <th>Area</th>
+                            <th style="display:none;">Area</th>
                         </tr>
                         </thead>
                         <tbody data-ng-repeat="branch in DashboardDetails.Branches">
                             <tr>
                             <td><span data-ng-bind="branch.BranchCode"></span></td>
                             <td><span data-ng-bind="branch.BranchName"></span></td>
-                            <td><span data-ng-bind="branch.BranchDivision"></span></td>
+                            <td style="display:none;"><span data-ng-bind="branch.BranchDivision"></span></td>
                         </tr>
                         </tbody>
                     </table>
@@ -220,7 +222,7 @@
             <!--end of col-->
 
             <div class="col-lg-6">
-                <div class="card_bg">
+                <div class="card_bg" style="display:none;">
                     <div class="card_header">
                         Chart
                     </div>
@@ -228,10 +230,6 @@
                 </div>
             </div>
             <!--end of col-->
-        </div>
-
-        <div class="row">
-            <div id="div_BranchSelection" clientidmode="static" class="BranchDiv" runat="server" style="display: none"></div>
         </div>
     </div>
     <div class="BlackOverlay" id="div_overLay" runat="server" clientidmode="static" style="display:none"></div>
